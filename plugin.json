@@ -1,0 +1,10 @@
+{
+    "id": "nodebb-plugin-markdown",
+    "name": "Markdown Parser",
+    "description": "A Markdown parser for NodeBB",
+    "url": "https://github.com/julianlam/nodebb-plugin-markdown",
+    "library": "./index.js",
+    "hooks": [
+        { "hook": "filter:post.parse", "method": "markdownify" }
+    ]
+}
