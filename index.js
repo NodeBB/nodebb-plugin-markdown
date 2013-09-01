@@ -6,7 +6,8 @@ var	marked = require('marked'),
 	};
 
 marked.setOptions({
-	breaks: true
+	breaks: true,
+	sanitize: true
 });
 
 module.exports = Markdown;
