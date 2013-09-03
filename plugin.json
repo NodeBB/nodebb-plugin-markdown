@@ -5,6 +5,6 @@
     "url": "https://github.com/julianlam/nodebb-plugin-markdown",
     "library": "./index.js",
     "hooks": [
-        { "hook": "filter:post.parse", "method": "markdownify" }
+        { "hook": "filter:post.parse", "method": "markdownify", "priority": 5 }
     ]
 }
