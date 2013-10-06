@@ -21,6 +21,7 @@
     "url": "https://github.com/julianlam/nodebb-plugin-markdown/issues"
   },
   "dependencies": {
-    "marked": "~0.2.9"
+    "marked": "~0.2.9",
+    "highlight.js": "~7.3.0"
   }
 }
