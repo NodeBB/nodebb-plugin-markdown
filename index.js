@@ -2,6 +2,7 @@ var	marked = require('marked'),
 	hljs = require('highlight.js'),
 	fs = require('fs'),
 	path = require('path'),
+	async = require('async'),
 	Markdown = {
 		admin: {
 			menu: function(custom_header, callback) {
@@ -30,6 +31,24 @@ var	marked = require('marked'),
 					});
 
 					callback(null, custom_routes);
+				});
+			},
+			activate: function() {
+				var	Meta = module.parent.require('./meta'),
+					defaults = [
+						{ field: 'gfm', value: '1' },
+						{ field: 'highlight', value: '1' },
+						{ field: 'tables', value: '1' },
+						{ field: 'breaks', value: '1' },
+						{ field: 'pedantic', value: '0' },
+						{ field: 'sanitize', value: '1' },
+						{ field: 'smartLists', value: '1' },
+						{ field: 'smartypants', value: '0' },
+						{ field: 'langPrefix', value: 'lang-' }
+					];
+
+				async.each(defaults, function(optObj, next) {
+					Meta.configs.setOnEmpty('nodebb-plugin-markdown:options:' + optObj.field, optObj.value, next);
 				});
 			}
 		},
