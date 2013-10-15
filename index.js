@@ -3,7 +3,36 @@ var	marked = require('marked'),
 	fs = require('fs'),
 	path = require('path'),
 	async = require('async'),
+	RDB = module.parent.require('./redis'),
 	Markdown = {
+		config: {},
+		init: function() {
+			// Load saved config
+			var	_self = this,
+				fields = [
+					'gfm', 'highlight', 'tables', 'breaks', 'pedantic',
+					'sanitize', 'smartLists', 'smartypants', 'langPrefix'
+				],
+				hashes = fields.map(function(field) { return 'nodebb-plugin-markdown:options:' + field });
+			RDB.hmget('config', hashes, function(err, options) {
+				fields.forEach(function(field, idx) {
+					if (field !== 'langPrefix') options[idx] = options[idx] === '1' ? true : false;
+					_self.config[field] = options[idx];
+				});
+
+				// Enable highlighting
+				if (_self.config.highlight) {
+					_self.config.highlight = function (code, lang) {
+						return hljs.highlightAuto(code).value;
+					};
+				}
+
+				marked.setOptions(_self.config);
+			});
+		},
+		markdownify: function(raw) {
+			return marked(raw);
+		},
 		admin: {
 			menu: function(custom_header, callback) {
 				custom_header.plugins.push({
@@ -51,18 +80,8 @@ var	marked = require('marked'),
 					Meta.configs.setOnEmpty('nodebb-plugin-markdown:options:' + optObj.field, optObj.value, next);
 				});
 			}
-		},
-		markdownify: function(raw) {
-			return marked(raw);
 		}
 	};
 
-marked.setOptions({
-	breaks: true,
-	sanitize: true,
-	highlight: function (code, lang) {
-		return hljs.highlightAuto(code).value;
-	}
-});
-
+Markdown.init();
 module.exports = Markdown;
