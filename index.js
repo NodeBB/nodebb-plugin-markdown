@@ -36,8 +36,6 @@ var	marked = require('marked'),
 					};
 				}
 
-				console.log(_self.config);
-
 				marked.setOptions(_self.config);
 			});
 		},
