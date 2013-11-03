@@ -12,6 +12,7 @@
         { "hook": "filter:post.parse", "method": "markdownify", "priority": 5 },
         { "hook": "filter:admin.header.build", "method": "admin.menu", "callbacked": false },
         { "hook": "filter:admin.create_routes", "method": "admin.route", "callbacked": true },
-        { "hook": "action:plugin.activate", "method": "admin.activate" }
+        { "hook": "action:plugin.activate", "method": "admin.activate" },
+        { "hook": "action:config.set", "method": "reload" }
     ]
 }

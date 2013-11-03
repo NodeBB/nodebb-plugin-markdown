@@ -33,6 +33,12 @@ var	marked = require('marked'),
 		markdownify: function(raw) {
 			return marked(raw);
 		},
+		reload: function(hookVals) {
+			var	isMarkdownPlugin = /^nodebb-plugin-markdown/;
+			if (isMarkdownPlugin.test(hookVals.key)) {
+				this.init();
+			}
+		},
 		admin: {
 			menu: function(custom_header, callback) {
 				custom_header.plugins.push({
