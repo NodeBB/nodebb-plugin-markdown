@@ -13,10 +13,19 @@ var	marked = require('marked'),
 					'gfm', 'highlight', 'tables', 'breaks', 'pedantic',
 					'sanitize', 'smartLists', 'smartypants', 'langPrefix'
 				],
+				defaults = [
+					true, true, true, true, false,
+					true, true, false, 'lang-'
+				],
 				hashes = fields.map(function(field) { return 'nodebb-plugin-markdown:options:' + field });
+
 			RDB.hmget('config', hashes, function(err, options) {
 				fields.forEach(function(field, idx) {
-					if (field !== 'langPrefix') options[idx] = options[idx] === '1' ? true : false;
+					if (field !== 'langPrefix') {
+						if (options[idx] !== null) options[idx] = options[idx] === '1' ? true : false;
+						else options[idx] = defaults[idx];
+					} else if (!options[idx]) options[idx] = defaults[idx];
+
 					_self.config[field] = options[idx];
 				});
 

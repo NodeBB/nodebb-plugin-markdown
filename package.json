@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-markdown",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "description": "A Markdown parser for NodeBB",
   "main": "index.js",
   "scripts": {
@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "marked": "~0.2.9",
-    "highlight.js": "~7.3.0"
+    "highlight.js": "~7.3.0",
+    "async": "~0.2.9"
   }
 }
