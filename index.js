@@ -3,7 +3,7 @@ var	marked = require('marked'),
 	fs = require('fs'),
 	path = require('path'),
 	async = require('async'),
-	RDB = module.parent.require('./redis'),
+	meta = module.parent.require('./meta'),
 	Markdown = {
 		config: {},
 		init: function() {
@@ -19,7 +19,7 @@ var	marked = require('marked'),
 				],
 				hashes = fields.map(function(field) { return 'nodebb-plugin-markdown:options:' + field });
 
-			RDB.hmget('config', hashes, function(err, options) {
+			meta.getFields(hashes, function(err, options) {
 				fields.forEach(function(field, idx) {
 					if (field !== 'langPrefix') {
 						if (options[idx] !== null) options[idx] = options[idx] === '1' ? true : false;
