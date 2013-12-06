@@ -19,7 +19,7 @@ var	marked = require('marked'),
 				],
 				hashes = fields.map(function(field) { return 'nodebb-plugin-markdown:options:' + field });
 
-			meta.configs.getFields('config', hashes, function(err, options) {
+			meta.configs.getFields(hashes, function(err, options) {
 				fields.forEach(function(field, idx) {
 					if (field !== 'langPrefix') {
 						if (options[idx] !== null) options[idx] = options[idx] === '1' ? true : false;
