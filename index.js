@@ -79,17 +79,17 @@ var	marked = require('marked'),
 			},
 			activate: function(id) {
 				if (id === 'nodebb-plugin-markdown') {
-						defaults = [
-							{ field: 'gfm', value: '1' },
-							{ field: 'highlight', value: '1' },
-							{ field: 'tables', value: '1' },
-							{ field: 'breaks', value: '1' },
-							{ field: 'pedantic', value: '0' },
-							{ field: 'sanitize', value: '1' },
-							{ field: 'smartLists', value: '1' },
-							{ field: 'smartypants', value: '0' },
-							{ field: 'langPrefix', value: 'lang-' }
-						];
+					var defaults = [
+						{ field: 'gfm', value: '1' },
+						{ field: 'highlight', value: '1' },
+						{ field: 'tables', value: '1' },
+						{ field: 'breaks', value: '1' },
+						{ field: 'pedantic', value: '0' },
+						{ field: 'sanitize', value: '1' },
+						{ field: 'smartLists', value: '1' },
+						{ field: 'smartypants', value: '0' },
+						{ field: 'langPrefix', value: 'lang-' }
+					];
 
 					async.each(defaults, function(optObj, next) {
 						meta.configs.setOnEmpty('nodebb-plugin-markdown:options:' + optObj.field, optObj.value, next);
