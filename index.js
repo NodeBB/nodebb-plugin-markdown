@@ -79,7 +79,6 @@ var	marked = require('marked'),
 			},
 			activate: function(id) {
 				if (id === 'nodebb-plugin-markdown') {
-					var	Meta = module.parent.require('./meta'),
 						defaults = [
 							{ field: 'gfm', value: '1' },
 							{ field: 'highlight', value: '1' },
@@ -93,7 +92,7 @@ var	marked = require('marked'),
 						];
 
 					async.each(defaults, function(optObj, next) {
-						Meta.configs.setOnEmpty('nodebb-plugin-markdown:options:' + optObj.field, optObj.value, next);
+						meta.configs.setOnEmpty('nodebb-plugin-markdown:options:' + optObj.field, optObj.value, next);
 					});
 				}
 			}
