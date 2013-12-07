@@ -79,7 +79,7 @@ var	marked = require('marked'),
 			},
 			activate: function(id) {
 				if (id === 'nodebb-plugin-markdown') {
-					defaults = [
+					var defaults = [
 						{ field: 'gfm', value: '1' },
 						{ field: 'highlight', value: '1' },
 						{ field: 'tables', value: '1' },
