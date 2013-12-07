@@ -3,7 +3,7 @@ var	marked = require('marked'),
 	fs = require('fs'),
 	path = require('path'),
 	async = require('async'),
-	RDB = module.parent.require('./redis'),
+ 	meta = module.parent.require('./meta'),
 	Markdown = {
 		config: {},
 		init: function() {
@@ -19,7 +19,7 @@ var	marked = require('marked'),
 				],
 				hashes = fields.map(function(field) { return 'nodebb-plugin-markdown:options:' + field });
 
-			RDB.hmget('config', hashes, function(err, options) {
+			meta.configs.getFields(hashes, function(err, options) {
 				fields.forEach(function(field, idx) {
 					if (field !== 'langPrefix') {
 						if (options[idx] !== null) options[idx] = options[idx] === '1' ? true : false;
@@ -79,21 +79,20 @@ var	marked = require('marked'),
 			},
 			activate: function(id) {
 				if (id === 'nodebb-plugin-markdown') {
-					var	Meta = module.parent.require('./meta'),
-						defaults = [
-							{ field: 'gfm', value: '1' },
-							{ field: 'highlight', value: '1' },
-							{ field: 'tables', value: '1' },
-							{ field: 'breaks', value: '1' },
-							{ field: 'pedantic', value: '0' },
-							{ field: 'sanitize', value: '1' },
-							{ field: 'smartLists', value: '1' },
-							{ field: 'smartypants', value: '0' },
-							{ field: 'langPrefix', value: 'lang-' }
-						];
+					var defaults = [
+						{ field: 'gfm', value: '1' },
+						{ field: 'highlight', value: '1' },
+						{ field: 'tables', value: '1' },
+						{ field: 'breaks', value: '1' },
+						{ field: 'pedantic', value: '0' },
+						{ field: 'sanitize', value: '1' },
+						{ field: 'smartLists', value: '1' },
+						{ field: 'smartypants', value: '0' },
+						{ field: 'langPrefix', value: 'lang-' }
+					];
 
 					async.each(defaults, function(optObj, next) {
-						Meta.configs.setOnEmpty('nodebb-plugin-markdown:options:' + optObj.field, optObj.value, next);
+						meta.configs.setOnEmpty('nodebb-plugin-markdown:options:' + optObj.field, optObj.value, next);
 					});
 				}
 			}
