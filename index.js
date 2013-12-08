@@ -13,21 +13,37 @@ var	marked = require('marked'),
 					'gfm', 'highlight', 'tables', 'breaks', 'pedantic',
 					'sanitize', 'smartLists', 'smartypants', 'langPrefix'
 				],
-				defaults = [
-					true, true, true, true, false,
-					true, true, false, 'lang-'
-				],
+				defaults = {
+					'gfm': true,
+					'highlight': true,
+					'tables': true,
+					'breaks': true,
+					'pedantic': false,
+					'sanitize': true,
+					'smartLists': true,
+					'smartypants': false,
+					'langPrefix': 'lang-'
+				},
 				hashes = fields.map(function(field) { return 'nodebb-plugin-markdown:options:' + field });
 
 			meta.configs.getFields(hashes, function(err, options) {
-				fields.forEach(function(field, idx) {
-					if (field !== 'langPrefix') {
-						if (options[idx] !== null) options[idx] = options[idx] === '1' ? true : false;
-						else options[idx] = defaults[idx];
-					} else if (!options[idx]) options[idx] = defaults[idx];
+				var	option;
+				for(field in options) {
+					if (options.hasOwnProperty(field)) {
+						option = field.slice(31);
 
-					_self.config[field] = options[idx];
-				});
+						// If not set in config (nil)
+						if (!options[field]) {
+							_self.config[option] = defaults[option];
+						} else {
+							if (option !== 'langPrefix') {
+								_self.config[option] = options[field] === '1' ? true : false;
+							} else {
+								_self.config[option] = options[field];
+							}
+						}
+					}
+				}
 
 				// Enable highlighting
 				if (_self.config.highlight) {

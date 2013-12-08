@@ -57,7 +57,7 @@
 	<div class="form-group">
 		<label for="smartypants">
 			<input type="checkbox" data-field="nodebb-plugin-markdown:options:smartypants" id="smartypants" />
-			Use "smart" typograhic punctuation for things like quotes and dashes.
+			Use "smart" typographic punctuation for things like quotes and dashes.
 		</label>
 	</div>
 	<div class="form-group">
