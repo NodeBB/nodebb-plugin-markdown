@@ -1,5 +1,5 @@
 var	marked = require('marked'),
-	hljs = require('highlight.js'),
+	pygmentize = require('pygmentize-bundled'),
 	fs = require('fs'),
 	path = require('path'),
 	async = require('async'),
@@ -47,16 +47,18 @@ var	marked = require('marked'),
 
 				// Enable highlighting
 				if (_self.config.highlight) {
-					_self.config.highlight = function (code, lang) {
-						return hljs.highlightAuto(code).value;
+					_self.config.highlight = function (code, lang, callback) {
+						pygmentize({ lang: lang, format: 'html' }, code, function (err, result) {
+							callback(err, result.toString());
+						});
 					};
 				}
 
 				marked.setOptions(_self.config);
 			});
 		},
-		markdownify: function(raw) {
-			return marked(raw);
+		markdownify: function(raw, callback) {
+			return marked(raw, callback);
 		},
 		reload: function(hookVals) {
 			var	isMarkdownPlugin = /^nodebb-plugin-markdown/;

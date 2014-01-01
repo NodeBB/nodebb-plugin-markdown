@@ -9,7 +9,7 @@
     	"css/default.css"
     ],
     "hooks": [
-        { "hook": "filter:post.parse", "method": "markdownify", "priority": 5 },
+        { "hook": "filter:post.parse", "method": "markdownify", "priority": 5, "callbacked": true },
         { "hook": "filter:post.parseSignature", "method": "markdownify", "priority": 5 },
         { "hook": "filter:admin.header.build", "method": "admin.menu", "callbacked": false },
         { "hook": "filter:admin.create_routes", "method": "admin.route", "callbacked": true },

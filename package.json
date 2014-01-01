@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "marked": "~0.2.9",
-    "highlight.js": "~7.3.0",
-    "async": "~0.2.9"
+    "async": "~0.2.9",
+    "pygmentize-bundled": "~2.1.0"
   }
 }
