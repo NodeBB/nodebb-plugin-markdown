@@ -77,7 +77,7 @@ var	marked = require('marked'),
 			menu: function(custom_header, callback) {
 				custom_header.plugins.push({
 					"route": '/plugins/markdown',
-					"icon": 'icon-edit',
+					"icon": 'fa-edit',
 					"name": 'Markdown'
 				});
 
