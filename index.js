@@ -49,7 +49,14 @@ var	marked = require('marked'),
 				if (_self.config.highlight) {
 					_self.config.highlight = function (code, lang, callback) {
 						pygmentize({ lang: lang, format: 'html' }, code, function (err, result) {
-							callback(err, result.toString());
+							if(err) {
+								return callback(err);
+							}
+							
+							if(result) {
+								return callback(null, result.toString());	
+							}
+							callback(null, code);
 						});
 					};
 				}
