@@ -48,7 +48,13 @@ var	marked = require('marked'),
 				// Enable highlighting
 				if (_self.config.highlight) {
 					_self.config.highlight = function (code, lang, callback) {
-						pygmentize({ lang: lang, format: 'html' }, code, function (err, result) {
+						pygmentize({
+							lang: lang,
+							format: 'html',
+							options: {
+								nowrap: 'true'
+							}
+						}, code, function (err, result) {
 							if(err) {
 								return callback(err);
 							}
