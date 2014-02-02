@@ -4,9 +4,11 @@
     "description": "A Markdown parser for NodeBB",
     "url": "https://github.com/julianlam/nodebb-plugin-markdown",
     "library": "./index.js",
-    "staticDir": "./public",
+    "staticDirs": {
+        "markdown": "public/css"
+    },
     "css": [
-    	"css/default.css"
+    	"markdown/default.css"
     ],
     "hooks": [
         { "hook": "filter:post.parse", "method": "markdownify", "priority": 5, "callbacked": true },
