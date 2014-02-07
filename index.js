@@ -59,7 +59,7 @@ var	marked = require('marked'),
 								return callback(err);
 							}
 							
-							if(result) {
+							if (result) {
 								return callback(null, result.toString());	
 							}
 							callback(null, code);
