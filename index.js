@@ -58,9 +58,9 @@ var	marked = require('marked'),
 							if(err) {
 								return callback(err);
 							}
-							
+
 							if (result) {
-								return callback(null, result.toString());	
+								return callback(null, result.toString());
 							}
 							callback(null, code);
 						});
@@ -78,6 +78,10 @@ var	marked = require('marked'),
 			if (isMarkdownPlugin.test(hookVals.key)) {
 				this.init();
 			}
+		},
+		renderHelp: function(helpContent, callback) {
+			helpContent += "<h2>Markdown</h2><p>This forum is powered by Markdown. For full documentation, <a href=\"http://daringfireball.net/projects/markdown/syntax\">click here</a></p>";
+			callback(null, helpContent);
 		},
 		admin: {
 			menu: function(custom_header, callback) {
