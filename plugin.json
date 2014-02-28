@@ -4,11 +4,8 @@
     "description": "A Markdown parser for NodeBB",
     "url": "https://github.com/julianlam/nodebb-plugin-markdown",
     "library": "./index.js",
-    "staticDirs": {
-        "markdown": "public/css"
-    },
-    "css": [
-    	"markdown/default.css"
+    "less": [
+        "public/less/default.less"
     ],
     "hooks": [
         { "hook": "filter:post.parse", "method": "markdownify", "priority": 5, "callbacked": true },
@@ -18,5 +15,6 @@
         { "hook": "filter:admin.create_routes", "method": "admin.route", "callbacked": true },
         { "hook": "action:plugin.activate", "method": "admin.activate" },
         { "hook": "action:config.set", "method": "reload" }
-    ]
+    ],
+    "minver": "0.4.0"
 }
