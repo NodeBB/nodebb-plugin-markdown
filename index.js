@@ -6,6 +6,14 @@ var	marked = require('marked'),
  	meta = module.parent.require('./meta'),
 	Markdown = {
 		config: {},
+		onLoad: function(app, middleware, controllers) {
+			function render(req, res, next) {
+				res.render('admin/plugins/markdown', {});
+			}
+
+			app.get('/admin/plugins/markdown', middleware.admin.buildHeader, render);
+			app.get('/api/admin/plugins/markdown', render);
+		},
 		init: function() {
 			// Load saved config
 			var	_self = this,
@@ -92,25 +100,6 @@ var	marked = require('marked'),
 				});
 
 				return custom_header;
-			},
-			route: function(custom_routes, callback) {
-				fs.readFile(path.join(__dirname, 'public/templates/admin.tpl'), function(err, tpl) {
-					custom_routes.routes.push({
-						route: '/plugins/markdown',
-						method: "get",
-						options: function(req, res, callback) {
-							callback({
-								req: req,
-								res: res,
-								route: '/plugins/markdown',
-								name: Markdown,
-								content: tpl
-							});
-						}
-					});
-
-					callback(null, custom_routes);
-				});
 			},
 			activate: function(id) {
 				if (id === 'nodebb-plugin-markdown') {
