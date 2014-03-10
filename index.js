@@ -99,7 +99,7 @@ var	marked = require('marked'),
 					"name": 'Markdown'
 				});
 
-				return custom_header;
+				callback(null, custom_header);
 			},
 			activate: function(id) {
 				if (id === 'nodebb-plugin-markdown') {

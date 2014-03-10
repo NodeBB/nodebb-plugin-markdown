@@ -5,15 +5,15 @@
     "url": "https://github.com/julianlam/nodebb-plugin-markdown",
     "library": "./index.js",
     "less": [
-        "./public/less/default.less"
+        "public/less/default.less"
     ],
     "templates": "./public/templates",
     "hooks": [
-        { "hook": "filter:post.parse", "method": "markdownify", "priority": 5, "callbacked": true },
-        { "hook": "filter:post.parseSignature", "method": "markdownify", "priority": 5, "callbacked": true },
-        { "hook": "filter:composer.help", "method": "renderHelp", "callbacked": true },
-        { "hook": "filter:admin.header.build", "method": "admin.menu", "callbacked": false },
-        { "hook": "action:app.load", "method": "onLoad", "callbacked": true },
+        { "hook": "filter:post.parse", "method": "markdownify", "priority": 5 },
+        { "hook": "filter:post.parseSignature", "method": "markdownify", "priority": 5 },
+        { "hook": "filter:composer.help", "method": "renderHelp" },
+        { "hook": "filter:admin.header.build", "method": "admin.menu" },
+        { "hook": "action:app.load", "method": "onLoad" },
         { "hook": "action:plugin.activate", "method": "admin.activate" },
         { "hook": "action:config.set", "method": "reload" }
     ],
