@@ -3,7 +3,7 @@ var	marked = require('marked'),
 	fs = require('fs'),
 	path = require('path'),
 	async = require('async'),
- 	meta = module.parent.require('./meta'),
+	meta = module.parent.require('./meta'),
 	Markdown = {
 		config: {},
 		onLoad: function(app, middleware, controllers) {
