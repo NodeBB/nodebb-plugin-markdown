@@ -14,8 +14,7 @@
         { "hook": "filter:composer.help", "method": "renderHelp" },
         { "hook": "filter:admin.header.build", "method": "admin.menu" },
         { "hook": "action:app.load", "method": "onLoad" },
-        { "hook": "action:plugin.activate", "method": "admin.activate" },
-        { "hook": "action:config.set", "method": "reload" }
+        { "hook": "action:plugin.activate", "method": "admin.activate" }
     ],
     "minver": "0.4.0"
 }

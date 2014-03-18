@@ -31,23 +31,19 @@ var	marked = require('marked'),
 					'smartLists': true,
 					'smartypants': false,
 					'langPrefix': 'lang-'
-				},
-				hashes = fields.map(function(field) { return 'nodebb-plugin-markdown:options:' + field });
+				};
 
-			meta.configs.getFields(hashes, function(err, options) {
-				var	option;
-				for(field in options) {
+			meta.settings.get('markdown', function(err, options) {
+				for(var field in options) {
 					if (options.hasOwnProperty(field)) {
-						option = field.slice(31);
-
 						// If not set in config (nil)
 						if (!options[field]) {
-							_self.config[option] = defaults[option];
+							_self.config[field] = defaults[field];
 						} else {
-							if (option !== 'langPrefix') {
-								_self.config[option] = options[field] === '1' ? true : false;
+							if (field !== 'langPrefix') {
+								_self.config[field] = options[field] === 'on' ? true : false;
 							} else {
-								_self.config[option] = options[field];
+								_self.config[field] = options[field];
 							}
 						}
 					}
@@ -81,12 +77,6 @@ var	marked = require('marked'),
 		markdownify: function(raw, callback) {
 			return marked(raw, callback);
 		},
-		reload: function(hookVals) {
-			var	isMarkdownPlugin = /^nodebb-plugin-markdown/;
-			if (isMarkdownPlugin.test(hookVals.key)) {
-				this.init();
-			}
-		},
 		renderHelp: function(helpContent, callback) {
 			helpContent += "<h2>Markdown</h2><p>This forum is powered by Markdown. For full documentation, <a href=\"http://daringfireball.net/projects/markdown/syntax\">click here</a></p>";
 			callback(null, helpContent);
@@ -104,19 +94,19 @@ var	marked = require('marked'),
 			activate: function(id) {
 				if (id === 'nodebb-plugin-markdown') {
 					var defaults = [
-						{ field: 'gfm', value: '1' },
-						{ field: 'highlight', value: '1' },
-						{ field: 'tables', value: '1' },
-						{ field: 'breaks', value: '1' },
-						{ field: 'pedantic', value: '0' },
-						{ field: 'sanitize', value: '1' },
-						{ field: 'smartLists', value: '1' },
-						{ field: 'smartypants', value: '0' },
+						{ field: 'gfm', value: 'on' },
+						{ field: 'highlight', value: 'on' },
+						{ field: 'tables', value: 'on' },
+						{ field: 'breaks', value: 'on' },
+						{ field: 'pedantic', value: 'off' },
+						{ field: 'sanitize', value: 'on' },
+						{ field: 'smartLists', value: 'on' },
+						{ field: 'smartypants', value: 'off' },
 						{ field: 'langPrefix', value: 'lang-' }
 					];
 
 					async.each(defaults, function(optObj, next) {
-						meta.configs.setOnEmpty('nodebb-plugin-markdown:options:' + optObj.field, optObj.value, next);
+						meta.settings.setOnEmpty('markdown', optObj.field, optObj.value, next);
 					});
 				}
 			}
