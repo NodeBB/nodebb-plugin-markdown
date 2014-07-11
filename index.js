@@ -2,7 +2,7 @@ var	marked = require('marked'),
 	pygmentize = require('pygmentize-bundled'),
 	fs = require('fs'),
 	path = require('path'),
-	async = require('async'),
+	async = module.parent.require('async'),
  	meta = module.parent.require('./meta'),
 	Markdown = {
 		config: {},
