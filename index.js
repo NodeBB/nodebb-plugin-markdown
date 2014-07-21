@@ -6,13 +6,15 @@ var	marked = require('marked'),
  	meta = module.parent.require('./meta'),
 	Markdown = {
 		config: {},
-		onLoad: function(app, middleware, controllers) {
+		onLoad: function(app, middleware, controllers, callback) {
 			function render(req, res, next) {
 				res.render('admin/plugins/markdown', {});
 			}
 
 			app.get('/admin/plugins/markdown', middleware.admin.buildHeader, render);
 			app.get('/api/admin/plugins/markdown', render);
+
+			callback();
 		},
 		init: function() {
 			// Load saved config
