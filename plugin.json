@@ -13,8 +13,8 @@
         { "hook": "filter:post.parseSignature", "method": "markdownify", "priority": 5 },
         { "hook": "filter:composer.help", "method": "renderHelp" },
         { "hook": "filter:admin.header.build", "method": "admin.menu" },
-        { "hook": "action:app.load", "method": "onLoad" },
+        { "hook": "filter:app.load", "method": "onLoad" },
         { "hook": "action:plugin.activate", "method": "admin.activate" }
     ],
-    "minver": "0.4.0"
+    "minver": "0.5.0"
 }
