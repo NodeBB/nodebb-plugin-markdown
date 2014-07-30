@@ -9,7 +9,7 @@
     ],
     "templates": "./public/templates",
     "hooks": [
-        { "hook": "filter:app.load", "method": "onLoad" },
+        { "hook": "static:app.load", "method": "onLoad" },
         { "hook": "filter:post.parse", "method": "markdownify", "priority": 5 },
         { "hook": "filter:post.parseSignature", "method": "markdownify", "priority": 5 },
         { "hook": "filter:composer.help", "method": "renderHelp" },
