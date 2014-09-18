@@ -2,7 +2,6 @@
 	"use strict";
 
 	var	marked = require('marked'),
-		pygmentize = require('pygmentize-bundled'),
 		fs = require('fs'),
 		path = require('path'),
 		async = module.parent.require('async'),
@@ -17,6 +16,12 @@
 
 				app.get('/admin/plugins/markdown', middleware.admin.buildHeader, render);
 				app.get('/api/admin/plugins/markdown', render);
+				app.get('/markdown/config', function(req, res) {
+					res.json(200, {
+						highlight: Markdown.highlight ? 1 : 0,
+						theme: 'arta.css'
+					});
+				});
 
 				callback();
 			},
@@ -55,27 +60,8 @@
 						}
 					}
 
-					// Enable highlighting
-					if (_self.config.highlight) {
-						_self.config.highlight = function (code, lang, callback) {
-							pygmentize({
-								lang: lang,
-								format: 'html',
-								options: {
-									nowrap: 'true'
-								}
-							}, code, function (err, result) {
-								if(err) {
-									return callback(err);
-								}
-
-								if (result) {
-									return callback(null, result.toString());
-								}
-								callback(null, code);
-							});
-						};
-					}
+					_self.highlight = _self.config.highlight;
+					delete _self.config.highlight;
 
 					marked.setOptions(_self.config);
 				});

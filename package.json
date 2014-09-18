@@ -18,7 +18,6 @@
     "url": "https://github.com/julianlam/nodebb-plugin-markdown/issues"
   },
   "dependencies": {
-    "marked": "~0.3.2",
-    "pygmentize-bundled": "~2.1.0"
+    "marked": "~0.3.2"
   }
 }

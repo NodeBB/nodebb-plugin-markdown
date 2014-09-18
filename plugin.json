@@ -7,6 +7,13 @@
     "less": [
         "public/less/default.less"
     ],
+    "scripts": [
+        "public/js/highlight.js",
+        "public/js/client.js"
+    ],
+    "staticDirs": {
+        "styles": "public/styles"
+    },
     "templates": "./public/templates",
     "hooks": [
         { "hook": "static:app.load", "method": "onLoad" },
