@@ -18,6 +18,14 @@
 				</label>
 			</div>
 			<div class="form-group">
+				<label for="highlightTheme">Use this theme for highlighted code blocks</label>
+				<select class="form-control" name="highlightTheme" id="highlightTheme">
+					<!-- BEGIN themes -->
+					<option value="{themes.name}">{themes.name}</option>
+					<!-- END themes -->
+				</select>
+			</div>
+			<div class="form-group">
 				<label for="tables">
 					<input type="checkbox" name="tables" id="tables" />
 					Parse <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#wiki-tables">GFM Table Syntax</a>

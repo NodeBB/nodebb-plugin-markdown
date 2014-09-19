@@ -11,7 +11,9 @@
 			config: {},
 			onLoad: function(app, middleware, controllers, callback) {
 				function render(req, res, next) {
-					res.render('admin/plugins/markdown', {});
+					res.render('admin/plugins/markdown', {
+						themes: Markdown.themes
+					});
 				}
 
 				app.get('/admin/plugins/markdown', middleware.admin.buildHeader, render);
@@ -19,11 +21,12 @@
 				app.get('/markdown/config', function(req, res) {
 					res.json(200, {
 						highlight: Markdown.highlight ? 1 : 0,
-						theme: 'arta.css'
+						theme: Markdown.config.highlightTheme || 'arta.css'
 					});
 				});
 
 				Markdown.init();
+				Markdown.loadThemes();
 				callback();
 			},
 			init: function() {
@@ -52,7 +55,7 @@
 							if (!options[field]) {
 								_self.config[field] = defaults[field];
 							} else {
-								if (field !== 'langPrefix') {
+								if (field !== 'langPrefix' && field !== 'highlightTheme') {
 									_self.config[field] = options[field] === 'on' ? true : false;
 								} else {
 									_self.config[field] = options[field];
@@ -65,6 +68,18 @@
 					delete _self.config.highlight;
 
 					marked.setOptions(_self.config);
+				});
+			},
+			loadThemes: function() {
+				fs.readdir(path.join(__dirname, 'public/styles'), function(err, files) {
+					var isStylesheet = /\.css$/;
+					Markdown.themes = files.filter(function(file) {
+						return isStylesheet.test(file);
+					}).map(function(file) {
+						return {
+							name: file
+						}
+					});
 				});
 			},
 			markdownify: function(raw, callback) {
