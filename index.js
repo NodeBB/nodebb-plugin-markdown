@@ -23,6 +23,7 @@
 					});
 				});
 
+				Markdown.init();
 				callback();
 			},
 			init: function() {
@@ -105,6 +106,5 @@
 			}
 		};
 
-	Markdown.init();
 	module.exports = Markdown;
 })();

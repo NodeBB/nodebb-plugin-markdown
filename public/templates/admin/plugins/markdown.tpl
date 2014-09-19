@@ -84,7 +84,15 @@
 
 		$('#save').on('click', function() {
 			Settings.save('markdown', $('.markdown-settings'), function() {
-				socket.emit('admin.restart');
+				app.alert({
+					type: 'success',
+					alert_id: 'markdown-saved',
+					title: 'Reload Required',
+					message: 'Please reload your NodeBB to have your changes take effect',
+					clickfn: function() {
+						socket.emit('admin.reload');
+					}
+				})
 			});
 		});
 	});
