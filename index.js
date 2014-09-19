@@ -21,7 +21,7 @@
 				app.get('/markdown/config', function(req, res) {
 					res.json(200, {
 						highlight: Markdown.highlight ? 1 : 0,
-						theme: Markdown.config.highlightTheme || 'arta.css'
+						theme: Markdown.config.highlightTheme || 'codepen-embed.css'
 					});
 				});
 
