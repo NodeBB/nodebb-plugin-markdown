@@ -3,7 +3,6 @@ $(document).ready(function() {
 
 	Markdown.init = function() {
 		$.get(RELATIVE_PATH + '/markdown/config', function(config) {
-			console.log('config is', config);
 			window.Markdown = config;
 
 			var cssEl = document.createElement('link');
