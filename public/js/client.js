@@ -30,5 +30,5 @@ $(document).ready(function() {
 	};
 
 	$(window).on('action:connected', Markdown.init);
-	$(window).on('action:posts.loaded action:topic.loaded', Markdown.highlight);
+	$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', Markdown.highlight);
 });
