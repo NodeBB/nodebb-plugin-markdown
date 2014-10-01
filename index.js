@@ -56,7 +56,7 @@
 							if (!options[field]) {
 								_self.config[field] = defaults[field];
 							} else {
-								if (field !== 'langPrefix' && field !== 'highlightTheme') {
+								if (field !== 'langPrefix' && field !== 'highlightTheme' && field !== 'headerPrefix') {
 									_self.config[field] = options[field] === 'on' ? true : false;
 								} else {
 									_self.config[field] = options[field];
