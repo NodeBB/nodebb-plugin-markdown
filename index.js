@@ -45,7 +45,8 @@
 						'sanitize': true,
 						'smartLists': true,
 						'smartypants': false,
-						'langPrefix': 'lang-'
+						'langPrefix': 'lang-',
+						'headerPrefix': 'md-header-'
 					};
 
 				meta.settings.get('markdown', function(err, options) {
@@ -110,7 +111,8 @@
 							{ field: 'sanitize', value: 'on' },
 							{ field: 'smartLists', value: 'on' },
 							{ field: 'smartypants', value: 'off' },
-							{ field: 'langPrefix', value: 'lang-' }
+							{ field: 'langPrefix', value: 'lang-' },
+							{ field: 'headerPrefix', value: 'md-header-'}
 						];
 
 						async.each(defaults, function(optObj, next) {
