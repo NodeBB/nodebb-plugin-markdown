@@ -34,7 +34,7 @@
 				var	_self = this,
 					fields = [
 						'gfm', 'highlight', 'tables', 'breaks', 'pedantic',
-						'sanitize', 'smartLists', 'smartypants', 'langPrefix'
+						'sanitize', 'smartLists', 'smartypants', 'langPrefix', 'headerPrefix'
 					],
 					defaults = {
 						'gfm': true,
