@@ -65,7 +65,7 @@
 			<div class="form-group">
 				<label for="smartLists">
 					<input type="checkbox" name="smartLists" id="smartLists" />
-					Use smarter list behviour
+					Use smarter list behaviour
 				</label>
 			</div>
 			<div class="form-group">
