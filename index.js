@@ -19,7 +19,7 @@
 				app.get('/admin/plugins/markdown', middleware.admin.buildHeader, render);
 				app.get('/api/admin/plugins/markdown', render);
 				app.get('/markdown/config', function(req, res) {
-					res.json(200, {
+					res.status(200).json({
 						highlight: Markdown.highlight ? 1 : 0,
 						theme: Markdown.config.highlightTheme || 'codepen-embed.css'
 					});
