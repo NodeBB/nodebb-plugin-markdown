@@ -4,8 +4,10 @@
 	var	marked = require('marked'),
 		fs = require('fs'),
 		path = require('path'),
+		url = require('url'),
 		async = module.parent.require('async'),
 		meta = module.parent.require('./meta'),
+		nconf = module.parent.require('nconf'),
 
 		Markdown = {
 			config: {},
@@ -45,22 +47,21 @@
 						'sanitize': true,
 						'smartLists': true,
 						'smartypants': false,
+						'noFollow': true,
 						'langPrefix': 'lang-',
 						'headerPrefix': 'md-header-'
 					};
 
 				meta.settings.get('markdown', function(err, options) {
-					for(var field in options) {
-						if (options.hasOwnProperty(field)) {
-							// If not set in config (nil)
-							if (!options[field]) {
-								_self.config[field] = defaults[field];
+					for(var field in defaults) {
+						// If not set in config (nil)
+						if (!options.hasOwnProperty(field)) {
+							_self.config[field] = defaults[field];
+						} else {
+							if (field !== 'langPrefix' && field !== 'highlightTheme' && field !== 'headerPrefix') {
+								_self.config[field] = options[field] === 'on' ? true : false;
 							} else {
-								if (field !== 'langPrefix' && field !== 'highlightTheme' && field !== 'headerPrefix') {
-									_self.config[field] = options[field] === 'on' ? true : false;
-								} else {
-									_self.config[field] = options[field];
-								}
+								_self.config[field] = options[field];
 							}
 						}
 					}
@@ -84,7 +85,27 @@
 				});
 			},
 			markdownify: function(raw, callback) {
-				return marked(raw, callback);
+				marked(raw, function(err, html) {
+					callback(err, Markdown.addNofollow(html));
+				});
+			},
+			addNofollow: function(html) {
+				if (Markdown.config.noFollow) {
+					var parsed,
+						baseHost = url.parse(nconf.get('base_url')).host;
+
+					html = html.replace(/<a href="([^"]+)/g, function(match, anchorUrl) {
+						parsed = url.parse(anchorUrl, false, true);
+						if (parsed.host !== null && baseHost !== parsed.host) {
+							return '<a rel="nofollow" href="' + anchorUrl;
+						} else {
+							return match;
+						}
+					});
+					return html;
+				} else {
+					return html;
+				}
 			},
 			renderHelp: function(helpContent, callback) {
 				helpContent += "<h2>Markdown</h2><p>This forum is powered by Markdown. For full documentation, <a href=\"http://daringfireball.net/projects/markdown/syntax\">click here</a></p>";
