@@ -1,13 +1,14 @@
 (function() {
 	"use strict";
 
-	var	marked = require('marked'),
+	var	Remarkable = require('remarkable'),
 		fs = require('fs'),
 		path = require('path'),
 		url = require('url'),
 		async = module.parent.require('async'),
 		meta = module.parent.require('./meta'),
 		nconf = module.parent.require('nconf'),
+		parser,
 
 		Markdown = {
 			config: {},
@@ -23,7 +24,7 @@
 				app.get('/markdown/config', function(req, res) {
 					res.status(200).json({
 						highlight: Markdown.highlight ? 1 : 0,
-						theme: Markdown.config.highlightTheme || 'codepen-embed.css'
+						theme: Markdown.config.highlightTheme || 'railscasts.css'
 					});
 				});
 
@@ -35,21 +36,17 @@
 				// Load saved config
 				var	_self = this,
 					fields = [
-						'gfm', 'highlight', 'tables', 'breaks', 'pedantic',
-						'sanitize', 'smartLists', 'smartypants', 'langPrefix', 'headerPrefix'
+						'html', 'xhtmlOut', 'breaks', 'langPrefix', 'linkify', 'typographer'
 					],
 					defaults = {
-						'gfm': true,
-						'highlight': true,
-						'tables': true,
+						'html': false,
+						'xhtmlOut': true,
 						'breaks': true,
-						'pedantic': false,
-						'sanitize': true,
-						'smartLists': true,
-						'smartypants': false,
-						'noFollow': true,
-						'langPrefix': 'lang-',
-						'headerPrefix': 'md-header-'
+						'langPrefix': 'language-',
+						'linkify': true,
+						'typographer': false,
+						'highlight': true,
+						'highlightTheme': 'railscasts.css'
 					};
 
 				meta.settings.get('markdown', function(err, options) {
@@ -66,10 +63,10 @@
 						}
 					}
 
-					_self.highlight = _self.config.highlight;
+					_self.highlight = _self.config.highlight || true;
 					delete _self.config.highlight;
 
-					marked.setOptions(_self.config);
+					parser = new Remarkable(_self.config);
 				});
 			},
 			loadThemes: function() {
@@ -85,28 +82,26 @@
 				});
 			},
 			markdownify: function(raw, callback) {
-				marked(raw, function(err, html) {
-					callback(err, Markdown.addNofollow(html));
-				});
+				callback(undefined, parser.render(raw));
 			},
-			addNofollow: function(html) {
-				if (Markdown.config.noFollow) {
-					var parsed,
-						baseHost = url.parse(nconf.get('base_url')).host;
+			// addNofollow: function(html) {
+			// 	if (Markdown.config.noFollow) {
+			// 		var parsed,
+			// 			baseHost = url.parse(nconf.get('base_url')).host;
 
-					html = html.replace(/<a href="([^"]+)/g, function(match, anchorUrl) {
-						parsed = url.parse(anchorUrl, false, true);
-						if (parsed.host !== null && baseHost !== parsed.host) {
-							return '<a rel="nofollow" href="' + anchorUrl;
-						} else {
-							return match;
-						}
-					});
-					return html;
-				} else {
-					return html;
-				}
-			},
+			// 		html = html.replace(/<a href="([^"]+)/g, function(match, anchorUrl) {
+			// 			parsed = url.parse(anchorUrl, false, true);
+			// 			if (parsed.host !== null && baseHost !== parsed.host) {
+			// 				return '<a rel="nofollow" href="' + anchorUrl;
+			// 			} else {
+			// 				return match;
+			// 			}
+			// 		});
+			// 		return html;
+			// 	} else {
+			// 		return html;
+			// 	}
+			// },
 			renderHelp: function(helpContent, callback) {
 				helpContent += "<h2>Markdown</h2><p>This forum is powered by Markdown. For full documentation, <a href=\"http://daringfireball.net/projects/markdown/syntax\">click here</a></p>";
 				callback(null, helpContent);
@@ -120,26 +115,6 @@
 					});
 
 					callback(null, custom_header);
-				},
-				activate: function(id) {
-					if (id === 'nodebb-plugin-markdown') {
-						var defaults = [
-							{ field: 'gfm', value: 'on' },
-							{ field: 'highlight', value: 'on' },
-							{ field: 'tables', value: 'on' },
-							{ field: 'breaks', value: 'on' },
-							{ field: 'pedantic', value: 'off' },
-							{ field: 'sanitize', value: 'on' },
-							{ field: 'smartLists', value: 'on' },
-							{ field: 'smartypants', value: 'off' },
-							{ field: 'langPrefix', value: 'lang-' },
-							{ field: 'headerPrefix', value: 'md-header-'}
-						];
-
-						async.each(defaults, function(optObj, next) {
-							meta.settings.setOnEmpty('markdown', optObj.field, optObj.value, next);
-						});
-					}
 				}
 			}
 		};
