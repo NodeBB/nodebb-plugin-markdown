@@ -18,6 +18,6 @@
     "url": "https://github.com/julianlam/nodebb-plugin-markdown/issues"
   },
   "dependencies": {
-    "remarkable": "git://github.com/jonschlinkert/remarkable#105a06ceca7dc5310dc1d49a964fb7c802113b48"
+    "remarkable": "^1.2.0"
   }
 }
