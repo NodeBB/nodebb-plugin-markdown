@@ -1,103 +1,123 @@
-var	marked = require('marked'),
-	hljs = require('highlight.js'),
-	fs = require('fs'),
-	path = require('path'),
-	async = require('async'),
-	meta = module.parent.require('./meta'),
-	Markdown = {
-		config: {},
-		init: function() {
-			// Load saved config
-			var	_self = this,
-				fields = [
-					'gfm', 'highlight', 'tables', 'breaks', 'pedantic',
-					'sanitize', 'smartLists', 'smartypants', 'langPrefix'
-				],
-				defaults = [
-					true, true, true, true, false,
-					true, true, false, 'lang-'
-				],
-				hashes = fields.map(function(field) { return 'nodebb-plugin-markdown:options:' + field });
+(function() {
+	"use strict";
 
-			meta.configs.getFields(hashes, function(err, options) {
-				fields.forEach(function(field, idx) {
-					if (field !== 'langPrefix') {
-						if (options[idx] !== null) options[idx] = options[idx] === '1' ? true : false;
-						else options[idx] = defaults[idx];
-					} else if (!options[idx]) options[idx] = defaults[idx];
-
-					_self.config[field] = options[idx];
-				});
-
-				// Enable highlighting
-				if (_self.config.highlight) {
-					_self.config.highlight = function (code, lang) {
-						return hljs.highlightAuto(code).value;
-					};
+	var	Remarkable = require('remarkable'),
+		fs = require('fs'),
+		path = require('path'),
+		url = require('url'),
+		async = module.parent.require('async'),
+		meta = module.parent.require('./meta'),
+		nconf = module.parent.require('nconf'),
+		parser,
+		Markdown = {
+			config: {},
+			onLoad: function(app, middleware, controllers, callback) {
+				function render(req, res, next) {
+					res.render('admin/plugins/markdown', {
+						themes: Markdown.themes
+					});
 				}
 
-				marked.setOptions(_self.config);
-			});
-		},
-		markdownify: function(raw) {
-			return marked(raw);
-		},
-		reload: function(hookVals) {
-			var	isMarkdownPlugin = /^nodebb-plugin-markdown/;
-			if (isMarkdownPlugin.test(hookVals.key)) {
-				this.init();
-			}
-		},
-		admin: {
-			menu: function(custom_header, callback) {
-				custom_header.plugins.push({
-					"route": '/plugins/markdown',
-					"icon": 'icon-edit',
-					"name": 'Markdown'
+				app.get('/admin/plugins/markdown', middleware.admin.buildHeader, render);
+				app.get('/api/admin/plugins/markdown', render);
+				app.get('/markdown/config', function(req, res) {
+					res.status(200).json({
+						highlight: Markdown.highlight ? 1 : 0,
+						theme: Markdown.config.highlightTheme || 'railscasts.css'
+					});
 				});
 
-				return custom_header;
+				Markdown.init();
+				Markdown.loadThemes();
+				callback();
 			},
-			route: function(custom_routes, callback) {
-				fs.readFile(path.join(__dirname, 'public/templates/admin.tpl'), function(err, tpl) {
-					custom_routes.routes.push({
-						route: '/plugins/markdown',
-						method: "get",
-						options: function(req, res, callback) {
-							callback({
-								req: req,
-								res: res,
-								route: '/plugins/markdown',
-								name: Markdown,
-								content: tpl
-							});
+			init: function() {
+				// Load saved config
+				var	_self = this,
+					fields = [
+						'html', 'xhtmlOut', 'breaks', 'langPrefix', 'linkify', 'typographer'
+					],
+					defaults = {
+						'html': false,
+						'xhtmlOut': true,
+						'breaks': true,
+						'langPrefix': 'language-',
+						'linkify': true,
+						'typographer': false,
+						'highlight': true,
+						'highlightTheme': 'railscasts.css'
+					};
+
+				meta.settings.get('markdown', function(err, options) {
+					for(var field in defaults) {
+						// If not set in config (nil)
+						if (!options.hasOwnProperty(field)) {
+							_self.config[field] = defaults[field];
+						} else {
+							if (field !== 'langPrefix' && field !== 'highlightTheme' && field !== 'headerPrefix') {
+								_self.config[field] = options[field] === 'on' ? true : false;
+							} else {
+								_self.config[field] = options[field];
+							}
+						}
+					}
+
+					_self.highlight = _self.config.highlight || true;
+					delete _self.config.highlight;
+
+					parser = new Remarkable(_self.config);
+				});
+			},
+			loadThemes: function() {
+				fs.readdir(path.join(__dirname, 'public/styles'), function(err, files) {
+					var isStylesheet = /\.css$/;
+					Markdown.themes = files.filter(function(file) {
+						return isStylesheet.test(file);
+					}).map(function(file) {
+						return {
+							name: file
 						}
 					});
-
-					callback(null, custom_routes);
 				});
 			},
-			activate: function(id) {
-				if (id === 'nodebb-plugin-markdown') {
-					var defaults = [
-						{ field: 'gfm', value: '1' },
-						{ field: 'highlight', value: '1' },
-						{ field: 'tables', value: '1' },
-						{ field: 'breaks', value: '1' },
-						{ field: 'pedantic', value: '0' },
-						{ field: 'sanitize', value: '1' },
-						{ field: 'smartLists', value: '1' },
-						{ field: 'smartypants', value: '0' },
-						{ field: 'langPrefix', value: 'lang-' }
-					];
+			markdownify: function(raw, callback) {
+				callback(undefined, parser.render(raw));
+			},
+			// addNofollow: function(html) {
+			// 	if (Markdown.config.noFollow) {
+			// 		var parsed,
+			// 			baseHost = url.parse(nconf.get('base_url')).host;
 
-					async.each(defaults, function(optObj, next) {
-						meta.configs.setOnEmpty('nodebb-plugin-markdown:options:' + optObj.field, optObj.value, next);
+			// 		html = html.replace(/<a href="([^"]+)/g, function(match, anchorUrl) {
+			// 			parsed = url.parse(anchorUrl, false, true);
+			// 			if (parsed.host !== null && baseHost !== parsed.host) {
+			// 				return '<a rel="nofollow" href="' + anchorUrl;
+			// 			} else {
+			// 				return match;
+			// 			}
+			// 		});
+			// 		return html;
+			// 	} else {
+			// 		return html;
+			// 	}
+			// },
+			renderHelp: function(helpContent, callback) {
+				helpContent += "<h2>Markdown</h2><p>This forum is powered by Markdown. For full documentation, <a href=\"http://daringfireball.net/projects/markdown/syntax\">click here</a></p>";
+				callback(null, helpContent);
+			},
+			admin: {
+				menu: function(custom_header, callback) {
+					custom_header.plugins.push({
+						"route": '/plugins/markdown',
+						"icon": 'fa-edit',
+						"name": 'Markdown'
 					});
+
+					callback(null, custom_header);
 				}
 			}
-		}
-	};
+		};
 
-Markdown.init();
-module.exports = Markdown;
+	module.exports = Markdown;
+})();
+

@@ -1,11 +1,8 @@
 {
   "name": "nodebb-plugin-markdown",
-  "version": "0.1.9",
+  "version": "0.7.3",
   "description": "A Markdown parser for NodeBB",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/julianlam/nodebb-plugin-markdown"
@@ -16,13 +13,11 @@
     "markdown"
   ],
   "author": "Julian Lam <julian@designcreateplay.com>",
-  "license": "BSD-2-Clause",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/julianlam/nodebb-plugin-markdown/issues"
   },
   "dependencies": {
-    "marked": "~0.2.9",
-    "highlight.js": "~7.3.0",
-    "async": "~0.2.9"
+    "remarkable": "^1.3.0"
   }
 }
