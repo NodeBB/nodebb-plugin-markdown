@@ -17,8 +17,9 @@
     "templates": "./public/templates",
     "hooks": [
         { "hook": "static:app.load", "method": "onLoad" },
-        { "hook": "filter:post.parse", "method": "markdownify", "priority": 5 },
-        { "hook": "filter:post.parseSignature", "method": "markdownify", "priority": 5 },
+        { "hook": "filter:parse.post", "method": "parsePost", "priority": 5 },
+        { "hook": "filter:parse.signature", "method": "parseSignature", "priority": 5 },
+        { "hook": "filter:parse.raw", "method": "parseRaw", "priority": 5 },
         { "hook": "filter:composer.help", "method": "renderHelp" },
         { "hook": "filter:admin.header.build", "method": "admin.menu" },
         { "hook": "action:plugin.activate", "method": "admin.activate" }

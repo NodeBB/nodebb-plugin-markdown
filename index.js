@@ -80,8 +80,20 @@
 					});
 				});
 			},
-			markdownify: function(raw, callback) {
-				callback(undefined, parser.render(raw));
+			parsePost: function(data, callback) {
+				if (data && data.postData && data.postData.content) {
+					data.postData.content = parser.render(data.postData.content);
+				}
+				callback(null, data);
+			},
+			parseSignature: function(data, callback) {
+				if (data && data.userData && data.userData.signature) {
+					data.userData.signature = parser.render(data.userData.signature);
+				}
+				callback(null, data);
+			},
+			parseRaw: function(raw, callback) {
+				callback(null, raw ? parser.render(raw) : raw);
 			},
 			// addNofollow: function(html) {
 			// 	if (Markdown.config.noFollow) {
