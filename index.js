@@ -18,9 +18,9 @@
 					});
 				}
 
-				params.app.get('/admin/plugins/markdown', params.middleware.admin.buildHeader, render);
-				params.app.get('/api/admin/plugins/markdown', render);
-				params.app.get('/markdown/config', function(req, res) {
+				params.router.get('/admin/plugins/markdown', params.middleware.admin.buildHeader, render);
+				params.router.get('/api/admin/plugins/markdown', render);
+				params.router.get('/markdown/config', function(req, res) {
 					res.status(200).json({
 						highlight: Markdown.highlight ? 1 : 0,
 						theme: Markdown.config.highlightTheme || 'railscasts.css'
