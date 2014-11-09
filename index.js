@@ -11,16 +11,16 @@
 		parser,
 		Markdown = {
 			config: {},
-			onLoad: function(app, middleware, controllers, callback) {
+			onLoad: function(params, callback) {
 				function render(req, res, next) {
 					res.render('admin/plugins/markdown', {
 						themes: Markdown.themes
 					});
 				}
 
-				app.get('/admin/plugins/markdown', middleware.admin.buildHeader, render);
-				app.get('/api/admin/plugins/markdown', render);
-				app.get('/markdown/config', function(req, res) {
+				params.app.get('/admin/plugins/markdown', params.middleware.admin.buildHeader, render);
+				params.app.get('/api/admin/plugins/markdown', render);
+				params.app.get('/markdown/config', function(req, res) {
 					res.status(200).json({
 						highlight: Markdown.highlight ? 1 : 0,
 						theme: Markdown.config.highlightTheme || 'railscasts.css'
