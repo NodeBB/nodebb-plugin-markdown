@@ -8,7 +8,10 @@ $(document).ready(function() {
 			var cssEl = document.createElement('link');
 			cssEl.rel = 'stylesheet';
 			cssEl.href = RELATIVE_PATH + '/plugins/nodebb-plugin-markdown/styles/' + config.theme;
-			document.head.appendChild(cssEl);
+			var head = document.head || document.getElementsByTagName("head")[0];
+			if (head) {
+				head.appendChild(cssEl);
+			}
 		});
 	};
 
