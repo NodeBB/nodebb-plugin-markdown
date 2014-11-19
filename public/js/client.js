@@ -46,7 +46,7 @@ $(document).ready(function() {
 
 	$(window).on('action:connected', Markdown.init);
 	$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', {
-		selector: '.topic-text pre code'
+		selector: '.topic-text pre code, .post-content pre code'
 	}, Markdown.highlight);
 	$(window).on('action:composer.preview', {
 		selector: '.composer .preview pre code'
