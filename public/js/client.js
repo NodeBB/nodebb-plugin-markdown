@@ -24,17 +24,19 @@ $(document).ready(function() {
 		});
 	};
 
-	Markdown.highlight = function(ev) {
+	Markdown.highlight = function(e) {
 		if (config) {
-			highlight();
+			highlight(e.data.selector);
 		} else {
-			done = highlight;
+			done = function() {
+				highlight(e.data.selector);
+			}
 		}
 	};
 
-	function highlight() {
+	function highlight(selector) {
 		if (config.highlight) {
-			var codeBlocks = $('.topic-text pre code');
+			var codeBlocks = $(selector);
 
 			codeBlocks.each(function(i, block) {
 				hljs.highlightBlock(block);
@@ -43,5 +45,10 @@ $(document).ready(function() {
 	}
 
 	$(window).on('action:connected', Markdown.init);
-	$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', Markdown.highlight);
+	$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', {
+		selector: '.topic-text pre code'
+	}, Markdown.highlight);
+	$(window).on('action:composer.preview', {
+		selector: '.composer .preview pre code'
+	}, Markdown.highlight);
 });
