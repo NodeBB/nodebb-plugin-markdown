@@ -11,6 +11,7 @@
 		parser,
 		Markdown = {
 			config: {},
+
 			onLoad: function(params, callback) {
 				function render(req, res, next) {
 					res.render('admin/plugins/markdown', {
@@ -31,6 +32,7 @@
 				Markdown.loadThemes();
 				callback();
 			},
+
 			init: function() {
 				// Load saved config
 				var	_self = this,
@@ -68,6 +70,7 @@
 					parser = new Remarkable(_self.config);
 				});
 			},
+
 			loadThemes: function() {
 				fs.readdir(path.join(__dirname, 'public/styles'), function(err, files) {
 					var isStylesheet = /\.css$/;
@@ -80,18 +83,21 @@
 					});
 				});
 			},
+
 			parsePost: function(data, callback) {
 				if (data && data.postData && data.postData.content) {
 					data.postData.content = parser.render(data.postData.content);
 				}
 				callback(null, data);
 			},
+
 			parseSignature: function(data, callback) {
 				if (data && data.userData && data.userData.signature) {
 					data.userData.signature = parser.render(data.userData.signature);
 				}
 				callback(null, data);
 			},
+
 			parseRaw: function(raw, callback) {
 				callback(null, raw ? parser.render(raw) : raw);
 			},
@@ -117,6 +123,17 @@
 				helpContent += "<h2>Markdown</h2><p>This forum is powered by Markdown. For full documentation, <a href=\"http://daringfireball.net/projects/markdown/syntax\">click here</a></p>";
 				callback(null, helpContent);
 			},
+
+			registerFormatting: function(payload, callback) {
+				var formatting = ['bold', 'italic', 'list', 'link'];
+
+				formatting.forEach(function(format) {
+					payload.options.push({ name: format, className: 'fa fa-' + format });
+				});
+
+				callback(null, payload);
+			},
+
 			admin: {
 				menu: function(custom_header, callback) {
 					custom_header.plugins.push({
