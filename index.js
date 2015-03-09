@@ -127,8 +127,9 @@
 			registerFormatting: function(payload, callback) {
 				var formatting = ['bold', 'italic', 'list', 'link'];
 
+				formatting.reverse();
 				formatting.forEach(function(format) {
-					payload.options.push({ name: format, className: 'fa fa-' + format });
+					payload.options.unshift({ name: format, className: 'fa fa-' + format });
 				});
 
 				callback(null, payload);
