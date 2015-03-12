@@ -23,5 +23,8 @@
         { "hook": "filter:composer.help", "method": "renderHelp" },
         { "hook": "filter:admin.header.build", "method": "admin.menu" },
         { "hook": "filter:composer.formatting", "method": "registerFormatting" }
-    ]
+    ],
+    "nbbpm": {
+        "compatibility": "^0.6.0"
+    }
 }
