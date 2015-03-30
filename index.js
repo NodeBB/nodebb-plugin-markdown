@@ -1,7 +1,7 @@
 (function() {
 	"use strict";
 
-	var	Remarkable = require('remarkable'),
+	var	MarkdownIt = require('markdown-it'),
 		fs = require('fs'),
 		path = require('path'),
 		url = require('url'),
@@ -67,7 +67,18 @@
 					_self.highlight = _self.config.highlight || true;
 					delete _self.config.highlight;
 
-					parser = new Remarkable(_self.config);
+					parser = new MarkdownIt(_self.config);
+
+					// Override the link validator from MarkdownIt, so you cannot link directly to a data-uri
+					parser.validateLink = function(url) {
+						var BAD_PROTOCOLS    = [ 'vbscript', 'javascript', 'file', 'data' ];
+						var str = url.trim().toLowerCase();
+
+						if (str.indexOf(':') >= 0 && BAD_PROTOCOLS.indexOf(str.split(':')[0]) >= 0) {
+							return false;
+						}
+						return true;
+					}
 				});
 			},
 

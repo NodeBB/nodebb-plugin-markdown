@@ -18,7 +18,7 @@
     "url": "https://github.com/julianlam/nodebb-plugin-markdown/issues"
   },
   "dependencies": {
-    "remarkable": "^1.3.0"
+    "markdown-it": "^4.0.3"
   },
   "nbbpm": {
     "compatibility": "^0.7.0"
