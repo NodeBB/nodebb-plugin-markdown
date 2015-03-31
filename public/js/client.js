@@ -2,7 +2,7 @@
 /* global hljs, RELATIVE_PATH, require */
 
 $(document).ready(function() {
-	var Markdown = {}, config, done;
+	var Markdown = {}, config;
 
 	$.get(RELATIVE_PATH + '/markdown/config', function(_config) {
 		config = _config;
@@ -16,34 +16,43 @@ $(document).ready(function() {
 			head.appendChild(cssEl);
 		}
 
-		if (done) {
-			done();
-		}
+		$(window).trigger('markdown.ready');
 	});
 	
-	Markdown.highlight = function(e) {
-		if (config) {
-			highlight(e.data.selector);
+	Markdown.highlight = function(data) {
+		if (data instanceof jQuery.Event) {
+			highlight($(data.data.selector));
 		} else {
-			done = function() {
-				highlight(e.data.selector);
-			}
+			highlight(data);
 		}
 	};
 
-	function highlight(selector) {
+	function highlight(elements) {
+		if (!config) {
+			return $(window).on('markdown.ready', highlight.bind(null, elements));
+		}
+
 		if (config.highlight) {
-			var codeBlocks = $(selector);
+			var codeBlocks = elements;
 
 			codeBlocks.each(function(i, block) {
+				$(block.parentNode).addClass('markdown-highlight');
 				hljs.highlightBlock(block);
 			});
 		}
 	}
 
-	$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', {
-		selector: '.topic-text pre code, .post-content pre code'
-	}, Markdown.highlight);
+	// If NodeBB supports components, send elements in directly, otherwise fall back to passing in selector
+	if (window.hasOwnProperty('components')) {
+		$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', function() {
+			Markdown.highlight(components.get('post/content').find('pre code'));
+		});
+	} else {
+		$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', {
+			selector: '.topic-text pre code, .post-content pre code'
+		}, Markdown.highlight);
+	}
+
 	$(window).on('action:composer.preview', {
 		selector: '.composer .preview pre code'
 	}, Markdown.highlight);
