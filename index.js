@@ -68,17 +68,6 @@
 					delete _self.config.highlight;
 
 					parser = new MarkdownIt(_self.config);
-
-					// Override the link validator from MarkdownIt, so you cannot link directly to a data-uri
-					parser.validateLink = function(url) {
-						var BAD_PROTOCOLS    = [ 'vbscript', 'javascript', 'file', 'data' ];
-						var str = url.trim().toLowerCase();
-
-						if (str.indexOf(':') >= 0 && BAD_PROTOCOLS.indexOf(str.split(':')[0]) >= 0) {
-							return false;
-						}
-						return true;
-					}
 				});
 			},
 
