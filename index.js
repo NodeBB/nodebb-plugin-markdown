@@ -68,6 +68,8 @@
 					delete _self.config.highlight;
 
 					parser = new MarkdownIt(_self.config);
+
+					Markdown.updateParserRules(parser);
 				});
 			},
 
@@ -133,6 +135,21 @@
 				});
 
 				callback(null, payload);
+			},
+
+			updateParserRules: function(parser) {
+				// Update renderer to add some classes to all images
+				parser.renderer.rules.image = function (tokens, idx, options, env, self) {
+					var aIndex = tokens[idx].attrIndex('class');
+
+					if (aIndex < 0) {
+						tokens[idx].attrPush(['class', 'img-responsive img-markdown']);
+					} else {
+						tokens[idx].attrs[aIndex][1] = tokens[idx].attrs[aIndex][1] + ' img-responsive img-markdown';
+					}
+
+					return self.renderToken(tokens, idx, options);
+				};
 			},
 
 			admin: {
