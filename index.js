@@ -8,6 +8,7 @@
 		async = module.parent.require('async'),
 		meta = module.parent.require('./meta'),
 		nconf = module.parent.require('nconf'),
+		plugins = module.parent.exports,
 		parser,
 		Markdown = {
 			config: {},
@@ -150,6 +151,8 @@
 
 					return self.renderToken(tokens, idx, options);
 				};
+
+				plugins.fireHook('action:markdown.updateParserRules', parser);
 			},
 
 			admin: {
