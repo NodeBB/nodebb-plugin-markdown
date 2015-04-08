@@ -140,6 +140,10 @@
 
 			updateParserRules: function(parser) {
 				// Update renderer to add some classes to all images
+				var renderImage = parser.renderer.rules.image || function(tokens, idx, options, env, self) {
+						renderToken.apply(self, arguments);
+					};
+
 				parser.renderer.rules.image = function (tokens, idx, options, env, self) {
 					var aIndex = tokens[idx].attrIndex('class');
 
@@ -149,7 +153,7 @@
 						tokens[idx].attrs[aIndex][1] = tokens[idx].attrs[aIndex][1] + ' img-responsive img-markdown';
 					}
 
-					return self.renderToken(tokens, idx, options);
+					return renderImage(tokens, idx, options, env, self);
 				};
 
 				plugins.fireHook('action:markdown.updateParserRules', parser);
