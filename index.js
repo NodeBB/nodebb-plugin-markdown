@@ -145,18 +145,31 @@
 					};
 
 				parser.renderer.rules.image = function (tokens, idx, options, env, self) {
-					var aIndex = tokens[idx].attrIndex('class');
+					var classIdx = tokens[idx].attrIndex('class'),
+						srcIdx = tokens[idx].attrIndex('src');
 
-					if (aIndex < 0) {
+					// Validate the url
+					if (!Markdown.isUrlValid(tokens[idx].attrs[srcIdx][1])) { return ''; }
+
+					if (classIdx < 0) {
 						tokens[idx].attrPush(['class', 'img-responsive img-markdown']);
 					} else {
-						tokens[idx].attrs[aIndex][1] = tokens[idx].attrs[aIndex][1] + ' img-responsive img-markdown';
+						tokens[idx].attrs[classIdx][1] = tokens[idx].attrs[classIdx][1] + ' img-responsive img-markdown';
 					}
 
 					return renderImage(tokens, idx, options, env, self);
 				};
 
 				plugins.fireHook('action:markdown.updateParserRules', parser);
+			},
+
+			isUrlValid: function(src) {
+				var urlObj = url.parse(src, false, true);
+				if (urlObj.host === null && new String(urlObj.pathname).startsWith(nconf.get('relative_path') + nconf.get('upload_url')) !== 0) {
+					return false;
+				} else {
+					return true;
+				}
 			},
 
 			admin: {
