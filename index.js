@@ -164,12 +164,17 @@
 			},
 
 			isUrlValid: function(src) {
-				var urlObj = url.parse(src, false, true);
-				if (urlObj.host === null && !urlObj.pathname.toString().startsWith(nconf.get('relative_path') + nconf.get('upload_url'))) {
+				try {
+					var urlObj = url.parse(src, false, true);
+					if (urlObj.host === null && !urlObj.pathname.toString().startsWith(nconf.get('relative_path') + nconf.get('upload_url'))) {
+						return false;
+					} else {
+						return true;
+					}
+				} catch (e) {
 					return false;
-				} else {
-					return true;
 				}
+
 			},
 
 			admin: {
