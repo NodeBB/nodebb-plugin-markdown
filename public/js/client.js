@@ -42,22 +42,16 @@ $(document).ready(function() {
 		}
 	}
 
-	// If NodeBB supports components, send elements in directly, otherwise fall back to passing in selector
-	if (window.hasOwnProperty('components')) {
-		$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', function() {
-			Markdown.highlight(components.get('post/content').find('pre code'));
-		});
-	} else {
-		$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', {
-			selector: '.topic-text pre code, .post-content pre code'
-		}, Markdown.highlight);
-	}
-
 	$(window).on('action:composer.preview', {
 		selector: '.composer .preview pre code'
 	}, Markdown.highlight);
 
-	require(['composer/formatting', 'composer/controls'], function(formatting, controls) {
+	require(['composer/formatting', 'composer/controls', 'components'], function(formatting, controls, components) {
+		
+		$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', function() {
+			Markdown.highlight(components.get('post/content').find('pre code'));
+		});
+		
 		formatting.addButtonDispatch('bold', function(textarea, selectionStart, selectionEnd){
 			if(selectionStart === selectionEnd){
 				controls.insertIntoTextarea(textarea, '**bolded text**');
