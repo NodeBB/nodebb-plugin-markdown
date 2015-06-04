@@ -9,7 +9,8 @@
     ],
     "scripts": [
         "public/js/highlight.js",
-        "public/js/client.js"
+        "public/js/client.js",
+        "public/js/admin.js"
     ],
     "staticDirs": {
         "styles": "public/styles"
