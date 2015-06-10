@@ -13,7 +13,8 @@
         "public/js/admin.js"
     ],
     "staticDirs": {
-        "styles": "public/styles"
+        "styles": "public/styles",
+        "js": "public/js"
     },
     "templates": "./public/templates",
     "hooks": [
