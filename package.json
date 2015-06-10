@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-markdown",
-  "version": "0.7.3",
+  "version": "2.1.8",
   "description": "A Markdown parser for NodeBB",
   "main": "index.js",
   "repository": {
@@ -18,6 +18,9 @@
     "url": "https://github.com/julianlam/nodebb-plugin-markdown/issues"
   },
   "dependencies": {
-    "remarkable": "^1.3.0"
+    "markdown-it": "^4.1.0"
+  },
+  "nbbpm": {
+    "compatibility": "^0.7.0"
   }
 }

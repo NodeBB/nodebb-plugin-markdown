@@ -1,34 +1,101 @@
+"use strict";
+/* global hljs, RELATIVE_PATH, require */
+
 $(document).ready(function() {
-	var Markdown = {};
+	var Markdown = {}, config;
 
-	Markdown.init = function() {
-		$.get(RELATIVE_PATH + '/markdown/config', function(config) {
-			window.Markdown = config;
+	$.get(RELATIVE_PATH + '/markdown/config', function(_config) {
+		config = _config;
 
-			var cssEl = document.createElement('link');
-			cssEl.rel = 'stylesheet';
-			cssEl.href = RELATIVE_PATH + '/plugins/nodebb-plugin-markdown/styles/' + config.theme;
-			document.head.appendChild(cssEl);
-		});
-	};
+		var cssEl = document.createElement('link');
+		cssEl.rel = 'stylesheet';
+		cssEl.href = RELATIVE_PATH + '/plugins/nodebb-plugin-markdown/styles/' + config.theme;
 
-	Markdown.highlight = function(ev, retry) {
-		if (window.Markdown) {
-			if (window.Markdown.highlight) {
-				var codeBlocks = $('.topic-text pre code');
+		var head = document.head || document.getElementsByTagName("head")[0];
+		if (head) {
+			head.appendChild(cssEl);
+		}
 
-				codeBlocks.each(function(i, block) {
-					hljs.highlightBlock(block);
-				});
-			}
-		} else if (!retry) {
-			// Try once more in one second
-			setTimeout(function() {
-				Markdown.highlight(null, true);
-			}, 1000);
+		$(window).trigger('markdown.ready');
+	});
+	
+	Markdown.highlight = function(data) {
+		if (data instanceof jQuery.Event) {
+			highlight($(data.data.selector));
+		} else {
+			highlight(data);
 		}
 	};
 
-	$(window).on('action:connected', Markdown.init);
-	$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', Markdown.highlight);
+	function highlight(elements) {
+		if (!config) {
+			return $(window).on('markdown.ready', highlight.bind(null, elements));
+		}
+
+		if (config.highlight) {
+			var codeBlocks = elements;
+
+			codeBlocks.each(function(i, block) {
+				$(block.parentNode).addClass('markdown-highlight');
+				hljs.highlightBlock(block);
+			});
+		}
+	}
+
+	$(window).on('action:composer.preview', {
+		selector: '.composer .preview pre code'
+	}, Markdown.highlight);
+
+	require(['composer/formatting', 'composer/controls', 'components'], function(formatting, controls, components) {
+		
+		$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', function() {
+			Markdown.highlight(components.get('post/content').find('pre code'));
+		});
+		
+		formatting.addButtonDispatch('bold', function(textarea, selectionStart, selectionEnd){
+			if(selectionStart === selectionEnd){
+				controls.insertIntoTextarea(textarea, '**bolded text**');
+				controls.updateTextareaSelection(textarea, selectionStart + 2, selectionStart + 13);
+			} else {
+				controls.wrapSelectionInTextareaWith(textarea, '**');
+				controls.updateTextareaSelection(textarea, selectionStart + 2, selectionEnd + 2);
+			}
+		});
+
+		formatting.addButtonDispatch('italic', function(textarea, selectionStart, selectionEnd){
+			if(selectionStart === selectionEnd){
+				controls.insertIntoTextarea(textarea, "*italicised text*");
+				controls.updateTextareaSelection(textarea, selectionStart + 1, selectionStart + 16);
+			} else {
+				controls.wrapSelectionInTextareaWith(textarea, '*');
+				controls.updateTextareaSelection(textarea, selectionStart + 1, selectionEnd + 1);
+			}
+		});
+
+		formatting.addButtonDispatch('list', function(textarea, selectionStart, selectionEnd){
+			if(selectionStart === selectionEnd){
+				controls.insertIntoTextarea(textarea, "\n* list item");
+
+				// Highlight "list item"
+				controls.updateTextareaSelection(textarea, selectionStart + 3, selectionStart + 12);
+			} else {
+				controls.wrapSelectionInTextareaWith(textarea, '\n* ', '');
+				controls.updateTextareaSelection(textarea, selectionStart + 3, selectionEnd + 3);
+			}
+		});
+
+		formatting.addButtonDispatch('link', function(textarea, selectionStart, selectionEnd){
+			if(selectionStart === selectionEnd){
+				controls.insertIntoTextarea(textarea, "[link text](link url)");
+
+				// Highlight "link url"
+				controls.updateTextareaSelection(textarea, selectionStart + 12, selectionEnd + 20);
+			} else {
+				controls.wrapSelectionInTextareaWith(textarea, '[', '](link url)');
+
+				// Highlight "link url"
+				controls.updateTextareaSelection(textarea, selectionEnd + 3, selectionEnd + 11);
+			}
+		});
+	});
 });
