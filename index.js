@@ -12,7 +12,6 @@
 		parser,
 		Markdown = {
 			config: {},
-
 			onLoad: function(params, callback) {
 				function render(req, res, next) {
 					res.render('admin/plugins/markdown', {
