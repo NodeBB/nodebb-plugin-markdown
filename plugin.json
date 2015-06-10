@@ -8,7 +8,6 @@
         "public/less/default.less"
     ],
     "scripts": [
-        "public/js/highlight.js",
         "public/js/client.js",
         "public/js/admin.js"
     ],
