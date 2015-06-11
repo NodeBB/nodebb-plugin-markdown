@@ -5,7 +5,6 @@
 		fs = require('fs'),
 		path = require('path'),
 		url = require('url'),
-		async = module.parent.require('async'),
 		meta = module.parent.require('./meta'),
 		nconf = module.parent.require('nconf'),
 		plugins = module.parent.exports,
@@ -122,8 +121,10 @@
 			// 	}
 			// },
 			renderHelp: function(helpContent, callback) {
-				helpContent += "<h2>Markdown</h2><p>This forum is powered by Markdown. For full documentation, <a href=\"http://daringfireball.net/projects/markdown/syntax\">click here</a></p>";
-				callback(null, helpContent);
+				plugins.fireHook('filter:parse.raw', '## Markdown\nThis forum is powered by Markdown. For full documentation, [click here](http://daringfireball.net/projects/markdown/syntax)', function(err, parsed) {
+					helpContent += parsed;
+					callback(null, helpContent);
+				});
 			},
 
 			registerFormatting: function(payload, callback) {
