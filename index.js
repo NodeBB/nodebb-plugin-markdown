@@ -36,7 +36,7 @@
 				// Load saved config
 				var	_self = this,
 					fields = [
-						'html', 'xhtmlOut', 'breaks', 'langPrefix', 'linkify', 'typographer'
+						'html', 'xhtmlOut', 'breaks', 'langPrefix', 'linkify', 'typographer', 'externalBlank', 'nofollow'
 					],
 					defaults = {
 						'html': false,
@@ -46,7 +46,9 @@
 						'linkify': true,
 						'typographer': false,
 						'highlight': true,
-						'highlightTheme': 'railscasts.css'
+						'highlightTheme': 'railscasts.css',
+						'externalBlank': false,
+						'nofollow': true
 					};
 
 				meta.settings.get('markdown', function(err, options) {
@@ -102,24 +104,6 @@
 			parseRaw: function(raw, callback) {
 				callback(null, raw ? parser.render(raw) : raw);
 			},
-			// addNofollow: function(html) {
-			// 	if (Markdown.config.noFollow) {
-			// 		var parsed,
-			// 			baseHost = url.parse(nconf.get('base_url')).host;
-
-			// 		html = html.replace(/<a href="([^"]+)/g, function(match, anchorUrl) {
-			// 			parsed = url.parse(anchorUrl, false, true);
-			// 			if (parsed.host !== null && baseHost !== parsed.host) {
-			// 				return '<a rel="nofollow" href="' + anchorUrl;
-			// 			} else {
-			// 				return match;
-			// 			}
-			// 		});
-			// 		return html;
-			// 	} else {
-			// 		return html;
-			// 	}
-			// },
 			renderHelp: function(helpContent, callback) {
 				plugins.fireHook('filter:parse.raw', '## Markdown\nThis forum is powered by Markdown. For full documentation, [click here](http://daringfireball.net/projects/markdown/syntax)', function(err, parsed) {
 					helpContent += parsed;
@@ -141,7 +125,10 @@
 			updateParserRules: function(parser) {
 				// Update renderer to add some classes to all images
 				var renderImage = parser.renderer.rules.image || function(tokens, idx, options, env, self) {
-						renderToken.apply(self, arguments);
+						return self.renderToken.apply(self, arguments);
+					},
+					renderLink = parser.renderer.rules.link_open || function(tokens, idx, options, env, self) {
+						return self.renderToken.apply(self, arguments);
 					};
 
 				parser.renderer.rules.image = function (tokens, idx, options, env, self) {
@@ -160,6 +147,33 @@
 					return renderImage(tokens, idx, options, env, self);
 				};
 
+				parser.renderer.rules.link_open = function(tokens, idx, options, env, self) {
+					// Add target="_blank" to all links
+					var targetIdx = tokens[idx].attrIndex('target'),
+						relIdx = tokens[idx].attrIndex('rel'),
+						hrefIdx = tokens[idx].attrIndex('href');
+
+					if (Markdown.isExternalLink(tokens[idx].attrs[hrefIdx][1])) {
+						if (Markdown.config.externalBlank) {
+							if (targetIdx < 0) {
+								tokens[idx].attrPush(['target', '_blank']);
+							} else {
+								tokens[idx].attrs[targetIdx][1] = '_blank';
+							}
+						}
+						
+						if (Markdown.config.nofollow) {
+							if (relIdx < 0) {
+								tokens[idx].attrPush(['rel', 'nofollow']);
+							} else {
+								tokens[idx].attrs[relIdx][1] = 'nofollow';
+							}
+						}
+					}
+
+					return renderLink(tokens, idx, options, env, self);
+				};
+
 				plugins.fireHook('action:markdown.updateParserRules', parser);
 			},
 
@@ -174,7 +188,21 @@
 				} catch (e) {
 					return false;
 				}
+			},
 
+			isExternalLink: function(urlString) {
+				var urlObj = url.parse(urlString),
+					baseUrlObj = url.parse(nconf.get('url'));
+
+				if (
+					urlObj.host === null ||	// Relative paths are always internal links...
+					(urlObj.host === baseUrlObj.host && urlObj.protocol === baseUrlObj.protocol &&	// Otherwise need to check that protocol and host match
+					(nconf.get('relative_path').length > 0 ? urlObj.pathname.indexOf(nconf.get('relative_path')) === 0 : true))	// Subfolder installs need this additional check
+				) {
+					return false;
+				} else {
+					return true;
+				}
 			},
 
 			admin: {

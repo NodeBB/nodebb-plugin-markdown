@@ -9,6 +9,8 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 				'breaks': true,
 				'langPrefix': 'language-',
 				'linkify': true,
+				'externalBlank': false,
+				'nofollow': true,
 				'typographer': false,
 				'highlight': true,
 				'highlightTheme': 'railscasts.css'

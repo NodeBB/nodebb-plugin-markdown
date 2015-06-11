@@ -41,6 +41,18 @@
 								</label>
 							</div>
 							<div class="form-group">
+								<label for="externalBlank">
+									<input type="checkbox" name="externalBlank" id="externalBlank" />
+									Open external links in a new tab/window
+								</label>
+							</div>
+							<div class="form-group">
+								<label for="nofollow">
+									<input type="checkbox" name="nofollow" id="nofollow" />
+									Tell web crawlers that external links are not to be followed
+								</label>
+							</div>
+							<div class="form-group">
 								<label for="typographer">
 									<input type="checkbox" name="typographer" id="typographer" />
 									Enable smartypants and other sweet transforms (e.g. <code>(c)</code> &rarr; <code>&copy;</code>)
