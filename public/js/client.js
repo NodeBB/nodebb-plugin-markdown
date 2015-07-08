@@ -60,50 +60,52 @@ $(document).ready(function() {
 			Markdown.highlight(components.get('post/content').find('pre code'));
 		});
 		
-		formatting.addButtonDispatch('bold', function(textarea, selectionStart, selectionEnd){
-			if(selectionStart === selectionEnd){
-				controls.insertIntoTextarea(textarea, '**bolded text**');
-				controls.updateTextareaSelection(textarea, selectionStart + 2, selectionStart + 13);
-			} else {
-				controls.wrapSelectionInTextareaWith(textarea, '**');
-				controls.updateTextareaSelection(textarea, selectionStart + 2, selectionEnd + 2);
-			}
-		});
+		if (formatting && controls) {
+			formatting.addButtonDispatch('bold', function(textarea, selectionStart, selectionEnd){
+				if(selectionStart === selectionEnd){
+					controls.insertIntoTextarea(textarea, '**bolded text**');
+					controls.updateTextareaSelection(textarea, selectionStart + 2, selectionStart + 13);
+				} else {
+					controls.wrapSelectionInTextareaWith(textarea, '**');
+					controls.updateTextareaSelection(textarea, selectionStart + 2, selectionEnd + 2);
+				}
+			});
 
-		formatting.addButtonDispatch('italic', function(textarea, selectionStart, selectionEnd){
-			if(selectionStart === selectionEnd){
-				controls.insertIntoTextarea(textarea, "*italicised text*");
-				controls.updateTextareaSelection(textarea, selectionStart + 1, selectionStart + 16);
-			} else {
-				controls.wrapSelectionInTextareaWith(textarea, '*');
-				controls.updateTextareaSelection(textarea, selectionStart + 1, selectionEnd + 1);
-			}
-		});
+			formatting.addButtonDispatch('italic', function(textarea, selectionStart, selectionEnd){
+				if(selectionStart === selectionEnd){
+					controls.insertIntoTextarea(textarea, "*italicised text*");
+					controls.updateTextareaSelection(textarea, selectionStart + 1, selectionStart + 16);
+				} else {
+					controls.wrapSelectionInTextareaWith(textarea, '*');
+					controls.updateTextareaSelection(textarea, selectionStart + 1, selectionEnd + 1);
+				}
+			});
 
-		formatting.addButtonDispatch('list', function(textarea, selectionStart, selectionEnd){
-			if(selectionStart === selectionEnd){
-				controls.insertIntoTextarea(textarea, "\n* list item");
+			formatting.addButtonDispatch('list', function(textarea, selectionStart, selectionEnd){
+				if(selectionStart === selectionEnd){
+					controls.insertIntoTextarea(textarea, "\n* list item");
 
-				// Highlight "list item"
-				controls.updateTextareaSelection(textarea, selectionStart + 3, selectionStart + 12);
-			} else {
-				controls.wrapSelectionInTextareaWith(textarea, '\n* ', '');
-				controls.updateTextareaSelection(textarea, selectionStart + 3, selectionEnd + 3);
-			}
-		});
+					// Highlight "list item"
+					controls.updateTextareaSelection(textarea, selectionStart + 3, selectionStart + 12);
+				} else {
+					controls.wrapSelectionInTextareaWith(textarea, '\n* ', '');
+					controls.updateTextareaSelection(textarea, selectionStart + 3, selectionEnd + 3);
+				}
+			});
 
-		formatting.addButtonDispatch('link', function(textarea, selectionStart, selectionEnd){
-			if(selectionStart === selectionEnd){
-				controls.insertIntoTextarea(textarea, "[link text](link url)");
+			formatting.addButtonDispatch('link', function(textarea, selectionStart, selectionEnd){
+				if(selectionStart === selectionEnd){
+					controls.insertIntoTextarea(textarea, "[link text](link url)");
 
-				// Highlight "link url"
-				controls.updateTextareaSelection(textarea, selectionStart + 12, selectionEnd + 20);
-			} else {
-				controls.wrapSelectionInTextareaWith(textarea, '[', '](link url)');
+					// Highlight "link url"
+					controls.updateTextareaSelection(textarea, selectionStart + 12, selectionEnd + 20);
+				} else {
+					controls.wrapSelectionInTextareaWith(textarea, '[', '](link url)');
 
-				// Highlight "link url"
-				controls.updateTextareaSelection(textarea, selectionEnd + 3, selectionEnd + 11);
-			}
-		});
+					// Highlight "link url"
+					controls.updateTextareaSelection(textarea, selectionEnd + 3, selectionEnd + 11);
+				}
+			});
+		}
 	});
 });
