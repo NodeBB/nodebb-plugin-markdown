@@ -20,7 +20,7 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 			for(var setting in defaults) {
 				if (!settings.hasOwnProperty(setting)) {
 					if (typeof defaults[setting] === 'boolean') {
-						$('#' + setting).prop('checked', defaults[setting]);
+						$('#' + setting).prop('checked', defaults[setting]).fire('change');
 					} else {
 						$('#' + setting).val(defaults[setting]);
 					}
