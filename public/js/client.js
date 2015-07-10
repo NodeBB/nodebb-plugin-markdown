@@ -2,7 +2,24 @@
 /* global hljs, RELATIVE_PATH, require */
 
 $(document).ready(function() {
-	var Markdown = {}, config;
+	var Markdown = {}, config,
+		lang = {
+			en: {
+				bold: 'bolded text',
+				italic: 'italicised text',
+				list_item: 'list item',
+				link_text: 'link text',
+				link_url: 'link url'
+			},
+			ru: {
+				bold: 'Жирный текст',
+				italic: 'Прописной шрифт',
+				list_item: 'Пункт списка',
+				link_text: 'Текст ссылки',
+				link_url: 'Адрес ссылки'
+				
+			}
+		};
 
 	$.get(RELATIVE_PATH + '/markdown/config', function(_config) {
 		config = _config;
@@ -63,8 +80,8 @@ $(document).ready(function() {
 		if (formatting && controls) {
 			formatting.addButtonDispatch('bold', function(textarea, selectionStart, selectionEnd){
 				if(selectionStart === selectionEnd){
-					controls.insertIntoTextarea(textarea, '**bolded text**');
-					controls.updateTextareaSelection(textarea, selectionStart + 2, selectionStart + 13);
+					controls.insertIntoTextarea(textarea, '**' + lang.ru.bold + '**');
+					controls.updateTextareaSelection(textarea, selectionStart + 2, selectionStart + lang.ru.bold.length + 2);
 				} else {
 					controls.wrapSelectionInTextareaWith(textarea, '**');
 					controls.updateTextareaSelection(textarea, selectionStart + 2, selectionEnd + 2);
@@ -73,8 +90,8 @@ $(document).ready(function() {
 
 			formatting.addButtonDispatch('italic', function(textarea, selectionStart, selectionEnd){
 				if(selectionStart === selectionEnd){
-					controls.insertIntoTextarea(textarea, "*italicised text*");
-					controls.updateTextareaSelection(textarea, selectionStart + 1, selectionStart + 16);
+					controls.insertIntoTextarea(textarea, '*' + lang.ru.italic + '*');
+					controls.updateTextareaSelection(textarea, selectionStart + 1, selectionStart + lang.ru.italic.length + 1);
 				} else {
 					controls.wrapSelectionInTextareaWith(textarea, '*');
 					controls.updateTextareaSelection(textarea, selectionStart + 1, selectionEnd + 1);
@@ -83,10 +100,10 @@ $(document).ready(function() {
 
 			formatting.addButtonDispatch('list', function(textarea, selectionStart, selectionEnd){
 				if(selectionStart === selectionEnd){
-					controls.insertIntoTextarea(textarea, "\n* list item");
+					controls.insertIntoTextarea(textarea, "\n* " + lang.ru.list_item);
 
 					// Highlight "list item"
-					controls.updateTextareaSelection(textarea, selectionStart + 3, selectionStart + 12);
+					controls.updateTextareaSelection(textarea, selectionStart + 3, selectionStart + lang.ru.list_item.length + 3);
 				} else {
 					controls.wrapSelectionInTextareaWith(textarea, '\n* ', '');
 					controls.updateTextareaSelection(textarea, selectionStart + 3, selectionEnd + 3);
@@ -95,15 +112,15 @@ $(document).ready(function() {
 
 			formatting.addButtonDispatch('link', function(textarea, selectionStart, selectionEnd){
 				if(selectionStart === selectionEnd){
-					controls.insertIntoTextarea(textarea, "[link text](link url)");
+					controls.insertIntoTextarea(textarea, "[" + lang.ru.link_text + "](" + lang.ru.link_url + ")");
 
 					// Highlight "link url"
-					controls.updateTextareaSelection(textarea, selectionStart + 12, selectionEnd + 20);
+					controls.updateTextareaSelection(textarea, selectionStart + lang.ru.link_text.length + 3, selectionEnd + lang.ru.link_text.length + lang.ru.link_url.length + 3);
 				} else {
-					controls.wrapSelectionInTextareaWith(textarea, '[', '](link url)');
+					controls.wrapSelectionInTextareaWith(textarea, '[', '](' + lang.ru.link_url + ')');
 
 					// Highlight "link url"
-					controls.updateTextareaSelection(textarea, selectionEnd + 3, selectionEnd + 11);
+					controls.updateTextareaSelection(textarea, selectionEnd + 3, selectionEnd + lang.ru.link_url.length + 3);
 				}
 			});
 		}
