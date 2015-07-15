@@ -29,6 +29,7 @@
 
 				Markdown.init();
 				Markdown.loadThemes();
+
 				callback();
 			},
 
