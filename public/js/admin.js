@@ -20,12 +20,15 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 			for(var setting in defaults) {
 				if (!settings.hasOwnProperty(setting)) {
 					if (typeof defaults[setting] === 'boolean') {
-						$('#' + setting).prop('checked', defaults[setting]).fire('change');
+						$('#' + setting).prop('checked', defaults[setting]);
 					} else {
 						$('#' + setting).val(defaults[setting]);
 					}
 				}
 			}
+
+			// Kickstart the checkbox handling in ACP
+			$('input[type="checkbox"]').trigger('change');
 		});
 	
 		$('#save').on('click', function() {
@@ -52,7 +55,7 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 					}
 				});
 			}
-		}) 
+		});
 	};
 	
 	return Markdown;
