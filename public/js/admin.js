@@ -26,9 +26,6 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 					}
 				}
 			}
-
-			// Kickstart the checkbox handling in ACP
-			$('input[type="checkbox"]').trigger('change');
 		});
 	
 		$('#save').on('click', function() {
