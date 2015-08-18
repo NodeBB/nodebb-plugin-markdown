@@ -2,24 +2,7 @@
 /* global hljs, RELATIVE_PATH, require */
 
 $(document).ready(function() {
-	var Markdown = {}, config,
-		lang = {
-			en_GB: {
-				bold: 'bolded text',
-				italic: 'italicised text',
-				list_item: 'list item',
-				link_text: 'link text',
-				link_url: 'link url'
-			},
-			ru: {
-				bold: 'Жирный текст',
-				italic: 'Прописной шрифт',
-				list_item: 'Пункт списка',
-				link_text: 'Текст ссылки',
-				link_url: 'Адрес ссылки'
-			}
-		}
-		strings = lang[window.config.defaultLang] || lang.en_GB;
+	var Markdown = {}, config;
 
 	$(window).on('action:connected', function() {
 		Markdown.prepareFormattingTools();
@@ -39,7 +22,7 @@ $(document).ready(function() {
 
 		$(window).trigger('markdown.ready');
 	});
-	
+
 	Markdown.highlight = function(data) {
 		if (data instanceof jQuery.Event) {
 			highlight($(data.data.selector));
@@ -118,7 +101,7 @@ $(document).ready(function() {
 			var codeBlocks = elements;
 
 			if (typeof hljs === 'undefined') {
-				$.getScript(RELATIVE_PATH + '/plugins/nodebb-plugin-markdown/js/highlight.js', highlightBlock);	
+				$.getScript(RELATIVE_PATH + '/plugins/nodebb-plugin-markdown/js/highlight.js', highlightBlock);
 			} else {
 				highlightBlock();
 			}
