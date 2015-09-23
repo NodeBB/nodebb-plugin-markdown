@@ -1,24 +1,9 @@
 "use strict";
-/* global hljs, RELATIVE_PATH, require */
+/* global hljs, RELATIVE_PATH, require, config */
 
 $(document).ready(function() {
-	var Markdown = {}, config;
+	var Markdown = {};
 
-	$.get(RELATIVE_PATH + '/markdown/config', function(_config) {
-		config = _config;
-
-		var cssEl = document.createElement('link');
-		cssEl.rel = 'stylesheet';
-		cssEl.href = RELATIVE_PATH + '/plugins/nodebb-plugin-markdown/styles/' + config.theme;
-
-		var head = document.head || document.getElementsByTagName("head")[0];
-		if (head) {
-			head.appendChild(cssEl);
-		}
-
-		$(window).trigger('markdown.ready');
-	});
-	
 	Markdown.highlight = function(data) {
 		if (data instanceof jQuery.Event) {
 			highlight($(data.data.selector));
@@ -28,10 +13,6 @@ $(document).ready(function() {
 	};
 
 	function highlight(elements) {
-		if (!config) {
-			return $(window).on('markdown.ready', highlight.bind(null, elements));
-		}
-
 		function highlightBlock() {
 			codeBlocks.each(function(i, block) {
 				$(block.parentNode).addClass('markdown-highlight');
@@ -39,11 +20,11 @@ $(document).ready(function() {
 			});
 		}
 
-		if (config.highlight) {
+		if (parseInt(config.markdown.highlight, 10)) {
 			var codeBlocks = elements;
 
 			if (typeof hljs === 'undefined') {
-				$.getScript(RELATIVE_PATH + '/plugins/nodebb-plugin-markdown/js/highlight.js', highlightBlock);	
+				$.getScript(RELATIVE_PATH + '/plugins/nodebb-plugin-markdown/js/highlight.js', highlightBlock);
 			} else {
 				highlightBlock();
 			}
@@ -55,11 +36,11 @@ $(document).ready(function() {
 	}, Markdown.highlight);
 
 	require(['composer/formatting', 'composer/controls', 'components'], function(formatting, controls, components) {
-		
+
 		$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', function() {
 			Markdown.highlight(components.get('post/content').find('pre code'));
 		});
-		
+
 		formatting.addButtonDispatch('bold', function(textarea, selectionStart, selectionEnd){
 			if(selectionStart === selectionEnd){
 				controls.insertIntoTextarea(textarea, '**bolded text**');

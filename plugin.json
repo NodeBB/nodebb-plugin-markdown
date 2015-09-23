@@ -23,6 +23,8 @@
         { "hook": "filter:parse.raw", "method": "parseRaw", "priority": 5 },
         { "hook": "filter:composer.help", "method": "renderHelp" },
         { "hook": "filter:admin.header.build", "method": "admin.menu" },
-        { "hook": "filter:composer.formatting", "method": "registerFormatting" }
+        { "hook": "filter:composer.formatting", "method": "registerFormatting" },
+        { "hook": "filter:config.get", "method": "getConfig" },
+        { "hook": "filter:meta.getLinkTags", "method": "getLinkTags"}
     ]
 }
