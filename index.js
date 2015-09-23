@@ -20,17 +20,28 @@
 
 				params.router.get('/admin/plugins/markdown', params.middleware.admin.buildHeader, render);
 				params.router.get('/api/admin/plugins/markdown', render);
-				params.router.get('/markdown/config', function(req, res) {
-					res.status(200).json({
-						highlight: Markdown.highlight ? 1 : 0,
-						theme: Markdown.config.highlightTheme || 'railscasts.css'
-					});
-				});
 
 				Markdown.init();
 				Markdown.loadThemes();
 
 				callback();
+			},
+
+			getConfig: function(config, callback) {
+				config.markdown = {
+					highlight: Markdown.highlight ? 1 : 0,
+					theme: Markdown.config.highlightTheme || 'railscasts.css'
+				};
+				callback(null, config);
+			},
+
+			getLinkTags: function(links, callback) {
+				links.push({
+					rel: "stylesheet",
+					type: "",
+					href: nconf.get('relative_path') + '/plugins/nodebb-plugin-markdown/styles/' + (Markdown.config.highlight || 'railscasts.css')
+				});
+				callback(null, links);
 			},
 
 			init: function() {
