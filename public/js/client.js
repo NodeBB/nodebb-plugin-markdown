@@ -32,13 +32,21 @@ $(document).ready(function() {
 			return $(window).on('markdown.ready', highlight.bind(null, elements));
 		}
 
-		if (config.highlight) {
-			var codeBlocks = elements;
-
+		function highlightBlock() {
 			codeBlocks.each(function(i, block) {
 				$(block.parentNode).addClass('markdown-highlight');
 				hljs.highlightBlock(block);
 			});
+		}
+
+		if (config.highlight) {
+			var codeBlocks = elements;
+
+			if (typeof hljs === 'undefined') {
+				$.getScript(RELATIVE_PATH + '/plugins/nodebb-plugin-markdown/js/highlight.js', highlightBlock);	
+			} else {
+				highlightBlock();
+			}
 		}
 	}
 

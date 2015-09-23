@@ -8,12 +8,12 @@
         "public/less/default.less"
     ],
     "scripts": [
-        "public/js/highlight.js",
         "public/js/client.js",
         "public/js/admin.js"
     ],
     "staticDirs": {
-        "styles": "public/styles"
+        "styles": "public/styles",
+        "js": "public/js"
     },
     "templates": "./public/templates",
     "hooks": [
