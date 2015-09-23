@@ -4,12 +4,70 @@
 $(document).ready(function() {
 	var Markdown = {};
 
+	$(window).on('action:connected', function() {
+		Markdown.prepareFormattingTools();
+	});
+
 	Markdown.highlight = function(data) {
 		if (data instanceof jQuery.Event) {
 			highlight($(data.data.selector));
 		} else {
 			highlight(data);
 		}
+	};
+
+	Markdown.prepareFormattingTools = function() {
+		require(['composer/formatting', 'composer/controls', 'translator'], function(formatting, controls, translator) {
+			if (formatting && controls) {
+				translator.getTranslations(window.config.userLang || window.config.defaultLang, 'markdown', function(strings) {
+					formatting.addButtonDispatch('bold', function(textarea, selectionStart, selectionEnd){
+						if(selectionStart === selectionEnd){
+							controls.insertIntoTextarea(textarea, '**' + strings.bold + '**');
+							controls.updateTextareaSelection(textarea, selectionStart + 2, selectionStart + strings.bold.length + 2);
+						} else {
+							controls.wrapSelectionInTextareaWith(textarea, '**');
+							controls.updateTextareaSelection(textarea, selectionStart + 2, selectionEnd + 2);
+						}
+					});
+
+					formatting.addButtonDispatch('italic', function(textarea, selectionStart, selectionEnd){
+						if(selectionStart === selectionEnd){
+							controls.insertIntoTextarea(textarea, '*' + strings.italic + '*');
+							controls.updateTextareaSelection(textarea, selectionStart + 1, selectionStart + strings.italic.length + 1);
+						} else {
+							controls.wrapSelectionInTextareaWith(textarea, '*');
+							controls.updateTextareaSelection(textarea, selectionStart + 1, selectionEnd + 1);
+						}
+					});
+
+					formatting.addButtonDispatch('list', function(textarea, selectionStart, selectionEnd){
+						if(selectionStart === selectionEnd){
+							controls.insertIntoTextarea(textarea, "\n* " + strings.list_item);
+
+							// Highlight "list item"
+							controls.updateTextareaSelection(textarea, selectionStart + 3, selectionStart + strings.list_item.length + 3);
+						} else {
+							controls.wrapSelectionInTextareaWith(textarea, '\n* ', '');
+							controls.updateTextareaSelection(textarea, selectionStart + 3, selectionEnd + 3);
+						}
+					});
+
+					formatting.addButtonDispatch('link', function(textarea, selectionStart, selectionEnd){
+						if(selectionStart === selectionEnd){
+							controls.insertIntoTextarea(textarea, "[" + strings.link_text + "](" + strings.link_url + ")");
+
+							// Highlight "link url"
+							controls.updateTextareaSelection(textarea, selectionStart + strings.link_text.length + 3, selectionEnd + strings.link_text.length + strings.link_url.length + 3);
+						} else {
+							controls.wrapSelectionInTextareaWith(textarea, '[', '](' + strings.link_url + ')');
+
+							// Highlight "link url"
+							controls.updateTextareaSelection(textarea, selectionEnd + 3, selectionEnd + strings.link_url.length + 3);
+						}
+					});
+				})
+			}
+		});
 	};
 
 	function highlight(elements) {
@@ -35,56 +93,10 @@ $(document).ready(function() {
 		selector: '.composer .preview pre code'
 	}, Markdown.highlight);
 
-	require(['composer/formatting', 'composer/controls', 'components'], function(formatting, controls, components) {
 
+	require(['components'], function(components) {
 		$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', function() {
 			Markdown.highlight(components.get('post/content').find('pre code'));
-		});
-
-		formatting.addButtonDispatch('bold', function(textarea, selectionStart, selectionEnd){
-			if(selectionStart === selectionEnd){
-				controls.insertIntoTextarea(textarea, '**bolded text**');
-				controls.updateTextareaSelection(textarea, selectionStart + 2, selectionStart + 13);
-			} else {
-				controls.wrapSelectionInTextareaWith(textarea, '**');
-				controls.updateTextareaSelection(textarea, selectionStart + 2, selectionEnd + 2);
-			}
-		});
-
-		formatting.addButtonDispatch('italic', function(textarea, selectionStart, selectionEnd){
-			if(selectionStart === selectionEnd){
-				controls.insertIntoTextarea(textarea, "*italicised text*");
-				controls.updateTextareaSelection(textarea, selectionStart + 1, selectionStart + 16);
-			} else {
-				controls.wrapSelectionInTextareaWith(textarea, '*');
-				controls.updateTextareaSelection(textarea, selectionStart + 1, selectionEnd + 1);
-			}
-		});
-
-		formatting.addButtonDispatch('list', function(textarea, selectionStart, selectionEnd){
-			if(selectionStart === selectionEnd){
-				controls.insertIntoTextarea(textarea, "\n* list item");
-
-				// Highlight "list item"
-				controls.updateTextareaSelection(textarea, selectionStart + 3, selectionStart + 12);
-			} else {
-				controls.wrapSelectionInTextareaWith(textarea, '\n* ', '');
-				controls.updateTextareaSelection(textarea, selectionStart + 3, selectionEnd + 3);
-			}
-		});
-
-		formatting.addButtonDispatch('link', function(textarea, selectionStart, selectionEnd){
-			if(selectionStart === selectionEnd){
-				controls.insertIntoTextarea(textarea, "[link text](link url)");
-
-				// Highlight "link url"
-				controls.updateTextareaSelection(textarea, selectionStart + 12, selectionEnd + 20);
-			} else {
-				controls.wrapSelectionInTextareaWith(textarea, '[', '](link url)');
-
-				// Highlight "link url"
-				controls.updateTextareaSelection(textarea, selectionEnd + 3, selectionEnd + 11);
-			}
 		});
 	});
 });

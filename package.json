@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-markdown",
-  "version": "2.1.10",
+  "version": "4.0.5",
   "description": "A Markdown parser for NodeBB",
   "main": "index.js",
   "repository": {
@@ -21,6 +21,6 @@
     "markdown-it": "^4.1.0"
   },
   "nbbpm": {
-    "compatibility": "^0.7.0"
+    "compatibility": "^0.7.1 || ^0.8.0"
   }
 }

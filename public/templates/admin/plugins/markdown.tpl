@@ -13,26 +13,18 @@
 								</label>
 							</div>
 							<div class="form-group">
-								<label for="highlight">
-									<input type="checkbox" name="highlight" id="highlight" />
-									Automatically detect and highlight code blocks
-								</label>
-							</div>
-							<div class="form-group">
 								<label for="breaks">
 									<input type="checkbox" name="breaks" id="breaks" />
 									Treat newlines as single line breaks
 								</label>
 							</div>
-						</div>
-						<!-- <div class="col-lg-6">
 							<div class="form-group">
-								<label for="noFollow">
-									<input type="checkbox" name="noFollow" id="noFollow" />
-									Instruct search engines to ignore off-site links (<code>rel=&quot;nofollow&quot;</code>)
+								<label for="typographer">
+									<input type="checkbox" name="typographer" id="typographer" />
+									Enable smartypants and other sweet transforms (e.g. <code>(c)</code> &rarr; <code>&copy;</code>)
 								</label>
 							</div>
-						</div> -->
+						</div>
 						<div class="col-lg-6">
 							<div class="form-group">
 								<label for="linkify">
@@ -41,9 +33,15 @@
 								</label>
 							</div>
 							<div class="form-group">
-								<label for="typographer">
-									<input type="checkbox" name="typographer" id="typographer" />
-									Enable smartypants and other sweet transforms (e.g. <code>(c)</code> &rarr; <code>&copy;</code>)
+								<label for="externalBlank">
+									<input type="checkbox" name="externalBlank" id="externalBlank" />
+									Open external links in a new tab/window
+								</label>
+							</div>
+							<div class="form-group">
+								<label for="nofollow">
+									<input type="checkbox" name="nofollow" id="nofollow" />
+									Tell web crawlers that external links are not to be followed
 								</label>
 							</div>
 						</div>
@@ -55,6 +53,12 @@
 					<div class="panel panel-default">
 						<div class="panel-heading">Code Formatting</div>
 						<div class="panel-body">
+							<div class="form-group">
+								<label for="highlight">
+									<input type="checkbox" name="highlight" id="highlight" />
+									Automatically detect and highlight code blocks
+								</label>
+							</div>
 							<div class="form-group">
 								<label for="highlightTheme">Use this theme for highlighted code blocks</label>
 								<select class="form-control" name="highlightTheme" id="highlightTheme">
