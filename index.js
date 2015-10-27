@@ -39,7 +39,7 @@
 				links.push({
 					rel: "stylesheet",
 					type: "",
-					href: nconf.get('relative_path') + '/plugins/nodebb-plugin-markdown/styles/' + (Markdown.config.highlight || 'railscasts.css')
+					href: nconf.get('relative_path') + '/plugins/nodebb-plugin-markdown/styles/' + (Markdown.config.highlightTheme || 'railscasts.css')
 				});
 				callback(null, links);
 			},
@@ -173,7 +173,7 @@
 								tokens[idx].attrs[targetIdx][1] = '_blank';
 							}
 						}
-						
+
 						if (Markdown.config.nofollow) {
 							if (relIdx < 0) {
 								tokens[idx].attrPush(['rel', 'nofollow']);
