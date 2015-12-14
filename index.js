@@ -117,7 +117,7 @@
 				callback(null, raw ? parser.render(raw) : raw);
 			},
 			renderHelp: function(helpContent, callback) {
-				plugins.fireHook('filter:parse.raw', '## Markdown\nThis forum is powered by Markdown. For full documentation, [click here](http://daringfireball.net/projects/markdown/syntax)', function(err, parsed) {
+				plugins.fireHook('filter:parse.raw', '## Markdown\nThis forum is powered by Markdown. For full documentation, [click here](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)', function(err, parsed) {
 					helpContent += parsed;
 					callback(null, helpContent);
 				});
