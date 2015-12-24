@@ -100,21 +100,21 @@
 			},
 
 			parsePost: function(data, callback) {
-				if (data && data.postData && data.postData.content) {
+				if (data && data.postData && data.postData.content && parser) {
 					data.postData.content = parser.render(data.postData.content);
 				}
 				callback(null, data);
 			},
 
 			parseSignature: function(data, callback) {
-				if (data && data.userData && data.userData.signature) {
+				if (data && data.userData && data.userData.signature && parser) {
 					data.userData.signature = parser.render(data.userData.signature);
 				}
 				callback(null, data);
 			},
 
 			parseRaw: function(raw, callback) {
-				callback(null, raw ? parser.render(raw) : raw);
+				callback(null, (raw && parser) ? parser.render(raw) : raw);
 			},
 			renderHelp: function(helpContent, callback) {
 				plugins.fireHook('filter:parse.raw', '## Markdown\nThis forum is powered by Markdown. For full documentation, [click here](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)', function(err, parsed) {
