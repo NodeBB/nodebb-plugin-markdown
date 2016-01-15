@@ -129,7 +129,7 @@
 			},
 
 			registerFormatting: function(payload, callback) {
-				var formatting = ['bold', 'italic', 'list', 'link', 'strikethrough'];
+				var formatting = ['bold', 'italic', 'list', 'strikethrough', 'link', 'picture-o'];
 
 				formatting.reverse();
 				formatting.forEach(function(format) {

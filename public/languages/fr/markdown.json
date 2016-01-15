@@ -2,8 +2,10 @@
 	"bold": "texte en gras",
 	"italic": "texte en italique",
 	"list_item": "élément de liste",
+	"strikethrough_text": "strikethrough text",
 	"link_text": "texte du lien",
 	"link_url": "url du lien",
-	"strikethrough_text": "strikethrough text",
+	"picture_text": "alt text",
+	"picture_url": "image url",
 	"help_text": "This forum is powered by Markdown. For full documentation, [click here](http://commonmark.org/help/)"
 }

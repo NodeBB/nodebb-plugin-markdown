@@ -2,8 +2,10 @@
 	"bold": "Fettschrift",
 	"italic": "Kursivschrift",
 	"list_item": "Listenpunkt",
+	"strikethrough_text": "strikethrough text",
 	"link_text": "Link Text",
 	"link_url": "Link Adresse",
-	"strikethrough_text": "strikethrough text",
+	"picture_text": "alt text",
+	"picture_url": "image url",
 	"help_text": "This forum is powered by Markdown. For full documentation, [click here](http://commonmark.org/help/)"
 }

@@ -2,8 +2,10 @@
 	"bold": "Жирный текст",
 	"italic": "Прописной шрифт",
 	"list_item": "Пункт списка",
+	"strikethrough_text": "strikethrough text",
 	"link_text": "Текст ссылки",
 	"link_url": "Адрес ссылки",
-	"strikethrough_text": "strikethrough text",
+	"picture_text": "alt text",
+	"picture_url": "image url",
 	"help_text": "This forum is powered by Markdown. For full documentation, [click here](http://commonmark.org/help/)"
 }

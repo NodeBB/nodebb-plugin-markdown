@@ -52,6 +52,17 @@ $(document).ready(function() {
 						}
 					});
 
+					formatting.addButtonDispatch('strikethrough', function(textarea, selectionStart, selectionEnd){
+						console.log(strings);
+						if(selectionStart === selectionEnd){
+							controls.insertIntoTextarea(textarea, "~~" + strings.strikethrough_text + "~~");
+							controls.updateTextareaSelection(textarea, selectionStart + 2, selectionEnd + strings.strikethrough_text.length + 2);
+						} else {
+							controls.wrapSelectionInTextareaWith(textarea, '~~', '~~');
+							controls.updateTextareaSelection(textarea, selectionStart + 2, selectionEnd + 2);
+						}
+					});
+
 					formatting.addButtonDispatch('link', function(textarea, selectionStart, selectionEnd){
 						if(selectionStart === selectionEnd){
 							controls.insertIntoTextarea(textarea, "[" + strings.link_text + "](" + strings.link_url + ")");
@@ -66,14 +77,17 @@ $(document).ready(function() {
 						}
 					});
 
-					formatting.addButtonDispatch('strikethrough', function(textarea, selectionStart, selectionEnd){
-						console.log(strings);
+					formatting.addButtonDispatch('picture-o', function(textarea, selectionStart, selectionEnd){
 						if(selectionStart === selectionEnd){
-							controls.insertIntoTextarea(textarea, "~~" + strings.strikethrough_text + "~~");
-							controls.updateTextareaSelection(textarea, selectionStart + 2, selectionEnd + strings.strikethrough_text.length + 2);
+							controls.insertIntoTextarea(textarea, "![" + strings.picture_text + "](" + strings.picture_url + ")");
+
+							// Highlight "picture url"
+							controls.updateTextareaSelection(textarea, selectionStart + strings.picture_text.length + 4, selectionEnd + strings.picture_text.length + strings.picture_url.length + 4);
 						} else {
-							controls.wrapSelectionInTextareaWith(textarea, '~~', '~~');
-							controls.updateTextareaSelection(textarea, selectionStart + 2, selectionEnd + 2);
+							controls.wrapSelectionInTextareaWith(textarea, '![', '](' + strings.picture_url + ')');
+
+							// Highlight "picture url"
+							controls.updateTextareaSelection(textarea, selectionEnd + 4, selectionEnd + strings.picture_url.length + 4);
 						}
 					});
 				})
