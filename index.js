@@ -4,11 +4,14 @@
 	var	MarkdownIt = require('markdown-it'),
 		fs = require('fs'),
 		path = require('path'),
-		url = require('url'),
-		meta = module.parent.require('./meta'),
+		url = require('url');
+
+	var	meta = module.parent.require('./meta'),
 		nconf = module.parent.require('nconf'),
-		plugins = module.parent.exports,
-		parser,
+		translator = module.parent.require('../public/src/modules/translator'),
+		plugins = module.parent.exports;
+
+	var	parser,
 		Markdown = {
 			config: {},
 			onLoad: function(params, callback) {
@@ -117,9 +120,11 @@
 				callback(null, (raw && parser) ? parser.render(raw) : raw);
 			},
 			renderHelp: function(helpContent, callback) {
-				plugins.fireHook('filter:parse.raw', '## Markdown\nThis forum is powered by Markdown. For full documentation, [click here](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)', function(err, parsed) {
-					helpContent += parsed;
-					callback(null, helpContent);
+				translator.translate('[[markdown:help_text]]', function(translated) {
+					plugins.fireHook('filter:parse.raw', '## Markdown\n' + translated, function(err, parsed) {
+						helpContent += parsed;
+						callback(null, helpContent);
+					});
 				});
 			},
 

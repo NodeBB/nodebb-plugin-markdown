@@ -4,5 +4,6 @@
 	"list_item": "list item",
 	"link_text": "link text",
 	"link_url": "link url",
-	"strikethrough_text": "strikethrough text"
+	"strikethrough_text": "strikethrough text",
+	"help_text": "This forum is powered by Markdown. For full documentation, [click here](http://commonmark.org/help/)"
 }

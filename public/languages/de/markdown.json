@@ -3,5 +3,7 @@
 	"italic": "Kursivschrift",
 	"list_item": "Listenpunkt",
 	"link_text": "Link Text",
-	"link_url": "Link Adresse"
+	"link_url": "Link Adresse",
+	"strikethrough_text": "strikethrough text",
+	"help_text": "This forum is powered by Markdown. For full documentation, [click here](http://commonmark.org/help/)"
 }

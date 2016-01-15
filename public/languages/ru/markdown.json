@@ -4,5 +4,6 @@
 	"list_item": "Пункт списка",
 	"link_text": "Текст ссылки",
 	"link_url": "Адрес ссылки",
-	"strikethrough_text": "strikethrough text"
+	"strikethrough_text": "strikethrough text",
+	"help_text": "This forum is powered by Markdown. For full documentation, [click here](http://commonmark.org/help/)"
 }
