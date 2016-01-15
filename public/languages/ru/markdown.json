@@ -3,5 +3,6 @@
 	"italic": "Прописной шрифт",
 	"list_item": "Пункт списка",
 	"link_text": "Текст ссылки",
-	"link_url": "Адрес ссылки"
+	"link_url": "Адрес ссылки",
+	"strikethrough_text": "strikethrough text"
 }

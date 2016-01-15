@@ -3,5 +3,6 @@
 	"italic": "texte en italique",
 	"list_item": "élément de liste",
 	"link_text": "texte du lien",
-	"link_url": "url du lien"
+	"link_url": "url du lien",
+	"strikethrough_text": "strikethrough text"
 }

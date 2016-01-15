@@ -65,6 +65,17 @@ $(document).ready(function() {
 							controls.updateTextareaSelection(textarea, selectionEnd + 3, selectionEnd + strings.link_url.length + 3);
 						}
 					});
+
+					formatting.addButtonDispatch('strikethrough', function(textarea, selectionStart, selectionEnd){
+						console.log(strings);
+						if(selectionStart === selectionEnd){
+							controls.insertIntoTextarea(textarea, "~~" + strings.strikethrough_text + "~~");
+							controls.updateTextareaSelection(textarea, selectionStart + 2, selectionEnd + strings.strikethrough_text.length + 2);
+						} else {
+							controls.wrapSelectionInTextareaWith(textarea, '~~', '~~');
+							controls.updateTextareaSelection(textarea, selectionStart + 2, selectionEnd + 2);
+						}
+					});
 				})
 			}
 		});
