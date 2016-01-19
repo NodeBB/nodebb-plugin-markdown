@@ -9,6 +9,8 @@
     ],
     "scripts": [
         "public/js/client.js",
+    ],
+    "acpScripts": [
         "public/js/admin.js"
     ],
     "staticDirs": {
