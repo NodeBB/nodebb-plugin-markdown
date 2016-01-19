@@ -8,7 +8,7 @@
         "public/less/default.less"
     ],
     "scripts": [
-        "public/js/client.js",
+        "public/js/client.js"
     ],
     "acpScripts": [
         "public/js/admin.js"
