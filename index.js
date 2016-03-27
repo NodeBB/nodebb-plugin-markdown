@@ -161,11 +161,6 @@
 						tokens[idx].attrs[classIdx][1] = tokens[idx].attrs[classIdx][1] + ' img-responsive img-markdown';
 					}
 
-					// Override src to placeholder
-					tokens[idx].attrSet('data-src', tokens[idx].attrs[srcIdx][1]);
-					tokens[idx].attrSet('data-state', 'unloaded');
-					tokens[idx].attrSet('src', 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
-
 					return renderImage(tokens, idx, options, env, self);
 				};
 
