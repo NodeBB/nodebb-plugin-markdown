@@ -129,12 +129,16 @@
 			},
 
 			registerFormatting: function(payload, callback) {
-				var formatting = ['bold', 'italic', 'list', 'strikethrough', 'link', 'picture-o'];
+				var formatting = [
+					{name: 'bold', className: 'fa fa-bold', title: '[[modules:composer.formatting.bold]]'},
+					{name: 'italic', className: 'fa fa-italic', title: '[[modules:composer.formatting.italic]]'},
+					{name: 'list', className: 'fa fa-list', title: '[[modules:composer.formatting.list]]'},
+					{name: 'strikethrough', className: 'fa fa-strikethrough', title: '[[modules:composer.formatting.strikethrough]]'},
+					{name: 'link', className: 'fa fa-link', title: '[[modules:composer.formatting.link]]'},
+					{name: 'picture-o', className: 'fa fa-picture-o', title: '[[modules:composer.formatting.picture]]'}
+				];
 
-				formatting.reverse();
-				formatting.forEach(function(format) {
-					payload.options.unshift({ name: format, className: 'fa fa-' + format });
-				});
+				payload.options = formatting.concat(payload.options);
 
 				callback(null, payload);
 			},
