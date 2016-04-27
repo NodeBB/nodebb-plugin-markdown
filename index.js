@@ -80,7 +80,7 @@
 						}
 					}
 
-					_self.highlight = _self.config.highlight || true;
+					_self.highlight = _self.config.highlight;
 					delete _self.config.highlight;
 
 					parser = new MarkdownIt(_self.config);

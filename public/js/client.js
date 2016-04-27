@@ -4,7 +4,7 @@
 $(document).ready(function() {
 	var Markdown = {};
 
-	$(window).on('action:connected', function() {
+	$(window).on('action:composer.enhanced', function() {
 		Markdown.prepareFormattingTools();
 	});
 
@@ -17,7 +17,11 @@ $(document).ready(function() {
 	};
 
 	Markdown.prepareFormattingTools = function() {
-		require(['composer/formatting', 'composer/controls', 'translator'], function(formatting, controls, translator) {
+		require([
+			'plugins/nodebb-plugin-composer-default/js/composer/formatting',
+			'plugins/nodebb-plugin-composer-default/js/composer/controls',
+			'translator'
+		], function(formatting, controls, translator) {
 			if (formatting && controls) {
 				translator.getTranslations(window.config.userLang || window.config.defaultLang, 'markdown', function(strings) {
 					formatting.addButtonDispatch('bold', function(textarea, selectionStart, selectionEnd){
