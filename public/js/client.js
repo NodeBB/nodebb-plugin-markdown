@@ -18,8 +18,8 @@ $(document).ready(function() {
 
 	Markdown.prepareFormattingTools = function() {
 		require([
-			'plugins/nodebb-plugin-composer-default/js/composer/formatting',
-			'plugins/nodebb-plugin-composer-default/js/composer/controls',
+			'composer/formatting',
+			'composer/controls',
 			'translator'
 		], function(formatting, controls, translator) {
 			if (formatting && controls) {
