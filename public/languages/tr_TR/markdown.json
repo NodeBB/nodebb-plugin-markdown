@@ -1,0 +1,11 @@
+{
+	"bold": "kalın yazı",
+	"italic": "İtalik yazı",
+	"list_item": "liste madde",
+	"strikethrough_text": "Üstü çizili metin",
+	"link_text": "bağlantı metni",
+	"link_url": "link url",
+	"picture_text": "alt metni",
+	"picture_url": "görsel url",
+	"help_text": "This forum is powered by Markdown. For full documentation, [click here](http://commonmark.org/help/)"
+}
