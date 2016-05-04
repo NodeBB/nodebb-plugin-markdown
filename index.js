@@ -116,6 +116,10 @@
 				callback(null, data);
 			},
 
+			parseAboutMe: function(aboutme, callback) {
+				callback(null, (aboutme && parser) ? parser.render(aboutme) : aboutme);
+			},
+
 			parseRaw: function(raw, callback) {
 				callback(null, (raw && parser) ? parser.render(raw) : raw);
 			},
