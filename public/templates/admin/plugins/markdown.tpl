@@ -99,6 +99,27 @@
 					</div>
 				</div>
 			</div>
+			<div class="row">
+				<div class="panel panel-default">
+					<div class="panel-heading">Markdown-it plugins</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="markdown-it-sup">
+								<input type="checkbox" name="markdown-it-sup" id="markdown-it-sup" />
+								<code>&lt;sup&gt;</code> tag for markdown-it markdown parser.
+							</label>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="markdown-it-sub">
+								<input type="checkbox" name="markdown-it-sub" id="markdown-it-sub" />
+								<code>&lt;sub&gt;</code> tag for markdown-it markdown parser.
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
 		</form>
 	</div>
 	<div class="col-lg-3">

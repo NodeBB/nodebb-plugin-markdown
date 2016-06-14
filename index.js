@@ -4,7 +4,8 @@
 	var	MarkdownIt = require('markdown-it'),
 		fs = require('fs'),
 		path = require('path'),
-		url = require('url');
+		url = require('url'),
+		winston = require('winston');
 
 	var	meta = module.parent.require('./meta'),
 		nconf = module.parent.require('nconf'),
@@ -14,6 +15,7 @@
 	var	parser,
 		Markdown = {
 			config: {},
+			mdPlugins: [],
 			onLoad: function(params, callback) {
 				function render(req, res, next) {
 					res.render('admin/plugins/markdown', {
@@ -50,9 +52,6 @@
 			init: function() {
 				// Load saved config
 				var	_self = this,
-					fields = [
-						'html', 'xhtmlOut', 'breaks', 'langPrefix', 'linkify', 'typographer', 'externalBlank', 'nofollow'
-					],
 					defaults = {
 						'html': false,
 						'xhtmlOut': true,
@@ -63,7 +62,10 @@
 						'highlight': true,
 						'highlightTheme': 'railscasts.css',
 						'externalBlank': false,
-						'nofollow': true
+						'nofollow': true,
+						// markdown-it-plugins
+						'markdown-it-sup': 'off',
+						'markdown-it-sub': 'off'
 					};
 
 				meta.settings.get('markdown', function(err, options) {
@@ -78,6 +80,9 @@
 								_self.config[field] = options[field];
 							}
 						}
+						if (field.startsWith('markdown-it-')) {
+							_self.mdPlugins.push(field);
+						}
 					}
 
 					_self.highlight = _self.config.highlight;
@@ -85,6 +90,18 @@
 
 					parser = new MarkdownIt(_self.config);
 
+					// load markdown-it plugins
+					for (var i = 0; i < _self.mdPlugins.length; i++) {
+						var mdPlugin = _self.mdPlugins[i];
+							if (_self.config[mdPlugin]) {
+								try {
+									parser = parser.use(require(mdPlugin));
+									winston.info('[nodebb-plugin-markdown] ' + mdPlugin + " is added to the markdown parser.");
+									} catch (err){
+										winston.error('[nodebb-plugin-markdown] ' + mdPlugin + " is not installed.");
+									}
+							}
+					}
 					Markdown.updateParserRules(parser);
 				});
 			},
@@ -97,7 +114,7 @@
 					}).map(function(file) {
 						return {
 							name: file
-						}
+						};
 					});
 				});
 			},
@@ -245,4 +262,3 @@
 
 	module.exports = Markdown;
 })();
-
