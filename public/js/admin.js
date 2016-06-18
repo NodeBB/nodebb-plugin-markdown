@@ -1,6 +1,6 @@
 define('admin/plugins/markdown', ['settings'], function(Settings) {
 	var Markdown = {};
-	
+
 	Markdown.init = function() {
 		Settings.load('markdown', $('.markdown-settings'), function(err, settings) {
 			var defaults = {
@@ -9,13 +9,23 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 				'breaks': true,
 				'langPrefix': 'language-',
 				'linkify': true,
-				'externalBlank': false,
-				'nofollow': true,
 				'typographer': false,
 				'highlight': true,
-				'highlightTheme': 'railscasts.css'
+				'highlightTheme': 'railscasts.css',
+				'externalBlank': false,
+				'nofollow': true,
+				// markdown-it-plugins
+				'mdPlugins': [{name: 'markdown-it-sup',
+												active: false,
+												description: '<code>&lt;sup&gt;</code> tag for markdown-it markdown parser.',
+												url: 'https://github.com/markdown-it/markdown-it-sup'},
+												{name: 'markdown-it-sub',
+												active: false,
+												description: '<code>&lt;sub&gt;</code> tag for markdown-it markdown parser.',
+												url: 'https://github.com/markdown-it/markdown-it-sub'}
+											]
 			};
-	
+
 			// Set defaults
 			for(var setting in defaults) {
 				if (!settings.hasOwnProperty(setting)) {
@@ -27,9 +37,10 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 				}
 			}
 		});
-	
+
 		$('#save').on('click', function() {
 			Settings.save('markdown', $('.markdown-settings'), function() {
+				console.log($('.markdown-settings'));
 				app.alert({
 					type: 'success',
 					alert_id: 'markdown-saved',
@@ -38,10 +49,10 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 					clickfn: function() {
 						socket.emit('admin.reload');
 					}
-				})
+				});
 			});
 		});
-		
+
 		// Warning for "html" option
 		$('#html').on('change', function() {
 			var inputEl = $(this);
@@ -54,6 +65,25 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 			}
 		});
 	};
-	
+
+	$('button[data-action="toggleActive"]').click(function(event) {
+		var btn = $(this);
+		var pluginName = btn.parents('li')[0].id;
+		var changed = btn.data("changed");
+		changed = (changed + 1) % 2;
+		console.log(btn.data());
+		console.log(btn);
+		//var btn = $('#' + pluginName + ' [data-action="toggleActive"]');
+		btn.data("changed", changed);
+		//btn.html('<i class="fa fa-power-off"></i> ' + (status.active ? 'Deactivate' : 'Activate'));
+		//btn.toggleClass('btn-warning', status.active).toggleClass('btn-success', !status.active);
+		btn.toggleClass('active', changed === 1);
+	});
+
+	$('#toggleInstall').click(function(event) {
+    console.log("install clicked");
+	});
+
+
 	return Markdown;
 });

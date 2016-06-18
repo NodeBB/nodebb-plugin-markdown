@@ -99,27 +99,6 @@
 					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="panel panel-default">
-					<div class="panel-heading">Markdown-it plugins</div>
-					<div class="col-sm-6">
-						<div class="form-group">
-							<label for="markdown-it-sup">
-								<input type="checkbox" name="markdown-it-sup" id="markdown-it-sup" />
-								<code>&lt;sup&gt;</code> tag for markdown-it markdown parser.
-							</label>
-						</div>
-					</div>
-					<div class="col-sm-6">
-						<div class="form-group">
-							<label for="markdown-it-sub">
-								<input type="checkbox" name="markdown-it-sub" id="markdown-it-sub" />
-								<code>&lt;sub&gt;</code> tag for markdown-it markdown parser.
-							</label>
-						</div>
-					</div>
-				</div>
-			</div>
 		</form>
 	</div>
 	<div class="col-lg-3">
@@ -128,6 +107,43 @@
 			<div class="panel-body">
 				<button class="btn btn-primary" id="save">Save Settings</button>
 			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-heading">Markdown-it plugins</div>
+			<ul class="plugins md-plugins">
+					<!-- BEGIN mdPlugins -->
+					<li id="{mdPlugins.name}" style="margin-left: 0;">
+						<div class="pull-right">
+							<button data-action="toggleActive" data-changed="0" class="btn
+							<!-- IF mdPlugins.active --> btn-success
+							<!-- ELSE --> btn-warning
+							<!-- ENDIF mdPlugins.active -->
+							"><i class="fa fa-power-off"></i>
+							<!-- IF mdPlugins.active -->Deactivate
+							<!-- ELSE -->Activate
+							<!-- ENDIF mdPlugins.active -->
+							</button>
+							<button id="toggleInstall" class="btn
+							<!-- IF mdPlugins.installed -->
+							btn-danger"><i class="fa fa-trash-o"></i> Uninstall
+							<!-- ELSE -->
+							btn-success"><i class="fa fa-download"></i> Install
+							<!-- ENDIF mdPlugins.installed -->
+							</button>
+						</div>
+						<h2><strong>{mdPlugins.name}</strong></h2>
+						<!-- IF mdPlugins.description -->
+						<p>{mdPlugins.description}</p>
+						<!-- ENDIF mdPlugins.description -->
+						<!-- IF mdPlugins.url -->
+						<p>For more information: <a target="_blank" href="{mdPlugins.url}">{mdPlugins.url}</a></p>
+						<!-- ENDIF mdPlugins.url -->
+					</li>
+					<!-- END mdPlugins -->
+			</ul>
 		</div>
 	</div>
 </div>

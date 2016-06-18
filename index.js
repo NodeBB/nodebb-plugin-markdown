@@ -19,7 +19,8 @@
 			onLoad: function(params, callback) {
 				function render(req, res, next) {
 					res.render('admin/plugins/markdown', {
-						themes: Markdown.themes
+						themes: Markdown.themes,
+						mdPlugins: Markdown.config.mdPlugins
 					});
 				}
 
@@ -64,8 +65,15 @@
 						'externalBlank': false,
 						'nofollow': true,
 						// markdown-it-plugins
-						'markdown-it-sup': 'off',
-						'markdown-it-sub': 'off'
+						'mdPlugins': [{name: 'markdown-it-sup',
+						                active: false,
+														description: '<code>&lt;sup&gt;</code> tag for markdown-it markdown parser.',
+														url: 'https://github.com/markdown-it/markdown-it-sup'},
+														{name: 'markdown-it-sub',
+														active: false,
+														description: '<code>&lt;sub&gt;</code> tag for markdown-it markdown parser.',
+														url: 'https://github.com/markdown-it/markdown-it-sub'}
+													]
 					};
 
 				meta.settings.get('markdown', function(err, options) {
@@ -80,9 +88,6 @@
 								_self.config[field] = options[field];
 							}
 						}
-						if (field.startsWith('markdown-it-')) {
-							_self.mdPlugins.push(field);
-						}
 					}
 
 					_self.highlight = _self.config.highlight;
@@ -91,16 +96,23 @@
 					parser = new MarkdownIt(_self.config);
 
 					// load markdown-it plugins
-					for (var i = 0; i < _self.mdPlugins.length; i++) {
-						var mdPlugin = _self.mdPlugins[i];
-							if (_self.config[mdPlugin]) {
-								try {
-									parser = parser.use(require(mdPlugin));
-									winston.info('[nodebb-plugin-markdown] ' + mdPlugin + " is added to the markdown parser.");
-									} catch (err){
-										winston.error('[nodebb-plugin-markdown] ' + mdPlugin + " is not installed.");
-									}
-							}
+					var mdPlugins = _self.config.mdPlugins;
+					for (var i = 0; i < mdPlugins.length; i++) {
+						var mdPlugin = mdPlugins[i];
+						console.log(mdPlugin);
+						// check if installed
+						try {
+							require.resolve(mdPlugin.name);
+							mdPlugin.installed = true;
+							winston.info('[nodebb-plugin-markdown] ' + mdPlugin.name + " is installed.");
+						} catch (e) {
+							mdPlugin.installed = false;
+							winston.error('[nodebb-plugin-markdown] ' + mdPlugin.name + " is not installed.");
+						}
+						if (mdPlugin.active && mdPlugin.installed) {
+							parser = parser.use(require(mdPlugin.name));
+							winston.info('[nodebb-plugin-markdown] ' + mdPlugin.name + " is added to the markdown parser.");
+						}
 					}
 					Markdown.updateParserRules(parser);
 				});
