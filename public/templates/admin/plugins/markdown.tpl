@@ -126,11 +126,11 @@
 							<!-- ELSE -->Activate
 							<!-- ENDIF mdPlugins.active -->
 							</button>
-							<button id="toggleInstall" class="btn
+							<button data-action="toggleInstall" class="btn
 							<!-- IF mdPlugins.installed -->
-							btn-danger"><i class="fa fa-trash-o"></i> Uninstall
+							btn-danger" data-installed="1"><i class="fa fa-trash-o"></i> Uninstall
 							<!-- ELSE -->
-							btn-success"><i class="fa fa-download"></i> Install
+							btn-success" data-installed="0"><i class="fa fa-download"></i> Install
 							<!-- ENDIF mdPlugins.installed -->
 							</button>
 						</div>

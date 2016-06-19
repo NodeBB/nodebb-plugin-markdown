@@ -1,3 +1,6 @@
+"use strict";
+/* global define, app, socket, bootbox */
+
 define('admin/plugins/markdown', ['settings'], function(Settings) {
 	var Markdown = {};
 
@@ -40,7 +43,6 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 
 		$('#save').on('click', function() {
 			Settings.save('markdown', $('.markdown-settings'), function() {
-				console.log($('.markdown-settings'));
 				app.alert({
 					type: 'success',
 					alert_id: 'markdown-saved',
@@ -80,10 +82,50 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 		btn.toggleClass('active', changed === 1);
 	});
 
-	$('#toggleInstall').click(function(event) {
-    console.log("install clicked");
+	$('button[data-action="toggleInstall"]').click(function(event) {
+		var btn = $(this);
+		var pluginName = btn.parents('li')[0].id;
+		var installed = btn.data("installed");
+		if (installed === 0) {
+			bootbox.confirm('Are you sure you want to install the plugin ' + pluginName, function(result) {
+				if (result) {
+					socket.emit('plugins.markdown.installMdPlugin', pluginName, function(err, callback) {
+						btn.data("installed", 1);
+						btn.html('<i class="fa fa-trash-o"></i> ' + 'Uninstall');
+						btn.removeClass('btn-success').addClass('btn-danger');
+						app.alert({
+							type: 'success',
+							alert_id: pluginName + 'installed',
+							title: 'Reload Required',
+							message: 'Please reload your NodeBB to have your changes take effect',
+							clickfn: function() {
+								socket.emit('admin.reload');
+							}
+						});
+					});
+				}
+			});
+		}
+		else {
+			bootbox.confirm('Are you sure you want to uninstall the plugin ' + pluginName, function(result) {
+				if (result) {
+					socket.emit('plugins.markdown.uninstallMdPlugin', pluginName, function(err, callback) {
+						btn.data("installed", 0);
+						btn.html('<i class="fa fa-download"></i> ' + 'Install');
+						btn.removeClass('btn-danger').addClass('btn-success');
+						app.alert({
+							type: 'success',
+							alert_id: pluginName + 'uninstalled',
+							title: 'Reload Required',
+							message: 'Please reload your NodeBB to have your changes take effect',
+							clickfn: function() {
+								socket.emit('admin.reload');
+							}
+						});
+					});
+				}
+			});
+		}
 	});
-
-
 	return Markdown;
 });

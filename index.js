@@ -1,6 +1,8 @@
 (function() {
 	"use strict";
 
+	require('./websockets');
+
 	var	MarkdownIt = require('markdown-it'),
 		fs = require('fs'),
 		path = require('path'),
@@ -99,7 +101,7 @@
 					var mdPlugins = _self.config.mdPlugins;
 					for (var i = 0; i < mdPlugins.length; i++) {
 						var mdPlugin = mdPlugins[i];
-						console.log(mdPlugin);
+						
 						// check if installed
 						try {
 							require.resolve(mdPlugin.name);
