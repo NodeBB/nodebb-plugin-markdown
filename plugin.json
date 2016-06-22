@@ -17,6 +17,9 @@
         "styles": "public/styles",
         "js": "public/js"
     },
+    "modules": [
+        "./public/js/highlight.js"
+    ],
     "languages": "public/languages",
     "defaultLang": "en_GB",
     "templates": "./public/templates",
