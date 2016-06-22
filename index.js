@@ -104,21 +104,23 @@
 
 					parser = new MarkdownIt(_self.config);
 
-					// load markdown-it plugins
+					// add activated markdown-it plugins to the parser
 					for (var i = 0; i < _self.mdPlugins.length; i++) {
 						var mdPlugin = _self.mdPlugins[i];
 						// check if installed
 						try {
 							require.resolve(mdPlugin.name);
 							mdPlugin.installed = true;
-							winston.info('[nodebb-plugin-markdown] ' + mdPlugin.name + " is installed.");
 						} catch (e) {
 							mdPlugin.installed = false;
-							winston.error('[nodebb-plugin-markdown] ' + mdPlugin.name + " is not installed.");
 						}
-						if (_self.config[mdPlugin.name] && mdPlugin.installed) {
-							parser = parser.use(require(mdPlugin.name));
-							winston.info('[nodebb-plugin-markdown] ' + mdPlugin.name + " is added to the markdown parser.");
+						if (_self.config[mdPlugin.name]) {
+							if (mdPlugin.installed) {
+								parser = parser.use(require(mdPlugin.name));
+								winston.info('[nodebb-plugin-markdown] ' + mdPlugin.name + " is added to the markdown parser.");
+							} else {
+								winston.error('[nodebb-plugin-markdown] ' + mdPlugin.name + " is not installed, and cannot be added to the parser.");
+							}
 						}
 					}
 					Markdown.updateParserRules(parser);
