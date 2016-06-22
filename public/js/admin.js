@@ -116,10 +116,10 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 						app.alert({
 							type: 'success',
 							alert_id: pluginName + 'uninstalled',
-							title: 'Reload Required',
-							message: 'Please reload your NodeBB to have your changes take effect',
+							title: 'Restart Required',
+							message: 'Please restart your NodeBB to have your changes take effect',
 							clickfn: function() {
-								socket.emit('admin.reload');
+								socket.emit('admin.restart');
 							}
 						});
 					});
