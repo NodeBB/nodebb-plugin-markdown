@@ -29,10 +29,15 @@
 				'externalBlank': false,
 				'nofollow': true,
 				// markdown-it-plugins
+				'markdown-it-deflist': false,
 				'markdown-it-sup': false,
 				'markdown-it-sub': false
 			},
 			mdPlugins: [{
+			  name: 'markdown-it-deflist',
+			  description: 'Definition list (<code>&lt;dl&gt;</code>) tag plugin for markdown-it markdown parser.',
+			  url: 'https://github.com/markdown-it/markdown-it-deflist'
+			}, {
 			  name: 'markdown-it-sup',
 			  description: '<code>&lt;sup&gt;</code> tag for markdown-it markdown parser.',
 			  url: 'https://github.com/markdown-it/markdown-it-sup'
