@@ -18,15 +18,8 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 				'externalBlank': false,
 				'nofollow': true,
 				// markdown-it-plugins
-				'mdPlugins': [{name: 'markdown-it-sup',
-												active: false,
-												description: '<code>&lt;sup&gt;</code> tag for markdown-it markdown parser.',
-												url: 'https://github.com/markdown-it/markdown-it-sup'},
-												{name: 'markdown-it-sub',
-												active: false,
-												description: '<code>&lt;sub&gt;</code> tag for markdown-it markdown parser.',
-												url: 'https://github.com/markdown-it/markdown-it-sub'}
-											]
+				'markdown-it-sup': false,
+				'markdown-it-sub': false
 			};
 
 			// Set defaults
@@ -66,23 +59,23 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 				});
 			}
 		});
+
+		// Warning for activation of an uninstalled md-plugin
+		$('[id^=markdown-it-]').on('change', function() {
+		  var inputEl = $(this).find('input');
+		  var installed = $(this).find('button').data('installed');
+		  console.log(installed);
+		  if ((inputEl.prop('checked')) && (installed === 0)) {
+		    bootbox.alert('You must install the plugin in order to activate it.', function() {
+		      inputEl.prop('checked', false);
+		    });
+		  }
+		});
 	};
 
-	$('button[data-action="toggleActive"]').click(function(event) {
-		var btn = $(this);
-		var pluginName = btn.parents('li')[0].id;
-		var changed = btn.data("changed");
-		changed = (changed + 1) % 2;
-		console.log(btn.data());
-		console.log(btn);
-		//var btn = $('#' + pluginName + ' [data-action="toggleActive"]');
-		btn.data("changed", changed);
-		//btn.html('<i class="fa fa-power-off"></i> ' + (status.active ? 'Deactivate' : 'Activate'));
-		//btn.toggleClass('btn-warning', status.active).toggleClass('btn-success', !status.active);
-		btn.toggleClass('active', changed === 1);
-	});
-
+  // Install and uninstall md plugins on demand
 	$('button[data-action="toggleInstall"]').click(function(event) {
+		event.preventDefault();
 		var btn = $(this);
 		var pluginName = btn.parents('li')[0].id;
 		var installed = btn.data("installed");

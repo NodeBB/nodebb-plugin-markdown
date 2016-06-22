@@ -1,7 +1,7 @@
 (function() {
 	"use strict";
 
-	require('./websockets');
+	require('./lib/websockets');
 
 	var	MarkdownIt = require('markdown-it'),
 		fs = require('fs'),
@@ -17,12 +17,20 @@
 	var	parser,
 		Markdown = {
 			config: {},
-			mdPlugins: [],
+			mdPlugins: [{
+			  name: 'markdown-it-sup',
+			  description: '<code>&lt;sup&gt;</code> tag for markdown-it markdown parser.',
+			  url: 'https://github.com/markdown-it/markdown-it-sup'
+			}, {
+			  name: 'markdown-it-sub',
+			  description: '<code>&lt;sub&gt;</code> tag for markdown-it markdown parser.',
+			  url: 'https://github.com/markdown-it/markdown-it-sub'
+			}],
 			onLoad: function(params, callback) {
 				function render(req, res, next) {
 					res.render('admin/plugins/markdown', {
 						themes: Markdown.themes,
-						mdPlugins: Markdown.config.mdPlugins
+						mdPlugins: Markdown.mdPlugins
 					});
 				}
 
@@ -67,15 +75,8 @@
 						'externalBlank': false,
 						'nofollow': true,
 						// markdown-it-plugins
-						'mdPlugins': [{name: 'markdown-it-sup',
-						                active: false,
-														description: '<code>&lt;sup&gt;</code> tag for markdown-it markdown parser.',
-														url: 'https://github.com/markdown-it/markdown-it-sup'},
-														{name: 'markdown-it-sub',
-														active: false,
-														description: '<code>&lt;sub&gt;</code> tag for markdown-it markdown parser.',
-														url: 'https://github.com/markdown-it/markdown-it-sub'}
-													]
+						'markdown-it-sup': false,
+						'markdown-it-sub': false
 					};
 
 				meta.settings.get('markdown', function(err, options) {
@@ -98,10 +99,8 @@
 					parser = new MarkdownIt(_self.config);
 
 					// load markdown-it plugins
-					var mdPlugins = _self.config.mdPlugins;
-					for (var i = 0; i < mdPlugins.length; i++) {
-						var mdPlugin = mdPlugins[i];
-						
+					for (var i = 0; i < _self.mdPlugins.length; i++) {
+						var mdPlugin = _self.mdPlugins[i];
 						// check if installed
 						try {
 							require.resolve(mdPlugin.name);
@@ -111,7 +110,7 @@
 							mdPlugin.installed = false;
 							winston.error('[nodebb-plugin-markdown] ' + mdPlugin.name + " is not installed.");
 						}
-						if (mdPlugin.active && mdPlugin.installed) {
+						if (_self.config[mdPlugin.name] && mdPlugin.installed) {
 							parser = parser.use(require(mdPlugin.name));
 							winston.info('[nodebb-plugin-markdown] ' + mdPlugin.name + " is added to the markdown parser.");
 						}
