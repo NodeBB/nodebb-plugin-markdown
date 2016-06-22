@@ -17,6 +17,21 @@
 	var	parser,
 		Markdown = {
 			config: {},
+			defaults: {
+				'html': false,
+				'xhtmlOut': true,
+				'breaks': true,
+				'langPrefix': 'language-',
+				'linkify': true,
+				'typographer': false,
+				'highlight': true,
+				'highlightTheme': 'railscasts.css',
+				'externalBlank': false,
+				'nofollow': true,
+				// markdown-it-plugins
+				'markdown-it-sup': false,
+				'markdown-it-sub': false
+			},
 			mdPlugins: [{
 			  name: 'markdown-it-sup',
 			  description: '<code>&lt;sup&gt;</code> tag for markdown-it markdown parser.',
@@ -30,7 +45,8 @@
 				function render(req, res, next) {
 					res.render('admin/plugins/markdown', {
 						themes: Markdown.themes,
-						mdPlugins: Markdown.mdPlugins
+						mdPlugins: Markdown.mdPlugins,
+						defaults: Markdown.defaults
 					});
 				}
 
@@ -62,28 +78,13 @@
 
 			init: function() {
 				// Load saved config
-				var	_self = this,
-					defaults = {
-						'html': false,
-						'xhtmlOut': true,
-						'breaks': true,
-						'langPrefix': 'language-',
-						'linkify': true,
-						'typographer': false,
-						'highlight': true,
-						'highlightTheme': 'railscasts.css',
-						'externalBlank': false,
-						'nofollow': true,
-						// markdown-it-plugins
-						'markdown-it-sup': false,
-						'markdown-it-sub': false
-					};
+				var	_self = this;
 
 				meta.settings.get('markdown', function(err, options) {
-					for(var field in defaults) {
+					for(var field in _self.defaults) {
 						// If not set in config (nil)
 						if (!options.hasOwnProperty(field)) {
-							_self.config[field] = defaults[field];
+							_self.config[field] = _self.defaults[field];
 						} else {
 							if (field !== 'langPrefix' && field !== 'highlightTheme' && field !== 'headerPrefix') {
 								_self.config[field] = options[field] === 'on' ? true : false;

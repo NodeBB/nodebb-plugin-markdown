@@ -6,32 +6,19 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 
 	Markdown.init = function() {
 		Settings.load('markdown', $('.markdown-settings'), function(err, settings) {
-			var defaults = {
-				'html': false,
-				'xhtmlOut': true,
-				'breaks': true,
-				'langPrefix': 'language-',
-				'linkify': true,
-				'typographer': false,
-				'highlight': true,
-				'highlightTheme': 'railscasts.css',
-				'externalBlank': false,
-				'nofollow': true,
-				// markdown-it-plugins
-				'markdown-it-sup': false,
-				'markdown-it-sub': false
-			};
-
 			// Set defaults
-			for(var setting in defaults) {
-				if (!settings.hasOwnProperty(setting)) {
-					if (typeof defaults[setting] === 'boolean') {
-						$('#' + setting).prop('checked', defaults[setting]);
-					} else {
-						$('#' + setting).val(defaults[setting]);
+			$.get('/api' + window.location.pathname, function(data) {
+ 			  var defaults = data.defaults;
+				for(var setting in defaults) {
+					if (!settings.hasOwnProperty(setting)) {
+						if (typeof defaults[setting] === 'boolean') {
+							$('#' + setting).prop('checked', defaults[setting]);
+						} else {
+							$('#' + setting).val(defaults[setting]);
+						}
 					}
 				}
-			}
+ 			});
 		});
 
 		$('#save').on('click', function() {
