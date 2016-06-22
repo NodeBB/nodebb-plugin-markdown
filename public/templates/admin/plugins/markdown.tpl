@@ -99,7 +99,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-sm-12">
+			<div class="row">
 				<div class="panel panel-default">
 					<div class="panel-heading">Markdown-it plugins</div>
 						<ul class="plugins md-plugins">
