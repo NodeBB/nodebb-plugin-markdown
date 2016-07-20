@@ -154,6 +154,9 @@
 					},
 					renderLink = parser.renderer.rules.link_open || function(tokens, idx, options, env, self) {
 						return self.renderToken.apply(self, arguments);
+					},
+					renderTable = parser.renderer.rules.table_open || function(tokens, idx, options, env, self) {
+						return self.renderToken.apply(self, arguments);
 					};
 
 				parser.renderer.rules.image = function (tokens, idx, options, env, self) {
@@ -197,6 +200,18 @@
 					}
 
 					return renderLink(tokens, idx, options, env, self);
+				};
+
+				parser.renderer.rules.table_open = function(tokens, idx, options, env, self) {
+					var classIdx = tokens[idx].attrIndex('class');
+
+					if (classIdx < 0) {
+						tokens[idx].attrPush(['class', 'table table-bordered table-striped']);
+					} else {
+						tokens[idx].attrs[classIdx][1] = tokens[idx].attrs[classIdx][1] + ' table table-bordered table-striped';
+					}
+
+					return renderTable(tokens, idx, options, env, self);
 				};
 
 				plugins.fireHook('action:markdown.updateParserRules', parser);
