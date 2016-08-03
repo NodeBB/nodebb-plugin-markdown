@@ -44,6 +44,16 @@
 					type: "",
 					href: nconf.get('relative_path') + '/plugins/nodebb-plugin-markdown/styles/' + (Markdown.config.highlightTheme || 'railscasts.css')
 				});
+
+				var prefetch = ['/src/modules/highlight.js', '/language/' + (meta.config.defaultLang || 'en_GB') + '/markdown.json'];
+				links = links.concat(prefetch.map(function(path) {
+					path = {
+						rel: 'prefetch',
+						href: nconf.get('relative_path') + path + (meta.config['cache-buster'] ? '?v=' + meta.config['cache-buster'] : '')
+					}
+					return path;
+				}));
+
 				callback(null, links);
 			},
 
