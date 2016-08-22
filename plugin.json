@@ -4,8 +4,8 @@
     "description": "A Markdown parser for NodeBB",
     "url": "https://github.com/julianlam/nodebb-plugin-markdown",
     "library": "./index.js",
-    "less": [
-        "public/less/default.less"
+    "sass": [
+        "public/less/default.scss"
     ],
     "scripts": [
         "public/js/client.js"
