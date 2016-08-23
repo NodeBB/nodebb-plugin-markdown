@@ -1,11 +1,11 @@
 <div class="row">
-	<div class="col-lg-9">
+	<div class="col-xl-9">
 		<form class="form markdown-settings">
-			<div class="panel panel-default">
-				<div class="panel-heading">Markdown</div>
-				<div class="panel-body">
+			<div class="card">
+				<div class="card-header">Markdown</div>
+				<div class="card-block">
 					<div class="row">
-						<div class="col-lg-6">
+						<div class="col-xl-6">
 							<div class="form-group">
 								<label for="xhtmlOut">
 									<input type="checkbox" name="xhtmlOut" id="xhtmlOut" />
@@ -25,7 +25,7 @@
 								</label>
 							</div>
 						</div>
-						<div class="col-lg-6">
+						<div class="col-xl-6">
 							<div class="form-group">
 								<label for="linkify">
 									<input type="checkbox" name="linkify" id="linkify" />
@@ -49,10 +49,10 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-6">
-					<div class="panel panel-default">
-						<div class="panel-heading">Code Formatting</div>
-						<div class="panel-body">
+				<div class="col-md-6">
+					<div class="card">
+						<div class="card-header">Code Formatting</div>
+						<div class="card-block">
 							<div class="form-group">
 								<label for="highlight">
 									<input type="checkbox" name="highlight" id="highlight" />
@@ -76,10 +76,10 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-sm-6">
-					<div class="panel panel-danger">
-						<div class="panel-heading">Danger Zone</div>
-						<div class="panel-body">
+				<div class="col-md-6">
+					<div class="card">
+						<div class="card-header bg-danger">Danger Zone</div>
+						<div class="card-block">
 							<div class="form-group">
 								<label for="html">
 									<input type="checkbox" name="html" id="html" />
@@ -101,10 +101,10 @@
 			</div>
 		</form>
 	</div>
-	<div class="col-lg-3">
-		<div class="panel panel-default">
-			<div class="panel-heading">Markdown Control Panel</div>
-			<div class="panel-body">
+	<div class="col-xl-3">
+		<div class="card">
+			<div class="card-header">Markdown Control Panel</div>
+			<div class="card-block">
 				<button class="btn btn-primary" id="save">Save Settings</button>
 			</div>
 		</div>
