@@ -5,7 +5,7 @@
     "url": "https://github.com/julianlam/nodebb-plugin-markdown",
     "library": "./index.js",
     "sass": [
-        "public/less/default.scss"
+        "public/sass/default.scss"
     ],
     "scripts": [
         "public/js/client.js"
