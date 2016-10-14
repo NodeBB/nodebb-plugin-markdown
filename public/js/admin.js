@@ -2,13 +2,12 @@
 /* global define, app, socket, bootbox */
 
 define('admin/plugins/markdown', ['settings'], function(Settings) {
-	var Markdown = {};
 
-	Markdown.init = function() {
-		Settings.load('markdown', $('.markdown-settings'), function(err, settings) {
-			// Set defaults
-			$.get('/api' + window.location.pathname, function(data) {
- 			  var defaults = data.defaults;
+	var Markdown = {
+		init: function() {
+			// Fill in the form
+			Settings.load('markdown', $('.markdown-settings'), function(err, settings) {
+				var defaults = ajaxify.data.defaults;
 				for(var setting in defaults) {
 					if (!settings.hasOwnProperty(setting)) {
 						if (typeof defaults[setting] === 'boolean') {
@@ -18,8 +17,8 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 						}
 					}
 				}
- 			});
-		});
+			});
+		};
 
 		$('#save').on('click', function() {
 			Settings.save('markdown', $('.markdown-settings'), function() {
@@ -51,7 +50,6 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 		$('[id^=markdown-it-]').on('change', function() {
 		  var inputEl = $(this).find('input');
 		  var installed = $(this).find('button').data('installed');
-		  console.log(installed);
 		  if ((inputEl.prop('checked')) && (installed === 0)) {
 		    bootbox.alert('You must install the plugin in order to activate it.', function() {
 		      inputEl.prop('checked', false);
