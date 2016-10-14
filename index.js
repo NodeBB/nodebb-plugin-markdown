@@ -78,6 +78,16 @@
 					type: "",
 					href: nconf.get('relative_path') + '/plugins/nodebb-plugin-markdown/styles/' + (Markdown.config.highlightTheme || 'railscasts.css')
 				});
+
+				var prefetch = ['/src/modules/highlight.js', '/language/' + (meta.config.defaultLang || 'en_GB') + '/markdown.json'];
+				links = links.concat(prefetch.map(function(path) {
+					path = {
+						rel: 'prefetch',
+						href: nconf.get('relative_path') + path + (meta.config['cache-buster'] ? '?v=' + meta.config['cache-buster'] : '')
+					}
+					return path;
+				}));
+
 				callback(null, links);
 			},
 
@@ -192,6 +202,9 @@
 					},
 					renderLink = parser.renderer.rules.link_open || function(tokens, idx, options, env, self) {
 						return self.renderToken.apply(self, arguments);
+					},
+					renderTable = parser.renderer.rules.table_open || function(tokens, idx, options, env, self) {
+						return self.renderToken.apply(self, arguments);
 					};
 
 				parser.renderer.rules.image = function (tokens, idx, options, env, self) {
@@ -235,6 +248,18 @@
 					}
 
 					return renderLink(tokens, idx, options, env, self);
+				};
+
+				parser.renderer.rules.table_open = function(tokens, idx, options, env, self) {
+					var classIdx = tokens[idx].attrIndex('class');
+
+					if (classIdx < 0) {
+						tokens[idx].attrPush(['class', 'table table-bordered table-striped']);
+					} else {
+						tokens[idx].attrs[classIdx][1] = tokens[idx].attrs[classIdx][1] + ' table table-bordered table-striped';
+					}
+
+					return renderTable(tokens, idx, options, env, self);
 				};
 
 				plugins.fireHook('action:markdown.updateParserRules', parser);

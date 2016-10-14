@@ -1,2 +1,3 @@
 node_modules/
 sftp-config.json
+*.sublime*

@@ -100,21 +100,13 @@ $(document).ready(function() {
 	};
 
 	function highlight(elements) {
-		function highlightBlock() {
-			codeBlocks.each(function(i, block) {
-				$(block.parentNode).addClass('markdown-highlight');
-				hljs.highlightBlock(block);
-			});
-		}
-
 		if (parseInt(config.markdown.highlight, 10)) {
-			var codeBlocks = elements;
-
-			if (typeof hljs === 'undefined') {
-				$.getScript(RELATIVE_PATH + '/plugins/nodebb-plugin-markdown/js/highlight.js', highlightBlock);
-			} else {
-				highlightBlock();
-			}
+			require(['highlight'], function(hljs) {
+				elements.each(function(i, block) {
+					$(block.parentNode).addClass('markdown-highlight');
+					hljs.highlightBlock(block);
+				});
+			});
 		}
 	}
 
