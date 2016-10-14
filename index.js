@@ -1,13 +1,10 @@
 (function() {
 	"use strict";
 
-	require('./lib/websockets');
-
 	var	MarkdownIt = require('markdown-it'),
 		fs = require('fs'),
 		path = require('path'),
-		url = require('url'),
-		winston = require('winston');
+		url = require('url');
 
 	var	meta = module.parent.require('./meta'),
 		nconf = module.parent.require('nconf'),
@@ -17,41 +14,10 @@
 	var	parser,
 		Markdown = {
 			config: {},
-			defaults: {
-				'html': false,
-				'xhtmlOut': true,
-				'breaks': true,
-				'langPrefix': 'language-',
-				'linkify': true,
-				'typographer': false,
-				'highlight': true,
-				'highlightTheme': 'railscasts.css',
-				'externalBlank': false,
-				'nofollow': true,
-				// markdown-it-plugins
-				'markdown-it-deflist': false,
-				'markdown-it-sup': false,
-				'markdown-it-sub': false
-			},
-			mdPlugins: [{
-			  name: 'markdown-it-deflist',
-			  description: 'Definition list (<code>&lt;dl&gt;</code>) tag plugin for markdown-it markdown parser.',
-			  url: 'https://github.com/markdown-it/markdown-it-deflist'
-			}, {
-			  name: 'markdown-it-sup',
-			  description: '<code>&lt;sup&gt;</code> tag for markdown-it markdown parser.',
-			  url: 'https://github.com/markdown-it/markdown-it-sup'
-			}, {
-			  name: 'markdown-it-sub',
-			  description: '<code>&lt;sub&gt;</code> tag for markdown-it markdown parser.',
-			  url: 'https://github.com/markdown-it/markdown-it-sub'
-			}],
 			onLoad: function(params, callback) {
 				function render(req, res, next) {
 					res.render('admin/plugins/markdown', {
-						themes: Markdown.themes,
-						mdPlugins: Markdown.mdPlugins,
-						defaults: Markdown.defaults
+						themes: Markdown.themes
 					});
 				}
 
@@ -93,13 +59,28 @@
 
 			init: function() {
 				// Load saved config
-				var	_self = this;
+				var	_self = this,
+					fields = [
+						'html', 'xhtmlOut', 'breaks', 'langPrefix', 'linkify', 'typographer', 'externalBlank', 'nofollow'
+					],
+					defaults = {
+						'html': false,
+						'xhtmlOut': true,
+						'breaks': true,
+						'langPrefix': 'language-',
+						'linkify': true,
+						'typographer': false,
+						'highlight': true,
+						'highlightTheme': 'railscasts.css',
+						'externalBlank': false,
+						'nofollow': true
+					};
 
 				meta.settings.get('markdown', function(err, options) {
-					for(var field in _self.defaults) {
+					for(var field in defaults) {
 						// If not set in config (nil)
 						if (!options.hasOwnProperty(field)) {
-							_self.config[field] = _self.defaults[field];
+							_self.config[field] = defaults[field];
 						} else {
 							if (field !== 'langPrefix' && field !== 'highlightTheme' && field !== 'headerPrefix') {
 								_self.config[field] = options[field] === 'on' ? true : false;
@@ -114,25 +95,6 @@
 
 					parser = new MarkdownIt(_self.config);
 
-					// add activated markdown-it plugins to the parser
-					for (var i = 0; i < _self.mdPlugins.length; i++) {
-						var mdPlugin = _self.mdPlugins[i];
-						// check if installed
-						try {
-							require.resolve(mdPlugin.name);
-							mdPlugin.installed = true;
-						} catch (e) {
-							mdPlugin.installed = false;
-						}
-						if (_self.config[mdPlugin.name]) {
-							if (mdPlugin.installed) {
-								parser = parser.use(require(mdPlugin.name));
-								winston.info('[nodebb-plugin-markdown] ' + mdPlugin.name + " is added to the markdown parser.");
-							} else {
-								winston.error('[nodebb-plugin-markdown] ' + mdPlugin.name + " is not installed, and cannot be added to the parser.");
-							}
-						}
-					}
 					Markdown.updateParserRules(parser);
 				});
 			},
@@ -145,7 +107,7 @@
 					}).map(function(file) {
 						return {
 							name: file
-						};
+						}
 					});
 				});
 			},
@@ -308,3 +270,4 @@
 
 	module.exports = Markdown;
 })();
+

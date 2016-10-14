@@ -7,9 +7,3 @@ To customise options for the parser, please consult the "Markdown" page in the a
 ## Installation
 
     npm install nodebb-plugin-markdown
-
-## ACP
-
-This plugin can be configured from the ACP, and you can also install or remove markdown-it [plugins](https://www.npmjs.com/browse/keyword/markdown-it-plugin).
-
-![ACP screenshot](screenshot.jpg)
