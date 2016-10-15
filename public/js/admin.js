@@ -16,6 +16,11 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 							$('#' + setting).val(defaults[setting]);
 						}
 					}
+					// store initial activation state of plugin
+					if (setting.startsWith('markdown-it-')) {
+						var inputEl = $('#' + setting).children('h2').children('input');
+						inputEl.prop('defaultChecked', inputEl.prop('checked'));
+					}
 				}
 		});
 
@@ -48,8 +53,9 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 		// Warning for activation of an uninstalled md-plugin
 		$('[id^=markdown-it-]').on('change', function() {
 		  var inputEl = $(this).find('input');
+			var activated = inputEl.prop('checked');
 		  var installed = $(this).find('button').data('installed');
-		  if ((inputEl.prop('checked')) && (installed === 0)) {
+		  if ((activated) && (installed === 0)) {
 		    bootbox.alert('You must install the plugin in order to activate it.', function() {
 		      inputEl.prop('checked', false);
 		    });
@@ -90,31 +96,37 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 			});
 		}
 		else {
-			bootbox.confirm('Are you sure you want to uninstall the plugin ' + pluginName, function(result) {
-				if (result) {
-					btn.html('<i class="fa fa-refresh fa-spin"></i> ' + 'Uninstalling');
-					btn.removeClass('btn-danger').addClass('btn-warning');
-					socket.emit('plugins.markdown.uninstallMdPlugin', pluginName, function(err, callback) {
-						if (err) {
-							btn.html('<i class="fa fa-trash-o"></i> ' + 'Uninstall');
-							btn.removeClass('btn-warning').addClass('btn-danger');
-							return app.alertError(err.message);
-						}
-						btn.data("installed", 0);
-						btn.html('<i class="fa fa-download"></i> ' + 'Install');
-						btn.removeClass('btn-warning').addClass('btn-success');
-						app.alert({
-							type: 'success',
-							alert_id: pluginName + 'uninstalled',
-							title: 'Restart Required',
-							message: 'Please restart your NodeBB to have your changes take effect',
-							clickfn: function() {
-								socket.emit('admin.restart');
+			var activated = btn.parent().next().children('input')[0].defaultChecked;
+			if (activated) {
+		    bootbox.alert('You need to deactivate the plugin and save settings in order to uninstall it.');
+		  }
+			else {
+				bootbox.confirm('Are you sure you want to uninstall the plugin ' + pluginName, function(result) {
+					if (result) {
+						btn.html('<i class="fa fa-refresh fa-spin"></i> ' + 'Uninstalling');
+						btn.removeClass('btn-danger').addClass('btn-warning');
+						socket.emit('plugins.markdown.uninstallMdPlugin', pluginName, function(err, callback) {
+							if (err) {
+								btn.html('<i class="fa fa-trash-o"></i> ' + 'Uninstall');
+								btn.removeClass('btn-warning').addClass('btn-danger');
+								return app.alertError(err.message);
 							}
+							btn.data("installed", 0);
+							btn.html('<i class="fa fa-download"></i> ' + 'Install');
+							btn.removeClass('btn-warning').addClass('btn-success');
+							app.alert({
+								type: 'success',
+								alert_id: pluginName + 'uninstalled',
+								title: 'Restart Required',
+								message: 'Please restart your NodeBB to have your changes take effect',
+								clickfn: function() {
+									socket.emit('admin.restart');
+								}
+							});
 						});
-					});
-				}
-			});
+					}
+				});
+			}
 		}
 	});
 };
