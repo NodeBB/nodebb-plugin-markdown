@@ -1,12 +1,12 @@
 "use strict";
-/* global define, app, socket, bootbox */
+/* global define, app, ajaxify, bootbox, socket */
 
 define('admin/plugins/markdown', ['settings'], function(Settings) {
+	var Markdown = {};
 
-	var Markdown = {
-		init: function() {
-			// Fill in the form
-			Settings.load('markdown', $('.markdown-settings'), function(err, settings) {
+	Markdown.init = function() {
+		// Set defaults
+		Settings.load('markdown', $('.markdown-settings'), function(err, settings) {
 				var defaults = ajaxify.data.defaults;
 				for(var setting in defaults) {
 					if (!settings.hasOwnProperty(setting)) {
@@ -17,8 +17,7 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 						}
 					}
 				}
-			});
-		};
+		});
 
 		$('#save').on('click', function() {
 			Settings.save('markdown', $('.markdown-settings'), function() {
@@ -56,7 +55,6 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 		    });
 		  }
 		});
-	};
 
   // Install and uninstall md plugins on demand
 	$('button[data-action="toggleInstall"]').click(function(event) {
@@ -67,10 +65,17 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 		if (installed === 0) {
 			bootbox.confirm('Are you sure you want to install the plugin ' + pluginName, function(result) {
 				if (result) {
+					btn.html('<i class="fa fa-refresh fa-spin"></i> ' + 'Installing');
+					btn.removeClass('btn-success').addClass('btn-warning');
 					socket.emit('plugins.markdown.installMdPlugin', pluginName, function(err, callback) {
+						if (err) {
+							btn.html('<i class="fa fa-download"></i> ' + 'Install');
+							btn.removeClass('btn-warning').addClass('btn-success');
+							return app.alertError(err.message);
+						}
 						btn.data("installed", 1);
 						btn.html('<i class="fa fa-trash-o"></i> ' + 'Uninstall');
-						btn.removeClass('btn-success').addClass('btn-danger');
+						btn.removeClass('btn-warning').addClass('btn-danger');
 						app.alert({
 							type: 'success',
 							alert_id: pluginName + 'installed',
@@ -87,10 +92,17 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 		else {
 			bootbox.confirm('Are you sure you want to uninstall the plugin ' + pluginName, function(result) {
 				if (result) {
+					btn.html('<i class="fa fa-refresh fa-spin"></i> ' + 'Uninstalling');
+					btn.removeClass('btn-danger').addClass('btn-warning');
 					socket.emit('plugins.markdown.uninstallMdPlugin', pluginName, function(err, callback) {
+						if (err) {
+							btn.html('<i class="fa fa-trash-o"></i> ' + 'Uninstall');
+							btn.removeClass('btn-warning').addClass('btn-danger');
+							return app.alertError(err.message);
+						}
 						btn.data("installed", 0);
 						btn.html('<i class="fa fa-download"></i> ' + 'Install');
-						btn.removeClass('btn-danger').addClass('btn-success');
+						btn.removeClass('btn-warning').addClass('btn-success');
 						app.alert({
 							type: 'success',
 							alert_id: pluginName + 'uninstalled',
@@ -105,5 +117,6 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 			});
 		}
 	});
+};
 	return Markdown;
 });
