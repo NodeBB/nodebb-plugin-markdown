@@ -45,7 +45,7 @@
 					href: nconf.get('relative_path') + '/plugins/nodebb-plugin-markdown/styles/' + (Markdown.config.highlightTheme || 'railscasts.css')
 				});
 
-				var prefetch = ['/src/modules/highlight.js', '/language/' + (meta.config.defaultLang || 'en-GB') + '/markdown.json'];
+				var prefetch = ['/src/modules/highlight.js', '/api/language/' + (meta.config.defaultLang || 'en-GB') + '/markdown'];
 				links = links.concat(prefetch.map(function(path) {
 					path = {
 						rel: 'prefetch',
