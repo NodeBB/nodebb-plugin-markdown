@@ -21,6 +21,6 @@
     "markdown-it": "^6.0.0"
   },
   "nbbpm": {
-    "compatibility": "^1.0.3"
+    "compatibility": "^1.4.4"
   }
 }
