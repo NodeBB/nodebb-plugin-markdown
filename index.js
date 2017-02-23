@@ -230,7 +230,11 @@
 			isUrlValid: function(src) {
 				try {
 					var urlObj = url.parse(src, false, true);
-					if (urlObj.host === null && !urlObj.pathname.toString().startsWith(nconf.get('relative_path') + nconf.get('upload_url'))) {
+					if (
+						urlObj.host === null &&
+						!urlObj.pathname.toString().startsWith(nconf.get('relative_path') + nconf.get('upload_url')) &&
+						!urlObj.pathname.toString().startsWith(nconf.get('relative_path') +  '/uploads') // Backward compatibility https://github.com/NodeBB/NodeBB/issues/5441
+					) {
 						return false;
 					} else {
 						return true;
