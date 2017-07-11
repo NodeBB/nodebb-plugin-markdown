@@ -38,15 +38,15 @@
 				callback(null, config);
 			},
 
-			getLinkTags: function(links, callback) {
-				links.push({
+			getLinkTags: function(hookData, callback) {
+				hookData.defaultLinks.push({
 					rel: "stylesheet",
 					type: "",
 					href: nconf.get('relative_path') + '/plugins/nodebb-plugin-markdown/styles/' + (Markdown.config.highlightTheme || 'railscasts.css')
 				});
 
 				var prefetch = ['/assets/src/modules/highlight.js', '/assets/language/' + (meta.config.defaultLang || 'en-GB') + '/markdown.json'];
-				links = links.concat(prefetch.map(function(path) {
+				hookData.defaultLinks = hookData.defaultLinks.concat(prefetch.map(function(path) {
 					path = {
 						rel: 'prefetch',
 						href: nconf.get('relative_path') + path + '?' + meta.config['cache-buster']
@@ -54,7 +54,7 @@
 					return path;
 				}));
 
-				callback(null, links);
+				callback(null, hookData);
 			},
 
 			init: function() {
