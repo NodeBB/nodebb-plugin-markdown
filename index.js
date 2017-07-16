@@ -245,9 +245,15 @@
 			},
 
 			isExternalLink: function(urlString) {
-				var urlObj = url.parse(urlString),
+				var urlObj;
+				var baseUrlObj;
+				try {
+					urlObj = url.parse(urlString);
 					baseUrlObj = url.parse(nconf.get('url'));
-
+				} catch (err) {
+					return false;
+				}
+				
 				if (
 					urlObj.host === null ||	// Relative paths are always internal links...
 					(urlObj.host === baseUrlObj.host && urlObj.protocol === baseUrlObj.protocol &&	// Otherwise need to check that protocol and host match
