@@ -39,14 +39,14 @@
 			},
 
 			getLinkTags: function(hookData, callback) {
-				hookData.defaultLinks.push({
+				hookData.links.push({
 					rel: "stylesheet",
 					type: "",
 					href: nconf.get('relative_path') + '/plugins/nodebb-plugin-markdown/styles/' + (Markdown.config.highlightTheme || 'railscasts.css')
 				});
 
 				var prefetch = ['/assets/src/modules/highlight.js', '/assets/language/' + (meta.config.defaultLang || 'en-GB') + '/markdown.json'];
-				hookData.defaultLinks = hookData.defaultLinks.concat(prefetch.map(function(path) {
+				hookData.links = hookData.links.concat(prefetch.map(function(path) {
 					path = {
 						rel: 'prefetch',
 						href: nconf.get('relative_path') + path + '?' + meta.config['cache-buster']
