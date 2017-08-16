@@ -198,13 +198,20 @@
 							} else {
 								tokens[idx].attrs[targetIdx][1] = '_blank';
 							}
+
+							if (relIdx < 0) {
+								tokens[idx].attrPush(['rel', 'noopener noreferrer']);
+								relIdx = tokens[idx].attrIndex('rel')
+							} else {
+								tokens[idx].attrs[relIdx][1] = 'noopener noreferrer';
+							}
 						}
 
 						if (Markdown.config.nofollow) {
 							if (relIdx < 0) {
 								tokens[idx].attrPush(['rel', 'nofollow']);
 							} else {
-								tokens[idx].attrs[relIdx][1] = 'nofollow';
+								tokens[idx].attrs[relIdx][1] += ' nofollow';
 							}
 						}
 					}
