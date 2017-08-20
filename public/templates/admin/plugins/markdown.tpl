@@ -99,6 +99,36 @@
 					</div>
 				</div>
 			</div>
+			<div class="row">
+				<div class="panel panel-default">
+					<div class="panel-heading">Markdown-it plugins</div>
+						<ul class="plugins md-plugins">
+								<!-- BEGIN mdPlugins -->
+								<li id="{mdPlugins.name}" style="margin-left: 0;">
+									<div class="pull-right">
+										<button data-action="toggleInstall" class="btn
+										<!-- IF mdPlugins.installed -->
+										btn-danger" data-installed="1"><i class="fa fa-trash-o"></i> Uninstall
+										<!-- ELSE -->
+										btn-success" data-installed="0"><i class="fa fa-download"></i> Install
+										<!-- ENDIF mdPlugins.installed -->
+										</button>
+									</div>
+									<h2>
+										<input type="checkbox" name="{mdPlugins.name}" data-key="{mdPlugins.name}" />
+										<strong>{mdPlugins.name}</strong>
+									</h2>
+									<!-- IF mdPlugins.description -->
+									<p>{mdPlugins.description}</p>
+									<!-- ENDIF mdPlugins.description -->
+									<!-- IF mdPlugins.url -->
+									<p>For more information: <a target="_blank" href="{mdPlugins.url}">{mdPlugins.url}</a></p>
+									<!-- ENDIF mdPlugins.url -->
+								</li>
+								<!-- END mdPlugins -->
+						</ul>
+					</div>
+				</div>
 		</form>
 	</div>
 	<div class="col-lg-3">
