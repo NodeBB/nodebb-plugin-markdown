@@ -41,7 +41,7 @@ var Markdown = {
 
 	getLinkTags: function (hookData, callback) {
 		hookData.links.push({
-			rel: 'stylesheet',
+			rel: 'prefetch stylesheet',
 			type: '',
 			href: nconf.get('relative_path') + '/plugins/nodebb-plugin-markdown/styles/' + (Markdown.config.highlightTheme || 'railscasts.css'),
 		});
