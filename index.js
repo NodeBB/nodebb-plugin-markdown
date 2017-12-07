@@ -172,7 +172,7 @@ var Markdown = {
 				});
 			}
 
-			return html + 'derp';
+			return html;
 		};
 
 		if (payload.hasOwnProperty('postData')) {
