@@ -4,6 +4,7 @@ var	MarkdownIt = require('markdown-it');
 var fs = require('fs');
 var path = require('path');
 var url = require('url');
+var async = require('async');
 
 var	meta = module.parent.require('./meta');
 var nconf = module.parent.require('nconf');
@@ -118,26 +119,73 @@ var Markdown = {
 	},
 
 	parsePost: function (data, callback) {
-		if (data && data.postData && data.postData.content && parser) {
-			data.postData.content = parser.render(data.postData.content);
-		}
-		callback(null, data);
+		async.waterfall([
+			function (next) {
+				if (data && data.postData && data.postData.content && parser) {
+					data.postData.content = parser.render(data.postData.content);
+				}
+				next(null, data);
+			},
+			async.apply(Markdown.postParse),
+		], callback);
 	},
 
 	parseSignature: function (data, callback) {
-		if (data && data.userData && data.userData.signature && parser) {
-			data.userData.signature = parser.render(data.userData.signature);
-		}
-		callback(null, data);
+		async.waterfall([
+			function (next) {
+				if (data && data.userData && data.userData.signature && parser) {
+					data.userData.signature = parser.render(data.userData.signature);
+				}
+				next(null, data);
+			},
+			async.apply(Markdown.postParse),
+		], callback);
 	},
 
 	parseAboutMe: function (aboutme, callback) {
-		callback(null, (aboutme && parser) ? parser.render(aboutme) : aboutme);
+		async.waterfall([
+			function (next) {
+				aboutme = (aboutme && parser) ? parser.render(aboutme) : aboutme;
+				process.nextTick(next, null, aboutme);
+			},
+			async.apply(Markdown.postParse),
+		], callback);
 	},
 
 	parseRaw: function (raw, callback) {
-		callback(null, (raw && parser) ? parser.render(raw) : raw);
+		async.waterfall([
+			function (next) {
+				raw = (raw && parser) ? parser.render(raw) : raw;
+				process.nextTick(next, null, raw);
+			},
+			async.apply(Markdown.postParse),
+		], callback);
 	},
+
+	postParse: function (payload, next) {
+		var italicMention = /@<em>([^<]+)<\/em>/g;
+		var execute = function (html) {
+			// Replace all italicised mentions back to regular mentions
+			if (italicMention.test(html)) {
+				html = html.replace(italicMention, function (match, slug) {
+					return '@_' + slug + '_';
+				});
+			}
+
+			return html + 'derp';
+		};
+
+		if (payload.hasOwnProperty('postData')) {
+			payload.postData.content = execute(payload.postData.content);
+		} else if (payload.hasOwnProperty('userData')) {
+			payload.userData.signature = execute(payload.userData.signature);
+		} else {
+			payload = execute(payload);
+		}
+
+		next(null, payload);
+	},
+
 	renderHelp: function (helpContent, callback) {
 		translator.translate('[[markdown:help_text]]', function (translated) {
 			plugins.fireHook('filter:parse.raw', '## Markdown\n' + translated, function (err, parsed) {
