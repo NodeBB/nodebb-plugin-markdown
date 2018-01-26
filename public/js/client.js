@@ -5,9 +5,51 @@
 $(document).ready(function () {
 	var Markdown = {};
 
-	$(window).on('action:composer.enhanced', function () {
+	$(window).on('action:composer.enhanced', function (evt, data) {
+		var textareaEl = data.postContainer.find('textarea');
+		Markdown.capturePaste(textareaEl);
 		Markdown.prepareFormattingTools();
 	});
+
+	Markdown.capturePaste = function (targetEl) {
+		targetEl.on('paste', function (e) {
+			var triggers = [/^\>\s*/, /^\s*\*\s+/, /^\s*\d+\.\s+/, /^\s{4,}/];
+			var start = e.target.selectionStart;
+			var line = getLine(targetEl.val(), start);
+
+			var trigger = triggers.reduce(function (regexp, cur) {
+				if (regexp) {
+					return regexp;
+				}
+
+				return cur.test(line) ? cur : false;
+			}, false);
+			var prefix = line.match(trigger)[0];
+
+			var payload = e.originalEvent.clipboardData.getData('text');
+			var fixed = payload.replace(/^/gm, prefix).slice(prefix.length);
+
+			setTimeout(function () {
+				var replacement = targetEl.val().slice(0, start) + fixed + targetEl.val().slice(start + payload.length);
+				targetEl.val(replacement);
+			}, 0);
+		});
+
+		function getLine(text, selectionStart) {
+			// Break apart into lines, return the line the cursor is in
+			var lines = text.split('\n');
+
+			return lines.reduce(function (memo, cur) {
+				if (typeof memo !== 'number') {
+					return memo;
+				} else if (selectionStart > (memo + cur.length)) {
+					return memo + cur.length + 1;
+				}
+
+				return cur;
+			}, 0);
+		}
+	};
 
 	Markdown.highlight = function (data) {
 		if (data instanceof jQuery.Event) {
