@@ -24,15 +24,19 @@ $(document).ready(function () {
 
 				return cur.test(line) ? cur : false;
 			}, false);
-			var prefix = line.match(trigger)[0];
+			
+			var prefix = line.match(trigger);
+			if (prefix) {
+				prefix = prefix[0];
+				
+				var payload = e.originalEvent.clipboardData.getData('text');
+				var fixed = payload.replace(/^/gm, prefix).slice(prefix.length);
 
-			var payload = e.originalEvent.clipboardData.getData('text');
-			var fixed = payload.replace(/^/gm, prefix).slice(prefix.length);
-
-			setTimeout(function () {
-				var replacement = targetEl.val().slice(0, start) + fixed + targetEl.val().slice(start + payload.length);
-				targetEl.val(replacement);
-			}, 0);
+				setTimeout(function () {
+					var replacement = targetEl.val().slice(0, start) + fixed + targetEl.val().slice(start + payload.length);
+					targetEl.val(replacement);
+				}, 0);
+			}			
 		});
 
 		function getLine(text, selectionStart) {
