@@ -1,6 +1,6 @@
 'use strict';
 
-/* global document, window, jQuery, $, require, config */
+/* global document, window, jQuery, $, require, config, socket */
 
 $(document).ready(function () {
 	var Markdown = {};
@@ -11,9 +11,48 @@ $(document).ready(function () {
 		Markdown.prepareFormattingTools();
 	});
 
+	Markdown.enhanceCheckbox = function (ev, data) {
+		if (!data.posts && !data.post) {
+			return;
+		} else if (data.hasOwnProperty('post')) {
+			data.posts = [data.post];
+		}
+
+		var disable;
+		var checkboxEls;
+		data.posts.forEach(function (post) {
+			disable = !post.display_edit_tools;
+			checkboxEls = $('.posts li[data-pid="' + post.pid + '"] .content input[type="checkbox"]');
+
+			checkboxEls.on('click', function (e) {
+				if (disable) {
+					// Find the post's checkboxes in DOM and make them readonly
+					e.preventDefault();
+				}
+
+				// Otherwise, edit the post to reflect state change
+				var _this = this;
+				var pid = $(this).parents('li[data-pid]').attr('data-pid');
+				var index = $(this).parents('.content').find('input[type="checkbox"]').toArray().reduce(function (memo, cur, index) {
+					if (cur === _this) {
+						memo = index;
+					}
+
+					return memo;
+				}, null);
+
+				socket.emit('plugins.markdown.checkbox.edit', {
+					pid: pid,
+					index: index,
+					state: $(_this).prop('checked'),
+				});
+			});
+		});
+	};
+
 	Markdown.capturePaste = function (targetEl) {
 		targetEl.on('paste', function (e) {
-			var triggers = [/^\>\s*/, /^\s*\*\s+/, /^\s*\d+\.\s+/, /^\s{4,}/];
+			var triggers = [/^>\s*/, /^\s*\*\s+/, /^\s*\d+\.\s+/, /^\s{4,}/];
 			var start = e.target.selectionStart;
 			var line = getLine(targetEl.val(), start);
 
@@ -152,6 +191,9 @@ $(document).ready(function () {
 		selector: '.composer .preview pre code',
 	}, Markdown.highlight);
 
+	$(window).on('action:topic.loaded', Markdown.enhanceCheckbox);
+	$(window).on('action:posts.loaded', Markdown.enhanceCheckbox);
+	$(window).on('action:posts.edited', Markdown.enhanceCheckbox);
 
 	require(['components'], function (components) {
 		$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', function () {

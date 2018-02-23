@@ -12,6 +12,10 @@ var translator = module.parent.require('../public/src/modules/translator');
 var winston = module.parent.require('winston');
 var plugins = module.parent.exports;
 
+var SocketPlugins = require.main.require('./src/socket.io/plugins');
+SocketPlugins.markdown = require('./websockets');
+// SocketPlugins.myPlugin.myMethod = function(socket, data, callback) { ... };
+
 var	parser;
 
 var Markdown = {
@@ -215,6 +219,9 @@ var Markdown = {
 	},
 
 	updateParserRules: function (parser) {
+		// Add support for checkboxes
+		parser.use(require('markdown-it-checkbox'));
+
 		// Update renderer to add some classes to all images
 		var renderImage = parser.renderer.rules.image || function (tokens, idx, options, env, self) {
 			return self.renderToken.apply(self, arguments);
