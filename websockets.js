@@ -1,9 +1,9 @@
 'use strict';
 
 var async = require('async');
-var privileges = require.main.require('./src/privileges');
-var SocketPosts = require.main.require('./src/socket.io/posts');
-var posts = require.main.require('./src/posts');
+var privileges = module.parent.parent.require('./privileges');
+var SocketPosts = module.parent.parent.require('./socket.io/posts');
+var posts = module.parent.parent.require('./posts');
 
 module.exports.checkbox = {
 	edit: function (socket, data, callback) {
