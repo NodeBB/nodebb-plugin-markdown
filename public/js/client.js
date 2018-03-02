@@ -63,11 +63,11 @@ $(document).ready(function () {
 
 				return cur.test(line) ? cur : false;
 			}, false);
-			
+
 			var prefix = line.match(trigger);
 			if (prefix) {
 				prefix = prefix[0];
-				
+
 				var payload = e.originalEvent.clipboardData.getData('text');
 				var fixed = payload.replace(/^/gm, prefix).slice(prefix.length);
 
@@ -75,7 +75,7 @@ $(document).ready(function () {
 					var replacement = targetEl.val().slice(0, start) + fixed + targetEl.val().slice(start + payload.length);
 					targetEl.val(replacement);
 				}, 0);
-			}			
+			}
 		});
 
 		function getLine(text, selectionStart) {
@@ -112,8 +112,15 @@ $(document).ready(function () {
 				translator.getTranslations(window.config.userLang || window.config.defaultLang, 'markdown', function (strings) {
 					formatting.addButtonDispatch('bold', function (textarea, selectionStart, selectionEnd) {
 						if (selectionStart === selectionEnd) {
-							controls.insertIntoTextarea(textarea, '**' + strings.bold + '**');
-							controls.updateTextareaSelection(textarea, selectionStart + 2, selectionStart + strings.bold.length + 2);
+							var block = controls.getBlockData(textarea, '**', selectionStart);
+
+							if (block.in && block.atEnd) {
+								// At end of bolded string, move cursor past delimiters
+								controls.updateTextareaSelection(textarea, selectionStart + 2, selectionStart + 2);
+							} else {
+								controls.insertIntoTextarea(textarea, '**' + strings.bold + '**');
+								controls.updateTextareaSelection(textarea, selectionStart + 2, selectionStart + strings.bold.length + 2);
+							}
 						} else {
 							var wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '**');
 							controls.updateTextareaSelection(textarea, selectionStart + 2 + wrapDelta[0], selectionEnd + 2 - wrapDelta[1]);
@@ -122,8 +129,15 @@ $(document).ready(function () {
 
 					formatting.addButtonDispatch('italic', function (textarea, selectionStart, selectionEnd) {
 						if (selectionStart === selectionEnd) {
-							controls.insertIntoTextarea(textarea, '*' + strings.italic + '*');
-							controls.updateTextareaSelection(textarea, selectionStart + 1, selectionStart + strings.italic.length + 1);
+							var block = controls.getBlockData(textarea, '*', selectionStart);
+
+							if (block.in && block.atEnd) {
+								// At end of italicised string, move cursor past delimiters
+								controls.updateTextareaSelection(textarea, selectionStart + 1, selectionStart + 1);
+							} else {
+								controls.insertIntoTextarea(textarea, '*' + strings.italic + '*');
+								controls.updateTextareaSelection(textarea, selectionStart + 1, selectionStart + strings.italic.length + 1);
+							}
 						} else {
 							var wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '*');
 							controls.updateTextareaSelection(textarea, selectionStart + 1 + wrapDelta[0], selectionEnd + 1 - wrapDelta[1]);
@@ -144,8 +158,15 @@ $(document).ready(function () {
 
 					formatting.addButtonDispatch('strikethrough', function (textarea, selectionStart, selectionEnd) {
 						if (selectionStart === selectionEnd) {
-							controls.insertIntoTextarea(textarea, '~~' + strings.strikethrough_text + '~~');
-							controls.updateTextareaSelection(textarea, selectionStart + 2, selectionEnd + strings.strikethrough_text.length + 2);
+							var block = controls.getBlockData(textarea, '~~', selectionStart);
+
+							if (block.in && block.atEnd) {
+								// At end of bolded string, move cursor past delimiters
+								controls.updateTextareaSelection(textarea, selectionStart + 2, selectionStart + 2);
+							} else {
+								controls.insertIntoTextarea(textarea, '~~' + strings.strikethrough_text + '~~');
+								controls.updateTextareaSelection(textarea, selectionStart + 2, selectionEnd + strings.strikethrough_text.length + 2);
+							}
 						} else {
 							var wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '~~', '~~');
 							controls.updateTextareaSelection(textarea, selectionStart + 2 + wrapDelta[0], selectionEnd + 2 - wrapDelta[1]);
