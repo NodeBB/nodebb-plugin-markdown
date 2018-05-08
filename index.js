@@ -219,7 +219,10 @@ var Markdown = {
 
 	updateParserRules: function (parser) {
 		// Add support for checkboxes
-		parser.use(require('markdown-it-checkbox'));
+		parser.use(require('markdown-it-checkbox'), {
+			divWrap: true,
+			divClass: 'plugin-markdown',
+		});
 
 		// Update renderer to add some classes to all images
 		var renderImage = parser.renderer.rules.image || function (tokens, idx, options, env, self) {

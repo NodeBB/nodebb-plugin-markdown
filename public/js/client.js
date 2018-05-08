@@ -22,7 +22,7 @@ $(document).ready(function () {
 		var checkboxEls;
 		data.posts.forEach(function (post) {
 			disable = !post.display_edit_tools;
-			checkboxEls = $('.posts li[data-pid="' + post.pid + '"] .content input[type="checkbox"]');
+			checkboxEls = $('.posts li[data-pid="' + post.pid + '"] .content div.plugin-markdown input[type="checkbox"]');
 
 			checkboxEls.on('click', function (e) {
 				if (disable) {
