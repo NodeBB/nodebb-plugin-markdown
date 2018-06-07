@@ -1,0 +1,11 @@
+{
+	"bold": "pogrubienie",
+	"italic": "pochylenie",
+	"list_item": "wypunktowanie",
+	"strikethrough_text": "przekreślenie",
+	"link_text": "tekst odnośnika",
+	"link_url": "url odnośnika",
+	"picture_text": "text alternatywny",
+	"picture_url": "url obrazu",
+	"help_text": "Forum działa dzięki Markdown. By uzyskać pełną dokumentację, [kliknij tutaj](http://commonmark.org/help/)"
+}
