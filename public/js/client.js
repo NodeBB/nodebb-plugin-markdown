@@ -199,10 +199,11 @@ $(document).ready(function () {
 
 	function highlight(elements) {
 		if (parseInt(config.markdown.highlight, 10)) {
-			require(['highlight'], function (hljs) {
+			require(['highlight', 'highlightjs-line-numbers'], function (hljs) {
 				elements.each(function (i, block) {
 					$(block.parentNode).addClass('markdown-highlight');
 					hljs.highlightBlock(block);
+					hljs.lineNumbersBlock(block);
 				});
 			});
 		}
