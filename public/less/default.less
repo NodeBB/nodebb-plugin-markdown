@@ -12,6 +12,33 @@
 
 .markdown-highlight .hljs {
 	display: inline-block;
+
+	&[data-lines="1"] {
+		white-space: normal !important;
+	}
+
+	.hljs-ln-line {
+		white-space: pre;
+	}
+
+	.hljs-ln-numbers {
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+
+		text-align: right;
+		color: #ccc;
+		border-right: 1px solid #CCC;
+		vertical-align: top;
+		padding-right: 5px;
+	}
+
+	.hljs-ln-code {
+		padding-left: 5px;
+	}
 }
 
 [component="post/content"] {

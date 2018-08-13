@@ -38,6 +38,7 @@ var Markdown = {
 	getConfig: function (config, callback) {
 		config.markdown = {
 			highlight: Markdown.highlight ? 1 : 0,
+			highlightLines: Markdown.config.highlightLines ? 1 : 0,
 			theme: Markdown.config.highlightTheme || 'railscasts.css',
 		};
 		callback(null, config);
@@ -73,6 +74,7 @@ var Markdown = {
 			linkify: true,
 			typographer: false,
 			highlight: true,
+			highlightLines: false,
 			highlightTheme: 'railscasts.css',
 			externalBlank: false,
 			nofollow: true,

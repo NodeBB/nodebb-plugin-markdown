@@ -13,6 +13,7 @@ define('admin/plugins/markdown', ['settings'], function(Settings) {
 				'nofollow': true,
 				'typographer': false,
 				'highlight': true,
+				'highlightLines': false,
 				'highlightTheme': 'railscasts.css'
 			};
 	

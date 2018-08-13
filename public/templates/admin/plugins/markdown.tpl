@@ -60,6 +60,12 @@
 								</label>
 							</div>
 							<div class="form-group">
+								<label for="highlightLines">
+									<input type="checkbox" name="highlightLines" id="highlightLines" />
+									Display line numbers in highlighted code blocks
+								</label>
+							</div>
+							<div class="form-group">
 								<label for="highlightTheme">Use this theme for highlighted code blocks</label>
 								<select class="form-control" name="highlightTheme" id="highlightTheme">
 									<!-- BEGIN themes -->
