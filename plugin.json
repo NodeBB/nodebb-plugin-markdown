@@ -14,11 +14,11 @@
         "public/js/admin.js"
     ],
     "staticDirs": {
-        "styles": "public/styles",
+        "styles": "./node_modules/highlight.js/styles",
         "js": "public/js"
     },
     "modules": [
-        "./node_modules/highlight.js/lib/highlight.js",
+        "./public/js/highlight.js",
         "./public/js/highlightjs-line-numbers.js"
     ],
     "languages": "public/languages",
