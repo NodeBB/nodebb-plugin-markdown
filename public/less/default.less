@@ -3,17 +3,8 @@
 	color: inherit;
 	background-color: inherit;
 	border: none;
-}
 
-// Backwards compatibility with themes without components
-.post-content pre, .topic-text pre, .composer .preview pre {
-	.markdown-highlight;
-}
-
-.markdown-highlight .hljs {
-	display: inline-block;
-
-	&[data-lines="1"] {
+	code[data-lines="1"] {
 		white-space: normal !important;
 	}
 
@@ -39,6 +30,15 @@
 	.hljs-ln-code {
 		padding-left: 5px;
 	}
+}
+
+// Backwards compatibility with themes without components
+.post-content pre, .topic-text pre, .composer .preview pre {
+	.markdown-highlight;
+}
+
+.markdown-highlight .hljs {
+	display: inline-block;
 }
 
 [component="post/content"] {
