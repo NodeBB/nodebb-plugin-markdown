@@ -1,5 +1,6 @@
 <div class="row">
-	<div class="col-lg-9">
+	<div class="col-sm-2 col-xs-12 settings-header">General</div>
+	<div class="col-sm-10 col-xs-12">
 		<form class="form markdown-settings">
 			<div class="panel panel-default">
 				<div class="panel-heading">Markdown</div>
@@ -136,12 +137,8 @@
 			</div>
 		</form>
 	</div>
-	<div class="col-lg-3">
-		<div class="panel panel-default">
-			<div class="panel-heading">Markdown Control Panel</div>
-			<div class="panel-body">
-				<button class="btn btn-primary" id="save">Save Settings</button>
-			</div>
-		</div>
-	</div>
 </div>
+
+<button id="save" class="floating-button mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+	<i class="material-icons">save</i>
+</button>
