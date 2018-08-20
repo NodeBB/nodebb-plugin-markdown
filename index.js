@@ -38,7 +38,7 @@ var Markdown = {
 	getConfig: function (config, callback) {
 		config.markdown = {
 			highlight: Markdown.highlight ? 1 : 0,
-			highlightLines: Markdown.config.highlightLines ? 1 : 0,
+			highlightLinesLanguageList: Markdown.config.highlightLinesLanguageList,
 			theme: Markdown.config.highlightTheme || 'railscasts.css',
 		};
 		callback(null, config);
@@ -74,7 +74,7 @@ var Markdown = {
 			linkify: true,
 			typographer: false,
 			highlight: true,
-			highlightLines: false,
+			highlightLinesLanguageList: [],
 			highlightTheme: 'railscasts.css',
 			externalBlank: false,
 			nofollow: true,
@@ -89,7 +89,7 @@ var Markdown = {
 				// If not set in config (nil)
 				if (!options.hasOwnProperty(field)) {
 					_self.config[field] = defaults[field];
-				} else if (field !== 'langPrefix' && field !== 'highlightTheme' && field !== 'headerPrefix') {
+				} else if (field !== 'langPrefix' && field !== 'highlightTheme' && field !== 'headerPrefix' && field !== 'highlightLinesLanguageList') {
 					_self.config[field] = options[field] === 'on';
 				} else {
 					_self.config[field] = options[field];
@@ -98,6 +98,17 @@ var Markdown = {
 
 			_self.highlight = _self.config.highlight;
 			delete _self.config.highlight;
+
+			if (typeof _self.config.highlightLinesLanguageList === 'string') {
+				try {
+					_self.config.highlightLinesLanguageList = JSON.parse(_self.config.highlightLinesLanguageList);
+				} catch (e) {
+					winston.warn('[plugins/markdown] Invalid config for highlightLinesLanguageList, blanking.');
+					_self.config.highlightLinesLanguageList = [];
+				}
+
+				_self.config.highlightLinesLanguageList = _self.config.highlightLinesLanguageList.join(',').split(',');
+			}
 
 			parser = new MarkdownIt(_self.config);
 

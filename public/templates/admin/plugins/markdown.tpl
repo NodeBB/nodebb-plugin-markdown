@@ -60,12 +60,6 @@
 								</label>
 							</div>
 							<div class="form-group">
-								<label for="highlightLines">
-									<input type="checkbox" name="highlightLines" id="highlightLines" />
-									Display line numbers in highlighted code blocks
-								</label>
-							</div>
-							<div class="form-group">
 								<label for="highlightTheme">Use this theme for highlighted code blocks</label>
 								<select class="form-control" name="highlightTheme" id="highlightTheme">
 									<!-- BEGIN themes -->
@@ -78,6 +72,41 @@
 									Prefix for <code>code</code> blocks
 								</label>
 								<input class="form-control" placeholder="language-" type="text" name="langPrefix" id="langPrefix" />
+							</div>
+
+							<div class="form-group">
+								<label for="highlightLinesLanguageList">
+									Enable line numbers for the following languages
+								</label>
+								<select class="form-control" multiple="true" name="highlightLinesLanguageList" id="highlightLinesLanguageList" size="20">
+									<option value="apache,apacheconf">Apache</option>
+									<option value="bash,sh,zsh">Bash</option>
+									<option value="cs,csharp">C#</option>
+									<option value="cpp,c,cc,h,c++,h++,hpp">C++</option>
+									<option value="css">CSS</option>
+									<option value="coffeescript,coffee,cson,iced">CoffeeScript</option>
+									<option value="diff,patch">Diff</option>
+									<option value="xml,html,xhtml,rss,atom,xjb,xsd,xsl,plist">HTML</option>
+									<option value="http,https">HTTP</option>
+									<option value="ini,toml">Ini</option>
+									<option value="json">JSON</option>
+									<option value="java">Java</option>
+									<option value="javascript,js,jsx">Javascript</option>
+									<option value="makefile,mk,mak">Makefile</option>
+									<option value="markdown,md,mkdown,mkd">Markdown</option>
+									<option value="nginx,nginxconf">Nginx</option>
+									<option value="objectivec,objc,obj-c">Objective C</option>
+									<option value="php,php3,php4,php5,php6">PHP</option>
+									<option value="perl,pl,pm">Perl</option>
+									<option value="python,py,gyp">Python</option>
+									<option value="ruby,rb,gemspec,podspec,thor,irb">Ruby</option>
+									<option value="sql">SQL</option>
+									<option value="shell,console">Shell</option>
+								</select>
+								<p class="help-block">
+									You can use <code>ctrl</code> and <code>shift</code> to select/deselect multiple
+									items and select/deselect items in ranges.
+								</p>
 							</div>
 						</div>
 					</div>

@@ -204,7 +204,13 @@ $(document).ready(function () {
 					$(block.parentNode).addClass('markdown-highlight');
 					hljs.highlightBlock(block);
 
-					if (parseInt(config.markdown.highlightLines, 10)) {
+					// Check detected language against whitelist and add lines if enabled
+					if (block.className.split(' ').map(function (className) {
+						if (className.indexOf('language-') === 0) {
+							className = className.slice(9);
+						}
+						return config.markdown.highlightLinesLanguageList.includes(className) || config.markdown.highlightLinesLanguageList.includes(className);
+					}).some(Boolean)) {
 						$(block).attr('data-lines', 1);
 						hljs.lineNumbersBlock(block);
 					}
