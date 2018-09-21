@@ -173,6 +173,16 @@ $(document).ready(function () {
 						}
 					});
 
+					formatting.addButtonDispatch('code', function (textarea, selectionStart, selectionEnd) {
+						if (selectionStart === selectionEnd) {
+							controls.insertIntoTextarea(textarea, '```\n' + strings.code_text + '\n```');
+							controls.updateTextareaSelection(textarea, selectionStart + 4, selectionEnd + strings.code_text.length + 4);
+						} else {
+							var wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '```\n', '\n```');
+							controls.updateTextareaSelection(textarea, selectionStart + 4 + wrapDelta[0], selectionEnd + 4 - wrapDelta[1]);
+						}
+					});
+
 					formatting.addButtonDispatch('link', function (textarea, selectionStart, selectionEnd) {
 						if (selectionStart === selectionEnd) {
 							controls.insertIntoTextarea(textarea, '[' + strings.link_text + '](' + strings.link_url + ')');

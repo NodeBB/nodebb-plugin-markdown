@@ -221,6 +221,7 @@ var Markdown = {
 			{ name: 'italic', className: 'fa fa-italic', title: '[[modules:composer.formatting.italic]]' },
 			{ name: 'list', className: 'fa fa-list', title: '[[modules:composer.formatting.list]]' },
 			{ name: 'strikethrough', className: 'fa fa-strikethrough', title: '[[modules:composer.formatting.strikethrough]]' },
+			{ name: 'code', className: 'fa fa-code', title: '[[modules:composer.formatting.code]]' },
 			{ name: 'link', className: 'fa fa-link', title: '[[modules:composer.formatting.link]]' },
 			{ name: 'picture-o', className: 'fa fa-picture-o', title: '[[modules:composer.formatting.picture]]' },
 		];
