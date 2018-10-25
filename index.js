@@ -1,18 +1,18 @@
 'use strict';
 
-var	MarkdownIt = require('markdown-it');
+var MarkdownIt = require('markdown-it');
 var fs = require('fs');
 var path = require('path');
 var url = require('url');
 var async = require('async');
 
-var	meta = module.parent.require('./meta');
+var meta = module.parent.require('../meta');
 var nconf = module.parent.require('nconf');
-var translator = module.parent.require('../public/src/modules/translator');
+var translator = module.parent.require('../../public/src/modules/translator');
 var winston = module.parent.require('winston');
 var plugins = module.parent.exports;
 
-var SocketPlugins = module.parent.require('../src/socket.io/plugins');
+var SocketPlugins = module.parent.require('../socket.io/plugins');
 SocketPlugins.markdown = require('./websockets');
 
 var	parser;
