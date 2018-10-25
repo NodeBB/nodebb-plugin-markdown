@@ -1,6 +1,6 @@
 'use strict';
 
-var	MarkdownIt = require('markdown-it');
+var MarkdownIt = require('markdown-it');
 var fs = require('fs');
 var path = require('path');
 var url = require('url');
