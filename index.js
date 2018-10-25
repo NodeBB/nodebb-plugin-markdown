@@ -6,14 +6,19 @@ var path = require('path');
 var url = require('url');
 var async = require('async');
 
-var	meta = module.parent.require('./meta');
-var nconf = module.parent.require('nconf');
-var translator = module.parent.require('../public/src/modules/translator');
 var winston = module.parent.require('winston');
+var nconf = module.parent.require('nconf');
+
+var nbbRequire = require('./lib/nbbRequire');
+
+var	meta = nbbRequire('./src/meta');
+var translator = nbbRequire('./public/src/modules/translator');
+var SocketPlugins = nbbRequire('./src/socket.io/plugins');
+
+SocketPlugins.markdown = require('./websockets');
+
 var plugins = module.parent.exports;
 
-var SocketPlugins = module.parent.require('../src/socket.io/plugins');
-SocketPlugins.markdown = require('./websockets');
 
 var	parser;
 
