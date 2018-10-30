@@ -45,6 +45,12 @@
 									Tell web crawlers that external links are not to be followed
 								</label>
 							</div>
+							<div class="form-group">
+								<label for="allowRTLO">
+									<input type="checkbox" name="allowRTLO" id="allowRTLO" />
+									Allow RTL override unicode in link content
+								</label>
+							</div>
 						</div>
 					</div>
 				</div>
