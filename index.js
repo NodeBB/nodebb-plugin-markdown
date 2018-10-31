@@ -78,6 +78,7 @@ var Markdown = {
 			highlightTheme: 'railscasts.css',
 			externalBlank: false,
 			nofollow: true,
+			allowRTLO: false,
 		};
 
 		meta.settings.get('markdown', function (err, options) {
@@ -296,6 +297,14 @@ var Markdown = {
 				}
 			}
 
+			if (!Markdown.config.allowRTLO) {
+				if (tokens[idx + 1] && tokens[idx + 1].type === 'text') {
+					if (tokens[idx + 1].content.match(Markdown.regexes.rtl_override)) {
+						tokens[idx + 1].content = tokens[idx + 1].content.replace(Markdown.regexes.rtl_override, '');
+					}
+				}
+			}
+
 			return renderLink(tokens, idx, options, env, self);
 		};
 
@@ -318,9 +327,9 @@ var Markdown = {
 		try {
 			var urlObj = url.parse(src, false, true);
 			if (
-				urlObj.host === null &&
-				!urlObj.pathname.toString().startsWith(nconf.get('relative_path') + nconf.get('upload_url')) &&
-				!urlObj.pathname.toString().startsWith(nconf.get('relative_path') + '/uploads') // Backward compatibility https://github.com/NodeBB/NodeBB/issues/5441
+				urlObj.host === null
+				&& !urlObj.pathname.toString().startsWith(nconf.get('relative_path') + nconf.get('upload_url'))
+				&& !urlObj.pathname.toString().startsWith(nconf.get('relative_path') + '/uploads') // Backward compatibility https://github.com/NodeBB/NodeBB/issues/5441
 			) {
 				return false;
 			}
@@ -341,9 +350,9 @@ var Markdown = {
 		}
 
 		if (
-			urlObj.host === null ||	// Relative paths are always internal links...
-			(urlObj.host === baseUrlObj.host && urlObj.protocol === baseUrlObj.protocol &&	// Otherwise need to check that protocol and host match
-			(nconf.get('relative_path').length > 0 ? urlObj.pathname.indexOf(nconf.get('relative_path')) === 0 : true))	// Subfolder installs need this additional check
+			urlObj.host === null	// Relative paths are always internal links...
+			|| (urlObj.host === baseUrlObj.host && urlObj.protocol === baseUrlObj.protocol	// Otherwise need to check that protocol and host match
+			&& (nconf.get('relative_path').length > 0 ? urlObj.pathname.indexOf(nconf.get('relative_path')) === 0 : true))	// Subfolder installs need this additional check
 		) {
 			return false;
 		}
@@ -360,6 +369,10 @@ var Markdown = {
 
 			callback(null, custom_header);
 		},
+	},
+
+	regexes: {
+		rtl_override: /\u202E/gi,
 	},
 };
 
