@@ -6,13 +6,13 @@ var path = require('path');
 var url = require('url');
 var async = require('async');
 
-var meta = module.parent.require('../meta');
-var nconf = module.parent.require('nconf');
-var translator = module.parent.require('../../public/src/modules/translator');
-var winston = module.parent.require('winston');
+var meta = require.main.require('./src/meta');
+var translator = require.main.require('./public/src/modules/translator');
+var nconf = require.main.require('nconf');
+var winston = require.main.require('winston');
 var plugins = module.parent.exports;
 
-var SocketPlugins = module.parent.require('../socket.io/plugins');
+var SocketPlugins = require.main.require('./src/socket.io/plugins');
 SocketPlugins.markdown = require('./websockets');
 
 var	parser;
