@@ -324,16 +324,19 @@ var Markdown = {
 	},
 
 	isUrlValid: function (src) {
+		/**
+		 * Images linking to a relative path are only allowed from the root prefixes
+		 * defined in allowedRoots. We allow both with and without relative_path
+		 * even though upload_url should handle it, because sometimes installs
+		 * migrate to (non-)subfolder and switch mid-way, but the uploads urls don't
+		 * get updated.
+		 */
+		const allowedRoots = [nconf.get('upload_url'), '/uploads'];
+		const allowed = pathname => allowedRoots.some(root => pathname.toString().startsWith(root) || pathname.toString().startsWith(nconf.get('relative_path') + root));
+
 		try {
 			var urlObj = url.parse(src, false, true);
-			if (
-				urlObj.host === null
-				&& !urlObj.pathname.toString().startsWith(nconf.get('relative_path') + nconf.get('upload_url'))
-				&& !urlObj.pathname.toString().startsWith(nconf.get('relative_path') + '/uploads') // Backward compatibility https://github.com/NodeBB/NodeBB/issues/5441
-			) {
-				return false;
-			}
-			return true;
+			return !(urlObj.host === null && !allowed(urlObj.pathname));
 		} catch (e) {
 			return false;
 		}
