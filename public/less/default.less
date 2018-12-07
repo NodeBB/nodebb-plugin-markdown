@@ -42,9 +42,18 @@
 }
 
 [component="post/content"] {
-	input[type="checkbox"] {
-		margin: 0 0.5rem;
-		position: relative;
-		top: 1px;
+	div.plugin-markdown {
+		display: flex;
+
+		input[type="checkbox"] {
+			margin-right: 0.5rem;
+			position: relative;
+			top: 1px;
+
+			&+label {
+				font-weight: unset;
+				flex: 1;
+			}
+		}
 	}
 }
