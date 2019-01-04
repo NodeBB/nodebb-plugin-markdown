@@ -118,7 +118,7 @@ var Markdown = {
 	},
 
 	loadThemes: function () {
-		fs.readdir(path.join(__dirname, '../highlight.js/styles'), function (err, files) {
+		fs.readdir(path.join(require.resolve('highlight.js'), '../../styles'), function (err, files) {
 			if (err) {
 				winston.error('[plugin/markdown] Could not load Markdown themes: ' + err.message);
 				Markdown.themes = [];
