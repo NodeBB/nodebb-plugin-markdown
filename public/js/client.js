@@ -1,8 +1,8 @@
 'use strict';
 
-/* global document, window, jQuery, $, require, config, socket */
+/* global window, jQuery, $, require, config, socket */
 
-$(document).ready(function () {
+(function() {
 	var Markdown = {};
 
 	$(window).on('action:composer.enhanced', function (evt, data) {
@@ -237,9 +237,10 @@ $(document).ready(function () {
 	$(window).on('action:posts.loaded', Markdown.enhanceCheckbox);
 	$(window).on('action:posts.edited', Markdown.enhanceCheckbox);
 
-	require(['components'], function (components) {
-		$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', function () {
+
+	$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', function () {
+		require(['components'], function (components) {
 			Markdown.highlight(components.get('post/content').find('pre code'));
 		});
 	});
-});
+})();
