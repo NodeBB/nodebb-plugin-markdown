@@ -20,14 +20,15 @@ var	parser;
 var Markdown = {
 	config: {},
 	onLoad: function (params, callback) {
-		function render(req, res) {
-			res.render('admin/plugins/markdown', {
-				themes: Markdown.themes,
-			});
-		}
+		const controllers = require('./lib/controllers');
+		const hostMiddleware = require.main.require('./src/middleware');
+		const middlewares = [hostMiddleware.maintenanceMode, hostMiddleware.registrationComplete, hostMiddleware.pluginHooks];
 
-		params.router.get('/admin/plugins/markdown', params.middleware.admin.buildHeader, render);
-		params.router.get('/api/admin/plugins/markdown', render);
+		params.router.get('/admin/plugins/markdown', params.middleware.admin.buildHeader, controllers.renderAdmin);
+		params.router.get('/api/admin/plugins/markdown', controllers.renderAdmin);
+
+		// Return raw markdown via GET
+		params.router.get('/api/post/:pid/raw', middlewares, controllers.retrieveRaw);
 
 		Markdown.init();
 		Markdown.loadThemes();
