@@ -21,6 +21,7 @@ module.exports.checkbox = {
 				var checkboxRegex = /\[[\sx]?\]/g;
 				var match;
 				var indices = [];
+				// eslint-disable-next-line
 				while ((match = checkboxRegex.exec(content)) !== null) {
 					indices.push(match.index);
 				}

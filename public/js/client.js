@@ -2,7 +2,7 @@
 
 /* global window, jQuery, $, require, config, socket */
 
-(function() {
+(function () {
 	var Markdown = {};
 
 	$(window).on('action:composer.enhanced', function (evt, data) {
@@ -14,7 +14,7 @@
 	Markdown.enhanceCheckbox = function (ev, data) {
 		if (!data.posts && !data.post) {
 			return;
-		} else if (data.hasOwnProperty('post')) {
+		} if (data.hasOwnProperty('post')) {
 			data.posts = [data.post];
 		}
 
@@ -66,7 +66,7 @@
 
 			var prefix = line.match(trigger);
 			if (prefix) {
-				prefix = prefix[0];
+				prefix = prefix.shift();
 
 				var payload = e.originalEvent.clipboardData.getData('text');
 				var fixed = payload.replace(/^/gm, prefix).slice(prefix.length);
@@ -85,7 +85,7 @@
 			return lines.reduce(function (memo, cur) {
 				if (typeof memo !== 'number') {
 					return memo;
-				} else if (selectionStart > (memo + cur.length)) {
+				} if (selectionStart > (memo + cur.length)) {
 					return memo + cur.length + 1;
 				}
 
@@ -243,4 +243,4 @@
 			Markdown.highlight(components.get('post/content').find('pre code'));
 		});
 	});
-})();
+}());

@@ -1,8 +1,16 @@
+'use strict';
+
+/* globals define, $, app, socket, bootbox */
+
 define('admin/plugins/markdown', ['settings'], function (Settings) {
 	var Markdown = {};
 
 	Markdown.init = function () {
 		Settings.load('markdown', $('.markdown-settings'), function (err, settings) {
+			if (err) {
+				settings = {};
+			}
+
 			var defaults = {
 				html: false,
 				xhtmlOut: true,
