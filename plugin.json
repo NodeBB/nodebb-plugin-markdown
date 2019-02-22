@@ -8,19 +8,17 @@
         "public/less/default.less"
     ],
     "scripts": [
-        "public/js/client.js"
+        "public/js/client.js",
+        "dist/highlight.js",
+        "dist/highlightjs-line-numbers.js"
     ],
     "acpScripts": [
         "public/js/admin.js"
     ],
     "staticDirs": {
-        "styles": "../highlight.js/styles",
+        "styles": "node_modules/highlight.js/styles",
         "js": "public/js"
     },
-    "modules": [
-        "./public/js/highlight.js",
-        "./public/js/highlightjs-line-numbers.js"
-    ],
     "languages": "public/languages",
     "defaultLang": "en_GB",
     "templates": "./public/templates",
