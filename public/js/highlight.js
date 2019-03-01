@@ -1,6 +1,8 @@
-'use static';
+'use strict';
 
-const hljs = require('highlight.js/lib/highlight');
+/* globals window */
+
+var hljs = require('highlight.js/lib/highlight');
 
 window.hljs = hljs;
 
