@@ -240,6 +240,17 @@ var Markdown = {
 			divClass: 'plugin-markdown',
 		});
 
+		// Add support for attributes
+		parser.use(require('markdown-it-attrs'));
+
+		parser.use((md) => {
+			md.core.ruler.before('linkify', 'autodir', (state) => {
+				state.tokens.forEach((token) => {
+					token.attrJoin('dir', 'auto');
+				});
+			});
+		});
+
 		// Update renderer to add some classes to all images
 		var renderImage = parser.renderer.rules.image || function (tokens, idx, options, env, self) {
 			return self.renderToken.apply(self, arguments);
