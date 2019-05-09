@@ -240,9 +240,6 @@ var Markdown = {
 			divClass: 'plugin-markdown',
 		});
 
-		// Add support for attributes
-		parser.use(require('markdown-it-attrs'));
-
 		parser.use((md) => {
 			md.core.ruler.before('linkify', 'autodir', (state) => {
 				state.tokens.forEach((token) => {

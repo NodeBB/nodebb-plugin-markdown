@@ -33,7 +33,6 @@
     "async": "^2.6.0",
     "highlight.js": "9.14.2",
     "markdown-it": "^8.4.2",
-    "markdown-it-attrs": "^2.3.4",
     "markdown-it-checkbox": "^1.1.0"
   },
   "nbbpm": {
