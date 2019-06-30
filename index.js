@@ -243,7 +243,9 @@ var Markdown = {
 		parser.use((md) => {
 			md.core.ruler.before('linkify', 'autodir', (state) => {
 				state.tokens.forEach((token) => {
-					token.attrJoin('dir', 'auto');
+					if (token.type === 'paragraph_open') {
+						token.attrJoin('dir', 'auto');
+					}
 				});
 			});
 		});
