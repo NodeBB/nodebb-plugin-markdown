@@ -24,6 +24,7 @@ define('admin/plugins/markdown', ['settings'], function (Settings) {
 				highlightLines: false,
 				highlightTheme: 'railscasts.css',
 				allowRTLO: false,
+				checkboxes: true,
 			};
 
 			// Set defaults

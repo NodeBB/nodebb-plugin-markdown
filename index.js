@@ -80,6 +80,7 @@ var Markdown = {
 			externalBlank: false,
 			nofollow: true,
 			allowRTLO: false,
+			checkboxes: true,
 		};
 
 		meta.settings.get('markdown', function (err, options) {
@@ -234,11 +235,14 @@ var Markdown = {
 	},
 
 	updateParserRules: function (parser) {
-		// Add support for checkboxes
-		parser.use(require('markdown-it-checkbox'), {
-			divWrap: true,
-			divClass: 'plugin-markdown',
-		});
+		console.log(Markdown.config);
+		if (Markdown.config.checkboxes) {
+			// Add support for checkboxes
+			parser.use(require('markdown-it-checkbox'), {
+				divWrap: true,
+				divClass: 'plugin-markdown',
+			});
+		}
 
 		parser.use((md) => {
 			md.core.ruler.before('linkify', 'autodir', (state) => {
