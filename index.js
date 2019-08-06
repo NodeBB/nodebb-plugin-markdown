@@ -235,7 +235,6 @@ var Markdown = {
 	},
 
 	updateParserRules: function (parser) {
-		console.log(Markdown.config);
 		if (Markdown.config.checkboxes) {
 			// Add support for checkboxes
 			parser.use(require('markdown-it-checkbox'), {
