@@ -194,14 +194,15 @@ var Markdown = {
 			return html;
 		};
 
-		if (payload.hasOwnProperty('postData')) {
-			payload.postData.content = execute(payload.postData.content);
-		} else if (payload.hasOwnProperty('userData')) {
-			payload.userData.signature = execute(payload.userData.signature);
-		} else {
-			payload = execute(payload);
+		if (payload) {
+	 		if (payload.hasOwnProperty('postData')) {
+				payload.postData.content = execute(payload.postData.content);
+			} else if (payload.hasOwnProperty('userData')) {
+				payload.userData.signature = execute(payload.userData.signature);
+			} else {
+				payload = execute(payload);
+			}
 		}
-
 		next(null, payload);
 	},
 
