@@ -51,12 +51,6 @@
 									Allow RTL override unicode in link content
 								</label>
 							</div>
-							<div class="form-group">
-								<label for="checkboxes">
-									<input type="checkbox" name="checkboxes" id="checkboxes" />
-									Interpret <code>[ ]</code> and <code>[x]</code> as checkboxes
-								</label>
-							</div>
 						</div>
 					</div>
 				</div>

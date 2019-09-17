@@ -80,7 +80,6 @@ var Markdown = {
 			externalBlank: false,
 			nofollow: true,
 			allowRTLO: false,
-			checkboxes: true,
 		};
 
 		meta.settings.get('markdown', function (err, options) {
@@ -195,7 +194,7 @@ var Markdown = {
 		};
 
 		if (payload) {
-	 		if (payload.hasOwnProperty('postData')) {
+			if (payload.hasOwnProperty('postData')) {
 				payload.postData.content = execute(payload.postData.content);
 			} else if (payload.hasOwnProperty('userData')) {
 				payload.userData.signature = execute(payload.userData.signature);
@@ -203,6 +202,7 @@ var Markdown = {
 				payload = execute(payload);
 			}
 		}
+
 		next(null, payload);
 	},
 
@@ -223,7 +223,7 @@ var Markdown = {
 		var formatting = [
 			{ name: 'bold', className: 'fa fa-bold', title: '[[modules:composer.formatting.bold]]' },
 			{ name: 'italic', className: 'fa fa-italic', title: '[[modules:composer.formatting.italic]]' },
-			{ name: 'list', className: 'fa fa-list-ul', title: '[[modules:composer.formatting.list]]' },
+			{ name: 'list', className: 'fa fa-list', title: '[[modules:composer.formatting.list]]' },
 			{ name: 'strikethrough', className: 'fa fa-strikethrough', title: '[[modules:composer.formatting.strikethrough]]' },
 			{ name: 'code', className: 'fa fa-code', title: '[[modules:composer.formatting.code]]' },
 			{ name: 'link', className: 'fa fa-link', title: '[[modules:composer.formatting.link]]' },
@@ -236,22 +236,10 @@ var Markdown = {
 	},
 
 	updateParserRules: function (parser) {
-		if (Markdown.config.checkboxes) {
-			// Add support for checkboxes
-			parser.use(require('markdown-it-checkbox'), {
-				divWrap: true,
-				divClass: 'plugin-markdown',
-			});
-		}
-
-		parser.use((md) => {
-			md.core.ruler.before('linkify', 'autodir', (state) => {
-				state.tokens.forEach((token) => {
-					if (token.type === 'paragraph_open') {
-						token.attrJoin('dir', 'auto');
-					}
-				});
-			});
+		// Add support for checkboxes
+		parser.use(require('markdown-it-checkbox'), {
+			divWrap: true,
+			divClass: 'plugin-markdown',
 		});
 
 		// Update renderer to add some classes to all images
