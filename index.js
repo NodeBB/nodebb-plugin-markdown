@@ -234,6 +234,13 @@ var Markdown = {
 		callback(null, payload);
 	},
 
+	updateSanitizeConfig: async (config) => {
+		config.allowedTags.push('input');
+		config.allowedAttributes.input = ['type', 'checked'];
+
+		return config;
+	},
+
 	updateParserRules: function (parser) {
 		if (Markdown.config.checkboxes) {
 			// Add support for checkboxes

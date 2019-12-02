@@ -34,6 +34,7 @@
         { "hook": "filter:admin.header.build", "method": "admin.menu" },
         { "hook": "filter:composer.formatting", "method": "registerFormatting" },
         { "hook": "filter:config.get", "method": "getConfig" },
-        { "hook": "filter:meta.getLinkTags", "method": "getLinkTags"}
+        { "hook": "filter:meta.getLinkTags", "method": "getLinkTags"},
+        { "hook": "filter:sanitize.config", "method": "updateSanitizeConfig" }
     ]
 }
