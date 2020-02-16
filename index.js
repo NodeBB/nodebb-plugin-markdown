@@ -7,7 +7,7 @@ var url = require('url');
 var async = require('async');
 
 var meta = require.main.require('./src/meta');
-var translator = require.main.require('./public/src/modules/translator');
+var translator = require.main.require('./src/translator');
 var nconf = require.main.require('nconf');
 var winston = require.main.require('winston');
 var plugins = module.parent.exports;
