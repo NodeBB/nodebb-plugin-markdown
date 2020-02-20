@@ -1,15 +1,16 @@
 /**
  * STOP! This file was edited from the version found in the repo
  * https://github.com/wcoder/highlightjs-line-numbers.js
- * 
+ *
  * Changes:
  *   - Made into a requirejs module
  *   - Instead of passing window, document in as w and d, they
  *     are defined at top of module
  */
-define('highlightjs-line-numbers', ['highlight'], function () {
+define('highlightjs-line-numbers', ['highlight.js'], function (hljs) {
 	var w = window;
 	var d = document;
+    w.hljs = hljs;
 
     var TABLE_NAME = 'hljs-ln',
         LINE_NAME = 'hljs-ln-line',

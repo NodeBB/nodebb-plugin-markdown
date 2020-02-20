@@ -18,7 +18,6 @@
         "js": "public/js"
     },
     "modules": [
-        "./public/js/highlight.js",
         "./public/js/highlightjs-line-numbers.js"
     ],
     "languages": "public/languages",
