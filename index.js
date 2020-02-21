@@ -52,7 +52,7 @@ var Markdown = {
 			href: nconf.get('relative_path') + '/plugins/nodebb-plugin-markdown/styles/' + (Markdown.config.highlightTheme || 'railscasts.css'),
 		});
 
-		var prefetch = ['/assets/src/modules/highlight.js', '/assets/language/' + (meta.config.defaultLang || 'en-GB') + '/markdown.json'];
+		var prefetch = ['/assets/language/' + (meta.config.defaultLang || 'en-GB') + '/markdown.json'];
 		hookData.links = hookData.links.concat(prefetch.map(function (path) {
 			path = {
 				rel: 'prefetch',
