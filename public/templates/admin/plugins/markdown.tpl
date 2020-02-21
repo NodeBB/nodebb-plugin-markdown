@@ -26,7 +26,7 @@
 								</label>
 							</div>
 							<div class="form-group">
-								<label for="checkboxes">
+								<label for="multimdTables">
 									<input type="checkbox" name="multimdTables" id="multimdTables" />
 									Allow advanced table syntax
 								</label>
