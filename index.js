@@ -238,7 +238,9 @@ var Markdown = {
 	updateSanitizeConfig: async (config) => {
 		config.allowedTags.push('input');
 		config.allowedAttributes.input = ['type', 'checked'];
-
+		config.allowedAttributes.th.push('colspan', 'rowspan');
+		config.allowedAttributes.td.push('colspan', 'rowspan');
+		
 		return config;
 	},
 
