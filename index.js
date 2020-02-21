@@ -81,6 +81,7 @@ var Markdown = {
 			nofollow: true,
 			allowRTLO: false,
 			checkboxes: true,
+			multimdTables: true,
 		};
 
 		meta.settings.get('markdown', function (err, options) {
@@ -248,6 +249,14 @@ var Markdown = {
 				divWrap: true,
 				divClass: 'plugin-markdown',
 			});
+		}
+
+		if (Markdown.config.multimdTables) {
+			parser.use(require('markdown-it-multimd-table'), {
+				multiline:  true,
+				rowspan:    true,
+				headerless: true,
+			})
 		}
 
 		parser.use((md) => {
