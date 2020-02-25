@@ -81,6 +81,7 @@ var Markdown = {
 			nofollow: true,
 			allowRTLO: false,
 			checkboxes: true,
+			multimdTables: true,
 		};
 
 		meta.settings.get('markdown', function (err, options) {
@@ -237,7 +238,9 @@ var Markdown = {
 	updateSanitizeConfig: async (config) => {
 		config.allowedTags.push('input');
 		config.allowedAttributes.input = ['type', 'checked'];
-
+		config.allowedAttributes.th.push('colspan', 'rowspan');
+		config.allowedAttributes.td.push('colspan', 'rowspan');
+		
 		return config;
 	},
 
@@ -248,6 +251,14 @@ var Markdown = {
 				divWrap: true,
 				divClass: 'plugin-markdown',
 			});
+		}
+
+		if (Markdown.config.multimdTables) {
+			parser.use(require('markdown-it-multimd-table'), {
+				multiline:  true,
+				rowspan:    true,
+				headerless: true,
+			})
 		}
 
 		parser.use((md) => {
