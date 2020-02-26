@@ -14,7 +14,7 @@
         "public/js/admin.js"
     ],
     "staticDirs": {
-        "styles": "../highlight.js/styles",
+        "styles": "node_modules/highlight.js/styles",
         "js": "public/js"
     },
     "modules": [
