@@ -184,11 +184,16 @@ var Markdown = {
 
 	postParse: function (payload, next) {
 		var italicMention = /@<em>([^<]+)<\/em>/g;
+		var boldMention = /@<strong>([^<]+)<\/strong>/g;
 		var execute = function (html) {
 			// Replace all italicised mentions back to regular mentions
 			if (italicMention.test(html)) {
 				html = html.replace(italicMention, function (match, slug) {
 					return '@_' + slug + '_';
+				});
+			} else if (boldMention.test(html)) {
+				html = html.replace(boldMention, function (match, slug) {
+					return '@__' + slug + '__';
 				});
 			}
 
