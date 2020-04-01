@@ -25,6 +25,12 @@
 									Enable smartypants and other sweet transforms (e.g. <code>(c)</code> &rarr; <code>&copy;</code>)
 								</label>
 							</div>
+							<div class="form-group">
+								<label for="multimdTables">
+									<input type="checkbox" name="multimdTables" id="multimdTables" />
+									Allow advanced table syntax
+								</label>
+							</div>
 						</div>
 						<div class="col-lg-6">
 							<div class="form-group">

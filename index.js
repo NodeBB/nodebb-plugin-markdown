@@ -81,6 +81,7 @@ var Markdown = {
 			nofollow: true,
 			allowRTLO: false,
 			checkboxes: true,
+			multimdTables: true,
 		};
 
 		meta.settings.get('markdown', function (err, options) {
@@ -183,11 +184,16 @@ var Markdown = {
 
 	postParse: function (payload, next) {
 		var italicMention = /@<em>([^<]+)<\/em>/g;
+		var boldMention = /@<strong>([^<]+)<\/strong>/g;
 		var execute = function (html) {
 			// Replace all italicised mentions back to regular mentions
 			if (italicMention.test(html)) {
 				html = html.replace(italicMention, function (match, slug) {
 					return '@_' + slug + '_';
+				});
+			} else if (boldMention.test(html)) {
+				html = html.replace(boldMention, function (match, slug) {
+					return '@__' + slug + '__';
 				});
 			}
 
@@ -237,6 +243,9 @@ var Markdown = {
 	updateSanitizeConfig: async (config) => {
 		config.allowedTags.push('input');
 		config.allowedAttributes.input = ['type', 'checked'];
+		config.allowedAttributes.ol.push('start');
+		config.allowedAttributes.th.push('colspan', 'rowspan');
+		config.allowedAttributes.td.push('colspan', 'rowspan');
 
 		return config;
 	},
@@ -248,6 +257,14 @@ var Markdown = {
 				divWrap: true,
 				divClass: 'plugin-markdown',
 			});
+		}
+
+		if (Markdown.config.multimdTables) {
+			parser.use(require('markdown-it-multimd-table'), {
+				multiline:  true,
+				rowspan:    true,
+				headerless: true,
+			})
 		}
 
 		parser.use((md) => {
