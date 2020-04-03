@@ -1,6 +1,6 @@
 'use strict';
 
-/* global window, jQuery, $, require, config, socket */
+/* global window, jQuery, $, config, socket */
 
 (function () {
 	var Markdown = {};

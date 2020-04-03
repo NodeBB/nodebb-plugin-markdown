@@ -10,16 +10,13 @@
     "scripts": [
         "public/js/client.js"
     ],
-    "acpScripts": [
-        "public/js/admin.js"
-    ],
     "staticDirs": {
-        "styles": "node_modules/highlight.js/styles",
-        "js": "public/js"
+        "styles": "node_modules/highlight.js/styles"
     },
-    "modules": [
-        "./public/js/highlightjs-line-numbers.js"
-    ],
+    "modules": {
+        "highlightjs-line-numbers.js": "./public/js/highlightjs-line-numbers.js",
+        "admin/plugins/markdown.js": "./public/js/admin.js"
+    },
     "languages": "public/languages",
     "defaultLang": "en_GB",
     "templates": "./public/templates",
