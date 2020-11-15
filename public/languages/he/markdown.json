@@ -1,0 +1,12 @@
+{
+	"bold": "טקסט מודגש",
+	"italic": "טקסט נטוי",
+	"list_item": "פריט רשימה",
+	"strikethrough_text": "קו חוצה",
+	"code_text": "קוד",
+	"link_text": "טקסט קישור",
+	"link_url": "כתובת קישור",
+	"picture_text": "כיתוב בבעיות טעינה",
+	"picture_url": "כתובת תמונה",
+	"help_text": "הפורום עובד עם Markdown. להסבר מלא, [לחץ כאן](http://commonmark.org/help/)"
+}
