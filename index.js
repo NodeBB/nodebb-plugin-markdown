@@ -261,10 +261,10 @@ var Markdown = {
 
 		if (Markdown.config.multimdTables) {
 			parser.use(require('markdown-it-multimd-table'), {
-				multiline:  true,
-				rowspan:    true,
+				multiline: true,
+				rowspan: true,
 				headerless: true,
-			})
+			});
 		}
 
 		parser.use((md) => {
@@ -328,9 +328,9 @@ var Markdown = {
 
 				if (Markdown.config.nofollow) {
 					if (relIdx < 0) {
-						tokens[idx].attrPush(['rel', 'nofollow']);
+						tokens[idx].attrPush(['rel', 'nofollow ugc']);
 					} else {
-						tokens[idx].attrs[relIdx][1] += ' nofollow';
+						tokens[idx].attrs[relIdx][1] += ' nofollow ugc';
 					}
 				}
 			}
