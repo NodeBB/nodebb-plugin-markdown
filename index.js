@@ -358,7 +358,7 @@ var Markdown = {
 			return renderTable(tokens, idx, options, env, self);
 		};
 
-		plugins.fireHook('action:markdown.updateParserRules', parser);
+		plugins.hooks.fire('action:markdown.updateParserRules', parser);
 	},
 
 	isUrlValid: function (src) {
