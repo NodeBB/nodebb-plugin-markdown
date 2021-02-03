@@ -213,7 +213,7 @@ var Markdown = {
 
 	renderHelp: function (helpContent, callback) {
 		translator.translate('[[markdown:help_text]]', function (translated) {
-			plugins.fireHook('filter:parse.raw', '## Markdown\n' + translated, function (err, parsed) {
+			plugins.hooks.fire('filter:parse.raw', '## Markdown\n' + translated, function (err, parsed) {
 				if (err) {
 					return callback(err);
 				}
