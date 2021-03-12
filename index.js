@@ -163,6 +163,9 @@ var Markdown = {
 	},
 
 	postParse: function (payload) {
+		if (!payload) {
+			return payload;
+		}
 		var italicMention = /@<em>([^<]+)<\/em>/g;
 		var boldMention = /@<strong>([^<]+)<\/strong>/g;
 		var execute = function (html) {
