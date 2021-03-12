@@ -4,7 +4,6 @@ var MarkdownIt = require('markdown-it');
 var fs = require('fs');
 var path = require('path');
 var url = require('url');
-var async = require('async');
 
 var meta = require.main.require('./src/meta');
 var translator = require.main.require('./src/translator');
@@ -138,51 +137,32 @@ var Markdown = {
 		});
 	},
 
-	parsePost: function (data, callback) {
-		async.waterfall([
-			function (next) {
-				if (data && data.postData && data.postData.content && parser) {
-					data.postData.content = parser.render(data.postData.content);
-				}
-				next(null, data);
-			},
-			async.apply(Markdown.postParse),
-		], callback);
+	parsePost: async function (data) {
+		if (data && data.postData && data.postData.content && parser) {
+			data.postData.content = parser.render(data.postData.content);
+		}
+		return Markdown.postParse(data);
 	},
 
-	parseSignature: function (data, callback) {
-		async.waterfall([
-			function (next) {
-				if (data && data.userData && data.userData.signature && parser) {
-					data.userData.signature = parser.render(data.userData.signature);
-				}
-				next(null, data);
-			},
-			async.apply(Markdown.postParse),
-		], callback);
+	parseSignature: async function (data) {
+		if (data && data.userData && data.userData.signature && parser) {
+			data.userData.signature = parser.render(data.userData.signature);
+		}
+		return Markdown.postParse(data);
 	},
 
-	parseAboutMe: function (aboutme, callback) {
-		async.waterfall([
-			function (next) {
-				aboutme = (aboutme && parser) ? parser.render(aboutme) : aboutme;
-				process.nextTick(next, null, aboutme);
-			},
-			async.apply(Markdown.postParse),
-		], callback);
+	parseAboutMe: async function (aboutme) {
+		aboutme = (aboutme && parser) ? parser.render(aboutme) : aboutme;
+		// process.nextTick(next, null, aboutme);
+		return Markdown.postParse(aboutme);
 	},
 
-	parseRaw: function (raw, callback) {
-		async.waterfall([
-			function (next) {
-				raw = (raw && parser) ? parser.render(raw) : raw;
-				process.nextTick(next, null, raw);
-			},
-			async.apply(Markdown.postParse),
-		], callback);
+	parseRaw: async function (raw) {
+		raw = (raw && parser) ? parser.render(raw) : raw;
+		return Markdown.postParse(raw);
 	},
 
-	postParse: function (payload, next) {
+	postParse: function (payload) {
 		var italicMention = /@<em>([^<]+)<\/em>/g;
 		var boldMention = /@<strong>([^<]+)<\/strong>/g;
 		var execute = function (html) {
@@ -208,7 +188,7 @@ var Markdown = {
 			payload = execute(payload);
 		}
 
-		next(null, payload);
+		return payload;
 	},
 
 	renderHelp: function (helpContent, callback) {
