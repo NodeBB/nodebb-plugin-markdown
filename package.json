@@ -32,20 +32,20 @@
   "dependencies": {
     "async": "^3.2.0",
     "highlight.js": "10.4.1",
-    "markdown-it": "^10.0.0",
+    "markdown-it": "^12.0.6",
     "markdown-it-checkbox": "^1.1.0",
     "markdown-it-multimd-table": "^4.0.1"
   },
   "nbbpm": {
-    "compatibility": "^1.6.0"
+    "compatibility": "^1.17.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^9.1.2",
-    "@commitlint/config-angular": "^7.1.2",
-    "eslint": "^7.7.0",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.8.0",
-    "husky": "^2.4.0",
-    "lint-staged": "^10.0.9"
+    "@commitlint/cli": "^12.1.4",
+    "@commitlint/config-angular": "^12.1.4",
+    "eslint": "^7.27.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.23.3",
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0"
   }
 }
