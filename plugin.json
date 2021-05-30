@@ -24,6 +24,7 @@
     "languages": "public/languages",
     "defaultLang": "en_GB",
     "templates": "./public/templates",
+	"settingsRoute": "/admin/plugins/markdown",
     "hooks": [
         { "hook": "static:app.load", "method": "onLoad" },
         { "hook": "filter:parse.post", "method": "parsePost", "priority": 5 },
