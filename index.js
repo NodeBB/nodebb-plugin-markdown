@@ -1,24 +1,24 @@
 'use strict';
 
-var MarkdownIt = require('markdown-it');
-var fs = require('fs');
-var path = require('path');
-var url = require('url');
+const MarkdownIt = require('markdown-it');
+const fs = require('fs');
+const path = require('path');
+const url = require('url');
 
-var meta = require.main.require('./src/meta');
-var translator = require.main.require('./src/translator');
-var nconf = require.main.require('nconf');
-var winston = require.main.require('winston');
-var plugins = module.parent.exports;
+const nconf = require.main.require('nconf');
+const winston = require.main.require('winston');
+const meta = require.main.require('./src/meta');
+const translator = require.main.require('./src/translator');
+const plugins = require.main.require('./src/plugins');
 
-var SocketPlugins = require.main.require('./src/socket.io/plugins');
+const SocketPlugins = require.main.require('./src/socket.io/plugins');
 SocketPlugins.markdown = require('./websockets');
 
-var	parser;
+let parser;
 
-var Markdown = {
+const Markdown = {
 	config: {},
-	onLoad: function (params, callback) {
+	onLoad: async function (params) {
 		const controllers = require('./lib/controllers');
 		const hostMiddleware = require.main.require('./src/middleware');
 		const middlewares = [hostMiddleware.maintenanceMode, hostMiddleware.registrationComplete, hostMiddleware.pluginHooks];
@@ -32,41 +32,40 @@ var Markdown = {
 		Markdown.init();
 		Markdown.loadThemes();
 
-		callback();
+		return params;
 	},
 
-	getConfig: function (config, callback) {
+	getConfig: function (config) {
 		config.markdown = {
 			highlight: Markdown.highlight ? 1 : 0,
 			highlightLinesLanguageList: Markdown.config.highlightLinesLanguageList,
 			theme: Markdown.config.highlightTheme || 'railscasts.css',
 		};
-		callback(null, config);
+		return config;
 	},
 
-	getLinkTags: function (hookData, callback) {
+	getLinkTags: function (hookData) {
 		hookData.links.push({
 			rel: 'prefetch stylesheet',
 			type: '',
-			href: nconf.get('relative_path') + '/plugins/nodebb-plugin-markdown/styles/' + (Markdown.config.highlightTheme || 'railscasts.css'),
+			href: `${nconf.get('relative_path')}/plugins/nodebb-plugin-markdown/styles/${Markdown.config.highlightTheme || 'railscasts.css'}`,
 		});
 
-		var prefetch = ['/assets/src/modules/highlight.js', '/assets/language/' + (meta.config.defaultLang || 'en-GB') + '/markdown.json'];
-		hookData.links = hookData.links.concat(prefetch.map(function (path) {
-			path = {
+		const prefetch = ['/assets/src/modules/highlight.js', `/assets/language/${meta.config.defaultLang || 'en-GB'}/markdown.json`];
+		hookData.links = hookData.links.concat(
+			prefetch.map((path) => ({
 				rel: 'prefetch',
 				href: nconf.get('relative_path') + path + '?' + meta.config['cache-buster'],
-			};
-			return path;
-		}));
+			}))
+		);
 
-		callback(null, hookData);
+		return hookData;
 	},
 
 	init: function () {
 		// Load saved config
-		var	_self = this;
-		var defaults = {
+		const _self = this;
+		const defaults = {
 			html: false,
 			xhtmlOut: true,
 			breaks: true,
@@ -85,10 +84,10 @@ var Markdown = {
 
 		meta.settings.get('markdown', function (err, options) {
 			if (err) {
-				winston.warn('[plugin/markdown] Unable to retrieve settings, assuming defaults: ' + err.message);
+				winston.warn(`[plugin/markdown] Unable to retrieve settings, assuming defaults: ${err.message}`);
 			}
 
-			for (var field in defaults) {
+			for (const field in defaults) {
 				// If not set in config (nil)
 				if (!options.hasOwnProperty(field)) {
 					_self.config[field] = defaults[field];
@@ -126,7 +125,7 @@ var Markdown = {
 				Markdown.themes = [];
 				return;
 			}
-			var isStylesheet = /\.css$/;
+			const isStylesheet = /\.css$/;
 			Markdown.themes = files.filter(function (file) {
 				return isStylesheet.test(file);
 			}).map(function (file) {
@@ -166,9 +165,9 @@ var Markdown = {
 		if (!payload) {
 			return payload;
 		}
-		var italicMention = /@<em>([^<]+)<\/em>/g;
-		var boldMention = /@<strong>([^<]+)<\/strong>/g;
-		var execute = function (html) {
+		const italicMention = /@<em>([^<]+)<\/em>/g;
+		const boldMention = /@<strong>([^<]+)<\/strong>/g;
+		const execute = function (html) {
 			// Replace all italicised mentions back to regular mentions
 			if (italicMention.test(html)) {
 				html = html.replace(italicMention, function (match, slug) {
@@ -194,21 +193,15 @@ var Markdown = {
 		return payload;
 	},
 
-	renderHelp: function (helpContent, callback) {
-		translator.translate('[[markdown:help_text]]', function (translated) {
-			plugins.hooks.fire('filter:parse.raw', '## Markdown\n' + translated, function (err, parsed) {
-				if (err) {
-					return callback(err);
-				}
-
-				helpContent += parsed;
-				callback(null, helpContent);
-			});
-		});
+	renderHelp: async function (helpContent) {
+		const translated = await translator.translate('[[markdown:help_text]]');
+		const parsed = plugins.hooks.fire('filter:parse.raw', `## Markdown\n${translated}`);
+		helpContent += parsed;
+		return helpContent;
 	},
 
-	registerFormatting: function (payload, callback) {
-		var formatting = [
+	registerFormatting: async function (payload) {
+		const formatting = [
 			{ name: 'bold', className: 'fa fa-bold', title: '[[modules:composer.formatting.bold]]' },
 			{ name: 'italic', className: 'fa fa-italic', title: '[[modules:composer.formatting.italic]]' },
 			{ name: 'list', className: 'fa fa-list-ul', title: '[[modules:composer.formatting.list]]' },
@@ -220,7 +213,7 @@ var Markdown = {
 
 		payload.options = formatting.concat(payload.options);
 
-		callback(null, payload);
+		return payload;
 	},
 
 	updateSanitizeConfig: async (config) => {
@@ -261,19 +254,19 @@ var Markdown = {
 		});
 
 		// Update renderer to add some classes to all images
-		var renderImage = parser.renderer.rules.image || function (tokens, idx, options, env, self) {
+		const renderImage = parser.renderer.rules.image || function (tokens, idx, options, env, self) {
 			return self.renderToken.apply(self, arguments);
 		};
-		var renderLink = parser.renderer.rules.link_open || function (tokens, idx, options, env, self) {
+		const renderLink = parser.renderer.rules.link_open || function (tokens, idx, options, env, self) {
 			return self.renderToken.apply(self, arguments);
 		};
-		var renderTable = parser.renderer.rules.table_open || function (tokens, idx, options, env, self) {
+		const renderTable = parser.renderer.rules.table_open || function (tokens, idx, options, env, self) {
 			return self.renderToken.apply(self, arguments);
 		};
 
 		parser.renderer.rules.image = function (tokens, idx, options, env, self) {
-			var classIdx = tokens[idx].attrIndex('class');
-			var srcIdx = tokens[idx].attrIndex('src');
+			const classIdx = tokens[idx].attrIndex('class');
+			const srcIdx = tokens[idx].attrIndex('src');
 
 			// Validate the url
 			if (!Markdown.isUrlValid(tokens[idx].attrs[srcIdx][1])) { return ''; }
@@ -289,9 +282,9 @@ var Markdown = {
 
 		parser.renderer.rules.link_open = function (tokens, idx, options, env, self) {
 			// Add target="_blank" to all links
-			var targetIdx = tokens[idx].attrIndex('target');
-			var relIdx = tokens[idx].attrIndex('rel');
-			var hrefIdx = tokens[idx].attrIndex('href');
+			const targetIdx = tokens[idx].attrIndex('target');
+			let relIdx = tokens[idx].attrIndex('rel');
+			const hrefIdx = tokens[idx].attrIndex('href');
 
 			if (Markdown.isExternalLink(tokens[idx].attrs[hrefIdx][1])) {
 				if (Markdown.config.externalBlank) {
@@ -330,7 +323,7 @@ var Markdown = {
 		};
 
 		parser.renderer.rules.table_open = function (tokens, idx, options, env, self) {
-			var classIdx = tokens[idx].attrIndex('class');
+			const classIdx = tokens[idx].attrIndex('class');
 
 			if (classIdx < 0) {
 				tokens[idx].attrPush(['class', 'table table-bordered table-striped']);
@@ -353,10 +346,10 @@ var Markdown = {
 		 * get updated.
 		 */
 		const allowedRoots = [nconf.get('upload_url'), '/uploads'];
-		const allowed = pathname => allowedRoots.some(root => pathname.toString().startsWith(root) || pathname.toString().startsWith(nconf.get('relative_path') + root));
+		const allowed = (pathname) => allowedRoots.some((root) => pathname.toString().startsWith(root) || pathname.toString().startsWith(nconf.get('relative_path') + root));
 
 		try {
-			var urlObj = url.parse(src, false, true);
+			const urlObj = url.parse(src, false, true);
 			return !(urlObj.host === null && !allowed(urlObj.pathname));
 		} catch (e) {
 			return false;
@@ -364,8 +357,8 @@ var Markdown = {
 	},
 
 	isExternalLink: function (urlString) {
-		var urlObj;
-		var baseUrlObj;
+		let urlObj;
+		let baseUrlObj;
 		try {
 			urlObj = url.parse(urlString);
 			baseUrlObj = url.parse(nconf.get('url'));
@@ -376,7 +369,7 @@ var Markdown = {
 		if (
 			urlObj.host === null	// Relative paths are always internal links...
 			|| (urlObj.host === baseUrlObj.host && urlObj.protocol === baseUrlObj.protocol	// Otherwise need to check that protocol and host match
-			&& (nconf.get('relative_path').length > 0 ? urlObj.pathname.indexOf(nconf.get('relative_path')) === 0 : true))	// Subfolder installs need this additional check
+				&& (nconf.get('relative_path').length > 0 ? urlObj.pathname.indexOf(nconf.get('relative_path')) === 0 : true))	// Subfolder installs need this additional check
 		) {
 			return false;
 		}
@@ -384,14 +377,13 @@ var Markdown = {
 	},
 
 	admin: {
-		menu: function (custom_header, callback) {
+		menu: async function (custom_header) {
 			custom_header.plugins.push({
 				route: '/plugins/markdown',
 				icon: 'fa-edit',
 				name: 'Markdown',
 			});
-
-			callback(null, custom_header);
+			return custom_header;
 		},
 	},
 
