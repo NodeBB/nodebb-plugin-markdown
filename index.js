@@ -293,7 +293,7 @@ const Markdown = {
 			token.attrSet('class', (token.attrGet('class') || '') + ' img-responsive img-markdown');
 
 			// Append sizes to images
-			if (env.images.has(filename)) {
+			if (env.images && env.images.has(filename)) {
 				const size = env.images.get(filename);
 				token.attrSet('width', size.width);
 				token.attrSet('height', size.height);
