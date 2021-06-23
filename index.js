@@ -8,6 +8,7 @@ const url = require('url');
 const nconf = require.main.require('nconf');
 const winston = require.main.require('winston');
 const meta = require.main.require('./src/meta');
+const posts = require.main.require('./src/posts');
 const translator = require.main.require('./src/translator');
 const plugins = require.main.require('./src/plugins');
 
@@ -137,31 +138,48 @@ const Markdown = {
 	},
 
 	parsePost: async function (data) {
+		const env = await Markdown.beforeParse(data);
 		if (data && data.postData && data.postData.content && parser) {
-			data.postData.content = parser.render(data.postData.content);
+			data.postData.content = parser.render(data.postData.content, env || {});
 		}
-		return Markdown.postParse(data);
+		return Markdown.afterParse(data);
 	},
 
 	parseSignature: async function (data) {
 		if (data && data.userData && data.userData.signature && parser) {
 			data.userData.signature = parser.render(data.userData.signature);
 		}
-		return Markdown.postParse(data);
+		return Markdown.afterParse(data);
 	},
 
 	parseAboutMe: async function (aboutme) {
 		aboutme = (aboutme && parser) ? parser.render(aboutme) : aboutme;
 		// process.nextTick(next, null, aboutme);
-		return Markdown.postParse(aboutme);
+		return Markdown.afterParse(aboutme);
 	},
 
 	parseRaw: async function (raw) {
 		raw = (raw && parser) ? parser.render(raw) : raw;
-		return Markdown.postParse(raw);
+		return Markdown.afterParse(raw);
 	},
 
-	postParse: function (payload) {
+	beforeParse: async (data) => {
+		const env = {};
+
+		if (data && data.postData && data.postData.pid) {
+			// Check that pid for images, and return their sizes
+			const images = await posts.uploads.listWithSizes(data.postData.pid);
+			env.images = images.reduce((memo, cur) => {
+				memo.set(cur.name, cur);
+				delete cur.name;
+				return memo;
+			}, new Map());
+		}
+
+		return env;
+	},
+
+	afterParse: function (payload) {
 		if (!payload) {
 			return payload;
 		}
@@ -265,16 +283,20 @@ const Markdown = {
 		};
 
 		parser.renderer.rules.image = function (tokens, idx, options, env, self) {
-			const classIdx = tokens[idx].attrIndex('class');
-			const srcIdx = tokens[idx].attrIndex('src');
+			const token = tokens[idx];
+			const attributes = new Map(token.attrs);
+			const filename = path.basename(attributes.get('src'));
 
 			// Validate the url
-			if (!Markdown.isUrlValid(tokens[idx].attrs[srcIdx][1])) { return ''; }
+			if (!Markdown.isUrlValid(attributes.get('src'))) { return ''; }
 
-			if (classIdx < 0) {
-				tokens[idx].attrPush(['class', 'img-responsive img-markdown']);
-			} else {
-				tokens[idx].attrs[classIdx][1] += ' img-responsive img-markdown';
+			token.attrSet('class', (token.attrGet('class') || '') + ' img-responsive img-markdown');
+
+			// Append sizes to images
+			if (env.images.has(filename)) {
+				const size = env.images.get(filename);
+				token.attrSet('width', size.width);
+				token.attrSet('height', size.height);
 			}
 
 			return renderImage(tokens, idx, options, env, self);
