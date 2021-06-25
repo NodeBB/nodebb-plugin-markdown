@@ -5,6 +5,8 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 
+const probe = require('probe-image-size');
+
 const nconf = require.main.require('nconf');
 const winston = require.main.require('winston');
 const meta = require.main.require('./src/meta');
@@ -164,7 +166,9 @@ const Markdown = {
 	},
 
 	beforeParse: async (data) => {
-		const env = {};
+		const env = {
+			images: new Map(),
+		};
 
 		if (data && data.postData && data.postData.pid) {
 			// Check that pid for images, and return their sizes
@@ -173,7 +177,36 @@ const Markdown = {
 				memo.set(cur.name, cur);
 				delete cur.name;
 				return memo;
-			}, new Map());
+			}, env.images);
+		}
+
+		// Probe post data for external images as well
+		if (data && data.postData && data.postData.content) {
+			const matcher = /!\[[^\]]*?\]\((https?[^)]+?)\)/g;
+			let current;
+
+			// eslint-disable-next-line no-cond-assign
+			while ((current = matcher.exec(data.postData.content)) !== null) {
+				const match = current[1];
+				if (match && Markdown.isExternalLink(match)) {	// for security only parse external images
+					try {
+						// eslint-disable-next-line no-await-in-loop
+						const size = await probe(match);
+						const parsedUrl = url.parse(match);
+						const filename = path.basename(parsedUrl.pathname);
+						let { width, height } = size;
+
+						// Swap width and height if orientation bit is set
+						if (size.orientation >= 5 && size.orientation <= 8) {
+							[width, height] = [height, width];
+						}
+
+						env.images.set(filename, { width, height });
+					} catch (e) {
+						// No handling required
+					}
+				}
+			}
 		}
 
 		return env;
@@ -285,7 +318,8 @@ const Markdown = {
 		parser.renderer.rules.image = function (tokens, idx, options, env, self) {
 			const token = tokens[idx];
 			const attributes = new Map(token.attrs);
-			const filename = path.basename(attributes.get('src'));
+			const parsedSrc = url.parse(attributes.get('src'));
+			const filename = path.basename(parsedSrc.pathname);
 
 			// Validate the url
 			if (!Markdown.isUrlValid(attributes.get('src'))) { return ''; }
