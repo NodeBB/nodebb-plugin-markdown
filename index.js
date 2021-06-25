@@ -13,6 +13,7 @@ const meta = require.main.require('./src/meta');
 const posts = require.main.require('./src/posts');
 const translator = require.main.require('./src/translator');
 const plugins = require.main.require('./src/plugins');
+const cacheCreate = require.main.require('./src/cacheCreate');
 
 const SocketPlugins = require.main.require('./src/socket.io/plugins');
 SocketPlugins.markdown = require('./websockets');
@@ -21,6 +22,7 @@ let parser;
 
 const Markdown = {
 	config: {},
+	_externalImageCache: undefined,
 	onLoad: async function (params) {
 		const controllers = require('./lib/controllers');
 		const hostMiddleware = require.main.require('./src/middleware');
@@ -70,20 +72,26 @@ const Markdown = {
 		const _self = this;
 		const defaults = {
 			html: false,
-			xhtmlOut: true,
-			breaks: true,
+
 			langPrefix: 'language-',
-			linkify: true,
-			typographer: false,
 			highlight: true,
 			highlightLinesLanguageList: [],
 			highlightTheme: 'railscasts.css',
+
+			probe: true,
+			probeCacheSize: 256,
+
+			xhtmlOut: true,
+			breaks: true,
+			linkify: true,
+			typographer: false,
 			externalBlank: false,
 			nofollow: true,
 			allowRTLO: false,
 			checkboxes: true,
 			multimdTables: true,
 		};
+		const notCheckboxes = ['langPrefix', 'hightlightTheme', 'highlightLinesLanguageList', 'probeCacheSize'];
 
 		meta.settings.get('markdown', function (err, options) {
 			if (err) {
@@ -94,7 +102,7 @@ const Markdown = {
 				// If not set in config (nil)
 				if (!options.hasOwnProperty(field)) {
 					_self.config[field] = defaults[field];
-				} else if (field !== 'langPrefix' && field !== 'highlightTheme' && field !== 'headerPrefix' && field !== 'highlightLinesLanguageList') {
+				} else if (!notCheckboxes.includes(field)) {
 					_self.config[field] = options[field] === 'on';
 				} else {
 					_self.config[field] = options[field];
@@ -118,6 +126,16 @@ const Markdown = {
 			parser = new MarkdownIt(_self.config);
 
 			Markdown.updateParserRules(parser);
+
+			// External image size cache
+			if (_self.config.probe) {
+				Markdown._externalImageCache = cacheCreate({
+					name: 'markdown.externalImageCache',
+					max: parseInt(_self.config.probeCacheSize, 10) || 256,
+					length: function () { return 1; },
+					maxAge: 1000 * 60 * 60 * 24,	// 1 day
+				});
+			}
 		});
 	},
 
@@ -181,7 +199,7 @@ const Markdown = {
 		}
 
 		// Probe post data for external images as well
-		if (data && data.postData && data.postData.content) {
+		if (Markdown.config.probe && data && data.postData && data.postData.content) {
 			const matcher = /!\[[^\]]*?\]\((https?[^)]+?)\)/g;
 			let current;
 
@@ -189,21 +207,28 @@ const Markdown = {
 			while ((current = matcher.exec(data.postData.content)) !== null) {
 				const match = current[1];
 				if (match && Markdown.isExternalLink(match)) {	// for security only parse external images
-					try {
-						// eslint-disable-next-line no-await-in-loop
-						const size = await probe(match);
-						const parsedUrl = url.parse(match);
-						const filename = path.basename(parsedUrl.pathname);
-						let { width, height } = size;
+					const parsedUrl = url.parse(match);
+					const filename = path.basename(parsedUrl.pathname);
+					const size = Markdown._externalImageCache.get(match);
+					if (size) {
+						env.images.set(filename, size);
+					} else {
+						try {
+							// eslint-disable-next-line no-await-in-loop
+							const size = await probe(match);
 
-						// Swap width and height if orientation bit is set
-						if (size.orientation >= 5 && size.orientation <= 8) {
-							[width, height] = [height, width];
+							let { width, height } = size;
+
+							// Swap width and height if orientation bit is set
+							if (size.orientation >= 5 && size.orientation <= 8) {
+								[width, height] = [height, width];
+							}
+
+							env.images.set(filename, { width, height });
+							Markdown._externalImageCache.set(match, { width, height });
+						} catch (e) {
+							// No handling required
 						}
-
-						env.images.set(filename, { width, height });
-					} catch (e) {
-						// No handling required
 					}
 				}
 			}

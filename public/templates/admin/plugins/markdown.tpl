@@ -131,6 +131,24 @@
 					</div>
 				</div>
 				<div class="col-sm-6">
+					<div class="panel panel-default">
+						<div class="panel-heading">Images</div>
+						<div class="panel-body">
+							<div class="checkbox">
+								<label for="probe">
+									<input type="checkbox" name="probe" id="probe" />
+									Append image sizes for externally linked images
+								</label>
+							</div>
+							<div class="form-group">
+								<label for="probeCacheSize">Cache size (number of images)</label>
+								<input class="form-control" type="number" id="probeCacheSize" name="probeCacheSize" placeholder="256 (Default)" />
+								<p class="help-block">
+									Markdown automatically saves image sizes so as to not make too many unnecessary calls. It remembers this value for 24 hours, to a maximum number of images as defined here. Increase this number if your forum posts contain links to many external images.
+								</p>
+							</div>
+						</div>
+					</div>
 					<div class="panel panel-danger">
 						<div class="panel-heading">Danger Zone</div>
 						<div class="panel-body">

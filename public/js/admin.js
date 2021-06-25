@@ -13,18 +13,24 @@ define('admin/plugins/markdown', ['settings'], function (Settings) {
 
 			var defaults = {
 				html: false,
+
+				langPrefix: 'language-',
+				highlight: true,
+				highlightLinesLanguageList: [],
+				highlightTheme: 'railscasts.css',
+
+				probe: true,
+				probeCacheSize: 256,
+
 				xhtmlOut: true,
 				breaks: true,
-				langPrefix: 'language-',
 				linkify: true,
+				typographer: false,
 				externalBlank: false,
 				nofollow: true,
-				typographer: false,
-				highlight: true,
-				highlightLines: false,
-				highlightTheme: 'railscasts.css',
 				allowRTLO: false,
 				checkboxes: true,
+				multimdTables: true,
 			};
 
 			// Set defaults
