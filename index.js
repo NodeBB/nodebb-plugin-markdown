@@ -344,7 +344,6 @@ const Markdown = {
 			const token = tokens[idx];
 			const attributes = new Map(token.attrs);
 			const parsedSrc = url.parse(attributes.get('src'));
-			const filename = path.basename(parsedSrc.pathname);
 
 			// Validate the url
 			if (!Markdown.isUrlValid(attributes.get('src'))) { return ''; }
@@ -352,6 +351,7 @@ const Markdown = {
 			token.attrSet('class', (token.attrGet('class') || '') + ' img-responsive img-markdown');
 
 			// Append sizes to images
+			const filename = path.basename(parsedSrc.pathname);
 			if (env.images && env.images.has(filename)) {
 				const size = env.images.get(filename);
 				token.attrSet('width', size.width);
