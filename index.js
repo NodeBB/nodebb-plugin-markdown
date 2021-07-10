@@ -91,7 +91,7 @@ const Markdown = {
 			checkboxes: true,
 			multimdTables: true,
 		};
-		const notCheckboxes = ['langPrefix', 'hightlightTheme', 'highlightLinesLanguageList', 'probeCacheSize'];
+		const notCheckboxes = ['langPrefix', 'highlightTheme', 'highlightLinesLanguageList', 'probeCacheSize'];
 
 		meta.settings.get('markdown', function (err, options) {
 			if (err) {
