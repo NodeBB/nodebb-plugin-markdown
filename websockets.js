@@ -21,7 +21,7 @@ module.exports.checkbox = {
 			indices.push(match.index);
 		}
 
-		content = content.replace(checkboxRegex, function (match, idx) {
+		content = content.replace(checkboxRegex, (match, idx) => {
 			if (idx !== indices[data.index]) {
 				return match;
 			}
