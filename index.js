@@ -271,7 +271,7 @@ const Markdown = {
 
 	renderHelp: async function (helpContent) {
 		const translated = await translator.translate('[[markdown:help_text]]');
-		const parsed = plugins.hooks.fire('filter:parse.raw', `## Markdown\n${translated}`);
+		const parsed = await plugins.hooks.fire('filter:parse.raw', `## Markdown\n${translated}`);
 		helpContent += parsed;
 		return helpContent;
 	},
