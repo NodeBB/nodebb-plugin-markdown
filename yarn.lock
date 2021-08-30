@@ -30,7 +30,7 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@commitlint/cli@^12.1.4":
+"@commitlint/cli@12.1.4":
   version "12.1.4"
   resolved "https://registry.yarnpkg.com/@commitlint/cli/-/cli-12.1.4.tgz#af4d9dd3c0122c7b39a61fa1cd2abbad0422dbe0"
   integrity sha512-ZR1WjXLvqEffYyBPT0XdnSxtt3Ty1TMoujEtseW5o3vPnkA1UNashAMjQVg/oELqfaiAMnDw8SERPMN0e/0kLg==
@@ -50,7 +50,7 @@
   resolved "https://registry.yarnpkg.com/@commitlint/config-angular-type-enum/-/config-angular-type-enum-12.1.4.tgz#02f9fd83cb13d1b40b0b2308147059ee0eae1ab5"
   integrity sha512-C/F4X0VN56qpVq4HqiY2DuynF3BLtIFxM8Zwf3xvSONHGYVqmYG1cM6qezMxKtTIuy7A5yKK5aeSnaptw+VQgw==
 
-"@commitlint/config-angular@^12.1.4":
+"@commitlint/config-angular@12.1.4":
   version "12.1.4"
   resolved "https://registry.yarnpkg.com/@commitlint/config-angular/-/config-angular-12.1.4.tgz#960e394994052201c4ded34713092ec4ea44ce97"
   integrity sha512-ptJpRjsHe0Cmh6Bm5tnC/RbR9p3/YMsZFhOzLEiv1sn2pBPsTSGIka1eO26XquLcw/0srKCGBNnUFFLO84qGPQ==
