@@ -351,11 +351,13 @@ const Markdown = {
 			token.attrSet('class', (token.attrGet('class') || '') + ' img-responsive img-markdown');
 
 			// Append sizes to images
-			const filename = path.basename(parsedSrc.pathname);
-			if (env.images && env.images.has(filename)) {
-				const size = env.images.get(filename);
-				token.attrSet('width', size.width);
-				token.attrSet('height', size.height);
+			if (parsedSrc.pathname) {
+				const filename = path.basename(parsedSrc.pathname);
+				if (env.images && env.images.has(filename)) {
+					const size = env.images.get(filename);
+					token.attrSet('width', size.width);
+					token.attrSet('height', size.height);
+				}
 			}
 
 			return renderImage(tokens, idx, options, env, self);
