@@ -1,8 +1,8 @@
 'use strict';
 
-/* globals define, $, app, socket, bootbox */
+/* globals define, $, socket, bootbox */
 
-define('admin/plugins/markdown', ['settings'], function (Settings) {
+define('admin/plugins/markdown', ['settings', 'alerts'], function (Settings, alerts) {
 	var Markdown = {};
 
 	Markdown.init = function () {
@@ -47,7 +47,7 @@ define('admin/plugins/markdown', ['settings'], function (Settings) {
 
 		$('#save').on('click', function () {
 			Settings.save('markdown', $('.markdown-settings'), function () {
-				app.alert({
+				alerts.alert({
 					type: 'success',
 					alert_id: 'markdown-saved',
 					title: 'Reload Required',
