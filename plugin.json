@@ -14,10 +14,10 @@
         "public/js/admin.js"
     ],
     "staticDirs": {
-        "themes": "./node_modules/@highlightjs/cdn-assets/styles"
+        "themes": "../@highlightjs/cdn-assets/styles"
     },
     "modules": {
-        "highlight.js": "./node_modules/@highlightjs/cdn-assets/highlight.min.js",
+        "highlight.js": "../@highlightjs/cdn-assets/highlight.min.js",
         "highlightjs-line-numbers.js": "./public/js/highlightjs-line-numbers.js"
     },
     "languages": "public/languages",
