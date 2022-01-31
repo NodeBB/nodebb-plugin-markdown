@@ -35,18 +35,18 @@ const Markdown = {
 		params.router.get('/api/post/:pid/raw', middlewares, controllers.retrieveRaw);
 
 		Markdown.init();
-		Markdown.loadThemes();
+		await Markdown.loadThemes();
 
 		return params;
 	},
 
 	getConfig: async (config) => {
-		const { defaultHighlightLanguage } = await meta.settings.get('markdown');
+		const { defaultHighlightLanguage, highlightTheme } = await meta.settings.get('markdown');
 
 		config.markdown = {
 			highlight: Markdown.highlight ? 1 : 0,
 			highlightLinesLanguageList: Markdown.config.highlightLinesLanguageList,
-			theme: Markdown.config.highlightTheme || 'default.min.css',
+			theme: highlightTheme || 'default.min.css',
 			defaultHighlightLanguage: defaultHighlightLanguage || '',
 		};
 
@@ -143,22 +143,17 @@ const Markdown = {
 		});
 	},
 
-	loadThemes: function () {
-		fs.readdir(path.resolve(__dirname, 'node_modules/@highlightjs/cdn-assets/styles'), function (err, files) {
-			if (err) {
-				winston.error('[plugin/markdown] Could not load Markdown themes: ' + err.message);
-				Markdown.themes = [];
-				return;
-			}
+	loadThemes: async () => {
+		try {
+			const files = await fs.promises.readdir(path.resolve(require.main.paths[0], '@highlightjs/cdn-assets/styles'));
 			const isStylesheet = /\.css$/;
 			Markdown.themes = files.filter(function (file) {
 				return isStylesheet.test(file);
-			}).map(function (file) {
-				return {
-					name: file,
-				};
 			});
-		});
+		} catch (err) {
+			winston.error('[plugin/markdown] Could not load Markdown themes: ' + err.message);
+			Markdown.themes = [];
+		}
 	},
 
 	parsePost: async function (data) {

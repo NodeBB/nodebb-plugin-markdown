@@ -36,5 +36,8 @@
         { "hook": "filter:config.get", "method": "getConfig" },
         { "hook": "filter:meta.getLinkTags", "method": "getLinkTags"},
         { "hook": "filter:sanitize.config", "method": "updateSanitizeConfig" }
+    ],
+    "upgrades": [
+        "upgrades/reset_md_hljs_theme.js"
     ]
 }

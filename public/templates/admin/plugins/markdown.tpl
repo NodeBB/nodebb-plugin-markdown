@@ -82,9 +82,9 @@
 							<div class="form-group">
 								<label for="highlightTheme">Use this theme for highlighted code blocks</label>
 								<select class="form-control" name="highlightTheme" id="highlightTheme">
-									<!-- BEGIN themes -->
-									<option value="{themes.name}">{themes.name}</option>
-									<!-- END themes -->
+									{{{ each themes }}}
+									<option value="{@value}">{@value}</option>
+									{{{ end }}}
 								</select>
 							</div>
 
