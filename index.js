@@ -6,6 +6,7 @@ const path = require('path');
 const url = require('url');
 
 const probe = require('probe-image-size');
+const punycode = require('punycode');
 
 const nconf = require.main.require('nconf');
 const winston = require.main.require('winston');
@@ -399,6 +400,11 @@ const Markdown = {
 						tokens[idx + 1].content = tokens[idx + 1].content.replace(Markdown.regexes.rtl_override, '');
 					}
 				}
+			}
+
+			// Convert any homographs in link text to punycode
+			if (tokens[idx + 1] && tokens[idx + 1].type === 'text') {
+				tokens[idx + 1].content = punycode.toASCII(tokens[idx + 1].content);
 			}
 
 			return renderLink(tokens, idx, options, env, self);
