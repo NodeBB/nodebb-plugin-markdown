@@ -40,12 +40,16 @@ const Markdown = {
 		return params;
 	},
 
-	getConfig: function (config) {
+	getConfig: async (config) => {
+		const { defaultHighlightLanguage } = await meta.settings.get('markdown');
+
 		config.markdown = {
 			highlight: Markdown.highlight ? 1 : 0,
 			highlightLinesLanguageList: Markdown.config.highlightLinesLanguageList,
 			theme: Markdown.config.highlightTheme || 'default.min.css',
+			defaultHighlightLanguage,
 		};
+
 		return config;
 	},
 

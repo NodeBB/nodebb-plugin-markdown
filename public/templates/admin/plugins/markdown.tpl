@@ -78,6 +78,7 @@
 									Automatically detect and highlight code blocks
 								</label>
 							</div>
+
 							<div class="form-group">
 								<label for="highlightTheme">Use this theme for highlighted code blocks</label>
 								<select class="form-control" name="highlightTheme" id="highlightTheme">
@@ -86,6 +87,15 @@
 									<!-- END themes -->
 								</select>
 							</div>
+
+							<div class="form-group">
+								<label for="defaultHighlightLanguage">
+									Default language for code blocks with no language defined
+								</label>
+								<input class="form-control" placeholder="e.g. js" type="text" name="defaultHighlightLanguage" id="defaultHighlightLanguage" />
+								<p class="help-block">Leave blank to use auto-language detection</p>
+							</div>
+
 							<div class="form-group">
 								<label for="langPrefix">
 									Prefix for <code>code</code> blocks

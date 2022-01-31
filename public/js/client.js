@@ -212,6 +212,12 @@
 			require(['highlight', 'highlightjs-line-numbers'], function () {
 				elements.each(function (i, block) {
 					$(block.parentNode).addClass('markdown-highlight');
+
+					// Default language if set in ACP
+					if (!Array.prototype.some.call(block.classList, (className) => className.startsWith('language-')) && config.markdown.defaultHighlightLanguage) {
+						block.classList.add(`language-${config.markdown.defaultHighlightLanguage}`);
+					}
+
 					window.hljs.highlightElement(block);
 
 					// Check detected language against whitelist and add lines if enabled
