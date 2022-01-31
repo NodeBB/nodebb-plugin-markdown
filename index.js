@@ -44,25 +44,25 @@ const Markdown = {
 		config.markdown = {
 			highlight: Markdown.highlight ? 1 : 0,
 			highlightLinesLanguageList: Markdown.config.highlightLinesLanguageList,
-			theme: Markdown.config.highlightTheme || 'railscasts.css',
+			theme: Markdown.config.highlightTheme || 'default.min.css',
 		};
 		return config;
 	},
 
-	getLinkTags: function (hookData) {
+	getLinkTags: async (hookData) => {
+		const { highlightTheme } = await meta.settings.get('markdown');
+
 		hookData.links.push({
 			rel: 'prefetch stylesheet',
 			type: '',
-			href: `${nconf.get('relative_path')}/plugins/nodebb-plugin-markdown/styles/${Markdown.config.highlightTheme || 'railscasts.css'}`,
+			href: `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/${highlightTheme || 'default.min.css'}`,
+		}, {
+			rel: 'prefetch',
+			href: `${nconf.get('relative_path')}/assets/language/${meta.config.defaultLang || 'en-GB'}/markdown.json?${meta.config['cache-buster']}`,
+		}, {
+			rel: 'prefetch',
+			href: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js',
 		});
-
-		const prefetch = ['/assets/src/modules/highlight.js', `/assets/language/${meta.config.defaultLang || 'en-GB'}/markdown.json`];
-		hookData.links = hookData.links.concat(
-			prefetch.map((path) => ({
-				rel: 'prefetch',
-				href: nconf.get('relative_path') + path + '?' + meta.config['cache-buster'],
-			}))
-		);
 
 		return hookData;
 	},
@@ -76,7 +76,7 @@ const Markdown = {
 			langPrefix: 'language-',
 			highlight: true,
 			highlightLinesLanguageList: [],
-			highlightTheme: 'railscasts.css',
+			highlightTheme: 'default.min.css',
 
 			probe: true,
 			probeCacheSize: 256,
@@ -140,7 +140,7 @@ const Markdown = {
 	},
 
 	loadThemes: function () {
-		fs.readdir(path.join(require.resolve('highlight.js'), '../../styles'), function (err, files) {
+		fs.readdir(path.resolve(__dirname, 'node_modules/@highlightjs/cdn-assets/styles'), function (err, files) {
 			if (err) {
 				winston.error('[plugin/markdown] Could not load Markdown themes: ' + err.message);
 				Markdown.themes = [];

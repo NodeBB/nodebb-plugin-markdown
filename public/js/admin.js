@@ -17,7 +17,7 @@ define('admin/plugins/markdown', ['settings', 'alerts'], function (Settings, ale
 				langPrefix: 'language-',
 				highlight: true,
 				highlightLinesLanguageList: [],
-				highlightTheme: 'railscasts.css',
+				highlightTheme: 'default.min.css',
 
 				probe: true,
 				probeCacheSize: 256,

@@ -14,13 +14,12 @@
         "public/js/admin.js"
     ],
     "staticDirs": {
-        "styles": "../highlight.js/styles",
         "js": "public/js"
     },
-    "modules": [
-        "./public/js/highlight.js",
-        "./public/js/highlightjs-line-numbers.js"
-    ],
+    "modules": {
+        "highlight.js": "./node_modules/@highlightjs/cdn-assets/highlight.min.js",
+        "highlightjs-line-numbers.js": "./public/js/highlightjs-line-numbers.js"
+    },
     "languages": "public/languages",
     "defaultLang": "en_GB",
     "templates": "./public/templates",

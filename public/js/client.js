@@ -1,6 +1,6 @@
 'use strict';
 
-/* global window, jQuery, $, require, config, socket */
+/* global window, jQuery, $, config, socket */
 
 (function () {
 	var Markdown = {};
@@ -209,10 +209,10 @@
 
 	function highlight(elements) {
 		if (parseInt(config.markdown.highlight, 10)) {
-			require(['highlight', 'highlightjs-line-numbers'], function (hljs) {
+			require(['highlight', 'highlightjs-line-numbers'], function () {
 				elements.each(function (i, block) {
 					$(block.parentNode).addClass('markdown-highlight');
-					hljs.highlightBlock(block);
+					window.hljs.highlightElement(block);
 
 					// Check detected language against whitelist and add lines if enabled
 					if (block.className.split(' ').map(function (className) {
@@ -222,7 +222,7 @@
 						return config.markdown.highlightLinesLanguageList.includes(className) || config.markdown.highlightLinesLanguageList.includes(className);
 					}).some(Boolean)) {
 						$(block).attr('data-lines', 1);
-						hljs.lineNumbersBlock(block);
+						window.hljs.lineNumbersBlock(block);
 					}
 				});
 			});
@@ -236,7 +236,6 @@
 	$(window).on('action:topic.loaded', Markdown.enhanceCheckbox);
 	$(window).on('action:posts.loaded', Markdown.enhanceCheckbox);
 	$(window).on('action:posts.edited', Markdown.enhanceCheckbox);
-
 
 	$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', function () {
 		require(['components'], function (components) {

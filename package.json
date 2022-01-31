@@ -29,7 +29,8 @@
     ]
   },
   "dependencies": {
-    "highlight.js": "10.4.1",
+    "@highlightjs/cdn-assets": "^11.4.0",
+    "highlightjs-line-numbers.js": "^2.8.0",
     "markdown-it": "^12.0.6",
     "markdown-it-checkbox": "^1.1.0",
     "markdown-it-multimd-table": "^4.0.1",
