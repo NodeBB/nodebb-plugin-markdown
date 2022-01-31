@@ -14,7 +14,7 @@
         "public/js/admin.js"
     ],
     "staticDirs": {
-        "js": "public/js"
+        "themes": "./node_modules/@highlightjs/cdn-assets/styles"
     },
     "modules": {
         "highlight.js": "./node_modules/@highlightjs/cdn-assets/highlight.min.js",

@@ -59,7 +59,7 @@ const Markdown = {
 		hookData.links.push({
 			rel: 'prefetch stylesheet',
 			type: '',
-			href: `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/${highlightTheme || 'default.min.css'}`,
+			href: `${nconf.get('relative_path')}/assets/plugins/nodebb-plugin-markdown/themes/${highlightTheme || 'default.min.css'}`,
 		}, {
 			rel: 'prefetch',
 			href: `${nconf.get('relative_path')}/assets/language/${meta.config.defaultLang || 'en-GB'}/markdown.json?${meta.config['cache-buster']}`,
