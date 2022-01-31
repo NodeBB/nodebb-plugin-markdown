@@ -47,7 +47,7 @@ const Markdown = {
 			highlight: Markdown.highlight ? 1 : 0,
 			highlightLinesLanguageList: Markdown.config.highlightLinesLanguageList,
 			theme: Markdown.config.highlightTheme || 'default.min.css',
-			defaultHighlightLanguage,
+			defaultHighlightLanguage: defaultHighlightLanguage || '',
 		};
 
 		return config;
@@ -65,7 +65,7 @@ const Markdown = {
 			href: `${nconf.get('relative_path')}/assets/language/${meta.config.defaultLang || 'en-GB'}/markdown.json?${meta.config['cache-buster']}`,
 		}, {
 			rel: 'prefetch',
-			href: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js',
+			href: `${nconf.get('relative_path')}/assets/src/modules/highlight.js`,
 		});
 
 		return hookData;
