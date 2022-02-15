@@ -7,10 +7,11 @@
  *   - Instead of passing window, document in as w and d, they
  *     are defined at top of module
  */
-define('highlightjs-line-numbers', ['highlight'], function () {
+define('highlightjs-line-numbers', ['highlight.js'], function (hljs) {
 	var w = window;
 	var d = document;
 
+    w.hljs = hljs;
     var TABLE_NAME = 'hljs-ln',
         LINE_NAME = 'hljs-ln-line',
         CODE_BLOCK_NAME = 'hljs-ln-code',

@@ -14,7 +14,6 @@
         "themes": "../@highlightjs/cdn-assets/styles"
     },
     "modules": {
-        "highlight.js": "../@highlightjs/cdn-assets/highlight.min.js",
         "highlightjs-line-numbers.js": "./public/js/highlightjs-line-numbers.js",
         "admin/plugins/markdown.js": "./public/js/admin.js"
     },
