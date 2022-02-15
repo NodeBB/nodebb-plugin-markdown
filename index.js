@@ -63,9 +63,6 @@ const Markdown = {
 		}, {
 			rel: 'prefetch',
 			href: `${nconf.get('relative_path')}/assets/language/${meta.config.defaultLang || 'en-GB'}/markdown.json?${meta.config['cache-buster']}`,
-		}, {
-			rel: 'prefetch',
-			href: `${nconf.get('relative_path')}/assets/src/modules/highlight.js`,
 		});
 
 		return hookData;
