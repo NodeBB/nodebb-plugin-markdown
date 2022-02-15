@@ -11,7 +11,7 @@
         "public/js/client.js"
     ],
     "staticDirs": {
-        "themes": "../@highlightjs/cdn-assets/styles"
+        "styles": "node_modules/highlight.js/styles"
     },
     "modules": {
         "highlightjs-line-numbers.js": "./public/js/highlightjs-line-numbers.js",
