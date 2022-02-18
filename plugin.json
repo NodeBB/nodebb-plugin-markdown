@@ -14,7 +14,6 @@
         "styles": "node_modules/highlight.js/styles"
     },
     "modules": {
-        "highlightjs-line-numbers.js": "./public/js/highlightjs-line-numbers.js",
         "../admin/plugins/markdown.js": "./public/js/admin.js"
     },
     "languages": "public/languages",
