@@ -207,9 +207,9 @@
 		});
 	};
 
-	function highlight(elements) {
+	async function highlight(elements) {
 		if (parseInt(config.markdown.highlight, 10)) {
-			const hljs = require('highlight.js');
+			const { default: hljs } = await import('highlight.js/lib/common');
 			window.hljs = hljs;
 			require('highlightjs-line-numbers.js');
 
