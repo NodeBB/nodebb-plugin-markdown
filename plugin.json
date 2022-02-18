@@ -35,6 +35,7 @@
         { "hook": "filter:sanitize.config", "method": "updateSanitizeConfig" }
     ],
     "upgrades": [
-        "upgrades/reset_md_hljs_theme.js"
+        "upgrades/reset_md_hljs_theme.js",
+        "upgrades/use_unminified_hljs_theme.js"
     ]
 }
