@@ -1,7 +1,6 @@
 'use strict';
 
 const meta = require.main.require('./src/meta');
-const markdown = require('..');
 
 module.exports = {
 	name: 'Update Markdown Theme to point to unminified file',
