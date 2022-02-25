@@ -142,7 +142,14 @@ const Markdown = {
 
 	loadThemes: async () => {
 		try {
-			const files = await fs.promises.readdir(path.join(require.resolve('highlight.js'), '../../styles'));
+			const pathToHljs = require.resolve('highlight.js', {
+				paths: [
+					require.main.paths[0],
+					path.join(__dirname, 'node_modules'),
+				],
+			});
+			const pathToStyles = path.join(pathToHljs, '../../styles');
+			const files = await fs.promises.readdir(pathToStyles);
 			const isStylesheet = /\.css$/;
 			Markdown.themes = files.filter(function (file) {
 				return isStylesheet.test(file);
