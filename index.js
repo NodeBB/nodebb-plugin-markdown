@@ -220,12 +220,10 @@ const Markdown = {
 					if (size) {
 						env.images.set(filename, size);
 					} else {
-						try {
-							// eslint-disable-next-line no-await-in-loop
-							const size = await probe(match, {
-								follow_max: 2,
-							});
-
+						// Size checked asynchronously, see: https://github.com/tomas/needle/issues/389
+						probe(match, {
+							follow_max: 2,
+						}).then((size) => {
 							let { width, height } = size;
 
 							// Swap width and height if orientation bit is set
@@ -235,10 +233,10 @@ const Markdown = {
 
 							env.images.set(filename, { width, height });
 							Markdown._externalImageCache.set(match, { width, height });
-						} catch (e) {
+						}).catch(() => {
 							// Likely an issue getting the external image size, ignore in the future
 							Markdown._externalImageFailures.add(match);
-						}
+						});
 					}
 				}
 			}
