@@ -23,6 +23,7 @@ let parser;
 const Markdown = {
 	config: {},
 	_externalImageCache: undefined,
+	_externalImageFailures: new Set(),
 	onLoad: async function (params) {
 		const controllers = require('./lib/controllers');
 		const hostMiddleware = require.main.require('./src/middleware');
@@ -209,12 +210,21 @@ const Markdown = {
 					const parsedUrl = url.parse(match);
 					const filename = path.basename(parsedUrl.pathname);
 					const size = Markdown._externalImageCache.get(match);
+
+					// Short-circuit to ignore previous failures
+					const hasFailed = Markdown._externalImageFailures.has(match);
+					if (hasFailed) {
+						return;
+					}
+
 					if (size) {
 						env.images.set(filename, size);
 					} else {
 						try {
 							// eslint-disable-next-line no-await-in-loop
-							const size = await probe(match);
+							const size = await probe(match, {
+								follow_max: 2,
+							});
 
 							let { width, height } = size;
 
@@ -226,7 +236,8 @@ const Markdown = {
 							env.images.set(filename, { width, height });
 							Markdown._externalImageCache.set(match, { width, height });
 						} catch (e) {
-							// No handling required
+							// Likely an issue getting the external image size, ignore in the future
+							Markdown._externalImageFailures.add(match);
 						}
 					}
 				}
