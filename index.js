@@ -231,7 +231,6 @@ const Markdown = {
 								[width, height] = [height, width];
 							}
 
-							env.images.set(filename, { width, height });
 							Markdown._externalImageCache.set(match, { width, height });
 						}).catch(() => {
 							// Likely an issue getting the external image size, ignore in the future
