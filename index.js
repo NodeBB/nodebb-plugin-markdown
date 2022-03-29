@@ -27,7 +27,9 @@ const Markdown = {
 	onLoad: async function (params) {
 		const controllers = require('./lib/controllers');
 		const hostMiddleware = require.main.require('./src/middleware');
-		const middlewares = [hostMiddleware.maintenanceMode, hostMiddleware.registrationComplete, hostMiddleware.pluginHooks];
+		const middlewares = [
+			hostMiddleware.maintenanceMode, hostMiddleware.registrationComplete, hostMiddleware.pluginHooks,
+		];
 
 		params.router.get('/admin/plugins/markdown', params.middleware.admin.buildHeader, controllers.renderAdmin);
 		params.router.get('/api/admin/plugins/markdown', controllers.renderAdmin);
@@ -95,12 +97,12 @@ const Markdown = {
 		};
 		const notCheckboxes = ['langPrefix', 'highlightTheme', 'highlightLinesLanguageList', 'probeCacheSize'];
 
-		meta.settings.get('markdown', function (err, options) {
+		meta.settings.get('markdown', (err, options) => {
 			if (err) {
 				winston.warn(`[plugin/markdown] Unable to retrieve settings, assuming defaults: ${err.message}`);
 			}
 
-			for (const field in defaults) {
+			Object.keys(defaults).forEach((field) => {
 				// If not set in config (nil)
 				if (!options.hasOwnProperty(field)) {
 					_self.config[field] = defaults[field];
@@ -109,7 +111,7 @@ const Markdown = {
 				} else {
 					_self.config[field] = options[field];
 				}
-			}
+			});
 
 			_self.highlight = _self.config.highlight;
 			delete _self.config.highlight;
@@ -135,7 +137,7 @@ const Markdown = {
 					name: 'markdown.externalImageCache',
 					max: parseInt(_self.config.probeCacheSize, 10) || 256,
 					length: function () { return 1; },
-					maxAge: 1000 * 60 * 60 * 24,	// 1 day
+					maxAge: 1000 * 60 * 60 * 24, // 1 day
 				});
 			}
 		});
@@ -145,11 +147,9 @@ const Markdown = {
 		try {
 			const files = await fs.promises.readdir(path.join(require.resolve('highlight.js'), '../../styles'));
 			const isStylesheet = /\.css$/;
-			Markdown.themes = files.filter(function (file) {
-				return isStylesheet.test(file);
-			});
+			Markdown.themes = files.filter(file => isStylesheet.test(file));
 		} catch (err) {
-			winston.error('[plugin/markdown] Could not load Markdown themes: ' + err.message);
+			winston.error(`[plugin/markdown] Could not load Markdown themes: ${err.message}`);
 			Markdown.themes = [];
 		}
 	},
@@ -203,7 +203,7 @@ const Markdown = {
 			// eslint-disable-next-line no-cond-assign
 			while ((current = matcher.exec(data.postData.content)) !== null) {
 				const match = current[1];
-				if (match && Markdown.isExternalLink(match)) {	// for security only parse external images
+				if (match && Markdown.isExternalLink(match)) { // for security only parse external images
 					const parsedUrl = url.parse(match);
 					const filename = path.basename(parsedUrl.pathname);
 					const size = Markdown._externalImageCache.get(match);
@@ -228,7 +228,6 @@ const Markdown = {
 								[width, height] = [height, width];
 							}
 
-							env.images.set(filename, { width, height });
 							Markdown._externalImageCache.set(match, { width, height });
 						}).catch(() => {
 							// Likely an issue getting the external image size, ignore in the future
@@ -251,13 +250,9 @@ const Markdown = {
 		const execute = function (html) {
 			// Replace all italicised mentions back to regular mentions
 			if (italicMention.test(html)) {
-				html = html.replace(italicMention, function (match, slug) {
-					return '@_' + slug + '_';
-				});
+				html = html.replace(italicMention, (match, slug) => `@_${slug}_`);
 			} else if (boldMention.test(html)) {
-				html = html.replace(boldMention, function (match, slug) {
-					return '@__' + slug + '__';
-				});
+				html = html.replace(boldMention, (match, slug) => `@__${slug}__`);
 			}
 
 			return html;
@@ -336,12 +331,15 @@ const Markdown = {
 
 		// Update renderer to add some classes to all images
 		const renderImage = parser.renderer.rules.image || function (tokens, idx, options, env, self) {
+			// eslint-disable-next-line prefer-spread,prefer-rest-params
 			return self.renderToken.apply(self, arguments);
 		};
 		const renderLink = parser.renderer.rules.link_open || function (tokens, idx, options, env, self) {
+			// eslint-disable-next-line prefer-spread,prefer-rest-params
 			return self.renderToken.apply(self, arguments);
 		};
 		const renderTable = parser.renderer.rules.table_open || function (tokens, idx, options, env, self) {
+			// eslint-disable-next-line prefer-spread,prefer-rest-params
 			return self.renderToken.apply(self, arguments);
 		};
 
@@ -353,7 +351,7 @@ const Markdown = {
 			// Validate the url
 			if (!Markdown.isUrlValid(attributes.get('src'))) { return ''; }
 
-			token.attrSet('class', (token.attrGet('class') || '') + ' img-responsive img-markdown');
+			token.attrSet('class', `${token.attrGet('class') || ''} img-responsive img-markdown`);
 
 			// Append sizes to images
 			if (parsedSrc.pathname) {
@@ -434,7 +432,7 @@ const Markdown = {
 		 * get updated.
 		 */
 		const allowedRoots = [nconf.get('upload_url'), '/uploads'];
-		const allowed = (pathname) => allowedRoots.some((root) => pathname.toString().startsWith(root) || pathname.toString().startsWith(nconf.get('relative_path') + root));
+		const allowed = pathname => allowedRoots.some(root => pathname.toString().startsWith(root) || pathname.toString().startsWith(nconf.get('relative_path') + root));
 
 		try {
 			const urlObj = url.parse(src, false, true);
@@ -455,9 +453,12 @@ const Markdown = {
 		}
 
 		if (
-			urlObj.host === null	// Relative paths are always internal links...
-			|| (urlObj.host === baseUrlObj.host && urlObj.protocol === baseUrlObj.protocol	// Otherwise need to check that protocol and host match
-				&& (nconf.get('relative_path').length > 0 ? urlObj.pathname.indexOf(nconf.get('relative_path')) === 0 : true))	// Subfolder installs need this additional check
+			urlObj.host === null || // Relative paths are always internal links...
+			(
+				urlObj.host === baseUrlObj.host &&
+				urlObj.protocol === baseUrlObj.protocol && // Otherwise need to check that protocol and host match
+				(nconf.get('relative_path').length > 0 ? urlObj.pathname.indexOf(nconf.get('relative_path')) === 0 : true) // Subfolder installs need this additional check
+			)
 		) {
 			return false;
 		}

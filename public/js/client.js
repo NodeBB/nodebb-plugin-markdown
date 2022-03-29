@@ -1,7 +1,5 @@
 'use strict';
 
-/* global window, jQuery, $, config, socket */
-
 (function () {
 	var Markdown = {};
 
@@ -33,13 +31,14 @@
 				// Otherwise, edit the post to reflect state change
 				var _this = this;
 				var pid = $(this).parents('li[data-pid]').attr('data-pid');
-				var index = $(this).parents('.content').find('input[type="checkbox"]').toArray().reduce(function (memo, cur, index) {
-					if (cur === _this) {
-						memo = index;
-					}
+				var index = $(this).parents('.content').find('input[type="checkbox"]').toArray()
+					.reduce(function (memo, cur, index) {
+						if (cur === _this) {
+							memo = index;
+						}
 
-					return memo;
-				}, null);
+						return memo;
+					}, null);
 
 				socket.emit('plugins.markdown.checkbox.edit', {
 					pid: pid,
@@ -119,11 +118,15 @@
 								controls.updateTextareaSelection(textarea, selectionStart + 2, selectionStart + 2);
 							} else {
 								controls.insertIntoTextarea(textarea, '**' + strings.bold + '**');
-								controls.updateTextareaSelection(textarea, selectionStart + 2, selectionStart + strings.bold.length + 2);
+								controls.updateTextareaSelection(
+									textarea, selectionStart + 2, selectionStart + strings.bold.length + 2
+								);
 							}
 						} else {
 							var wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '**');
-							controls.updateTextareaSelection(textarea, selectionStart + 2 + wrapDelta[0], selectionEnd + 2 - wrapDelta[1]);
+							controls.updateTextareaSelection(
+								textarea, selectionStart + 2 + wrapDelta[0], selectionEnd + 2 - wrapDelta[1]
+							);
 						}
 					});
 
@@ -136,11 +139,15 @@
 								controls.updateTextareaSelection(textarea, selectionStart + 1, selectionStart + 1);
 							} else {
 								controls.insertIntoTextarea(textarea, '*' + strings.italic + '*');
-								controls.updateTextareaSelection(textarea, selectionStart + 1, selectionStart + strings.italic.length + 1);
+								controls.updateTextareaSelection(
+									textarea, selectionStart + 1, selectionStart + strings.italic.length + 1
+								);
 							}
 						} else {
 							var wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '*');
-							controls.updateTextareaSelection(textarea, selectionStart + 1 + wrapDelta[0], selectionEnd + 1 - wrapDelta[1]);
+							controls.updateTextareaSelection(
+								textarea, selectionStart + 1 + wrapDelta[0], selectionEnd + 1 - wrapDelta[1]
+							);
 						}
 					});
 
@@ -149,10 +156,14 @@
 							controls.insertIntoTextarea(textarea, '\n* ' + strings.list_item);
 
 							// Highlight "list item"
-							controls.updateTextareaSelection(textarea, selectionStart + 3, selectionStart + strings.list_item.length + 3);
+							controls.updateTextareaSelection(
+								textarea, selectionStart + 3, selectionStart + strings.list_item.length + 3
+							);
 						} else {
 							var wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '\n* ', '');
-							controls.updateTextareaSelection(textarea, selectionStart + 3 + wrapDelta[0], selectionEnd + 3 - wrapDelta[1]);
+							controls.updateTextareaSelection(
+								textarea, selectionStart + 3 + wrapDelta[0], selectionEnd + 3 - wrapDelta[1]
+							);
 						}
 					});
 
@@ -165,41 +176,61 @@
 								controls.updateTextareaSelection(textarea, selectionStart + 2, selectionStart + 2);
 							} else {
 								controls.insertIntoTextarea(textarea, '~~' + strings.strikethrough_text + '~~');
-								controls.updateTextareaSelection(textarea, selectionStart + 2, selectionEnd + strings.strikethrough_text.length + 2);
+								controls.updateTextareaSelection(
+									textarea, selectionStart + 2, selectionEnd + strings.strikethrough_text.length + 2
+								);
 							}
 						} else {
 							var wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '~~', '~~');
-							controls.updateTextareaSelection(textarea, selectionStart + 2 + wrapDelta[0], selectionEnd + 2 - wrapDelta[1]);
+							controls.updateTextareaSelection(
+								textarea, selectionStart + 2 + wrapDelta[0], selectionEnd + 2 - wrapDelta[1]
+							);
 						}
 					});
 
 					formatting.addButtonDispatch('code', function (textarea, selectionStart, selectionEnd) {
 						if (selectionStart === selectionEnd) {
 							controls.insertIntoTextarea(textarea, '```\n' + strings.code_text + '\n```');
-							controls.updateTextareaSelection(textarea, selectionStart + 4, selectionEnd + strings.code_text.length + 4);
+							controls.updateTextareaSelection(
+								textarea, selectionStart + 4, selectionEnd + strings.code_text.length + 4
+							);
 						} else {
 							var wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '```\n', '\n```');
-							controls.updateTextareaSelection(textarea, selectionStart + 4 + wrapDelta[0], selectionEnd + 4 - wrapDelta[1]);
+							controls.updateTextareaSelection(
+								textarea, selectionStart + 4 + wrapDelta[0], selectionEnd + 4 - wrapDelta[1]
+							);
 						}
 					});
 
 					formatting.addButtonDispatch('link', function (textarea, selectionStart, selectionEnd) {
 						if (selectionStart === selectionEnd) {
 							controls.insertIntoTextarea(textarea, '[' + strings.link_text + '](' + strings.link_url + ')');
-							controls.updateTextareaSelection(textarea, selectionStart + strings.link_text.length + 3, selectionEnd + strings.link_text.length + strings.link_url.length + 3);
+							controls.updateTextareaSelection(
+								textarea,
+								selectionStart + strings.link_text.length + 3,
+								selectionEnd + strings.link_text.length + strings.link_url.length + 3
+							);
 						} else {
 							var wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '[', '](' + strings.link_url + ')');
-							controls.updateTextareaSelection(textarea, selectionEnd + 3 - wrapDelta[1], selectionEnd + strings.link_url.length + 3 - wrapDelta[1]);
+							controls.updateTextareaSelection(
+								textarea, selectionEnd + 3 - wrapDelta[1], selectionEnd + strings.link_url.length + 3 - wrapDelta[1]
+							);
 						}
 					});
 
 					formatting.addButtonDispatch('picture-o', function (textarea, selectionStart, selectionEnd) {
 						if (selectionStart === selectionEnd) {
 							controls.insertIntoTextarea(textarea, '![' + strings.picture_text + '](' + strings.picture_url + ')');
-							controls.updateTextareaSelection(textarea, selectionStart + strings.picture_text.length + 4, selectionEnd + strings.picture_text.length + strings.picture_url.length + 4);
+							controls.updateTextareaSelection(
+								textarea,
+								selectionStart + strings.picture_text.length + 4,
+								selectionEnd + strings.picture_text.length + strings.picture_url.length + 4
+							);
 						} else {
 							var wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '![', '](' + strings.picture_url + ')');
-							controls.updateTextareaSelection(textarea, selectionEnd + 4 - wrapDelta[1], selectionEnd + strings.picture_url.length + 4 - wrapDelta[1]);
+							controls.updateTextareaSelection(
+								textarea, selectionEnd + 4 - wrapDelta[1], selectionEnd + strings.picture_url.length + 4 - wrapDelta[1]
+							);
 						}
 					});
 				});
