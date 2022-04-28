@@ -238,33 +238,32 @@
 		});
 	};
 
-	function highlight(elements) {
+	async function highlight(elements) {
 		if (parseInt(config.markdown.highlight, 10)) {
-			require(['highlight', 'highlightjs-line-numbers'], function () {
-				elements.each(function (i, block) {
-					$(block.parentNode).addClass('markdown-highlight');
+			const { default: hljs } = await import('highlight.js/lib/common');
+			window.hljs = hljs;
+			require('highlightjs-line-numbers.js');
 
-					// Default language if set in ACP
-					if (!Array.prototype.some.call(block.classList, className => className.startsWith('language-')) && config.markdown.defaultHighlightLanguage) {
-						block.classList.add(`language-${config.markdown.defaultHighlightLanguage}`);
+			elements.each(function (i, block) {
+				$(block.parentNode).addClass('markdown-highlight');
+
+				// Default language if set in ACP
+				if (!Array.prototype.some.call(block.classList, (className) => className.startsWith('language-')) && config.markdown.defaultHighlightLanguage) {
+					block.classList.add(`language-${config.markdown.defaultHighlightLanguage}`);
+				}
+
+				window.hljs.highlightElement(block);
+
+				// Check detected language against whitelist and add lines if enabled
+				if (block.className.split(' ').map(function (className) {
+					if (className.indexOf('language-') === 0) {
+						className = className.slice(9);
 					}
-
-					window.hljs.highlightElement(block);
-
-					// Check detected language against whitelist and add lines if enabled
-					if (block.className.split(' ').map(function (className) {
-						if (className.indexOf('language-') === 0) {
-							className = className.slice(9);
-						}
-						return (
-							config.markdown.highlightLinesLanguageList.includes(className) ||
-							config.markdown.highlightLinesLanguageList.includes(className)
-						);
-					}).some(Boolean)) {
-						$(block).attr('data-lines', 1);
-						window.hljs.lineNumbersBlock(block);
-					}
-				});
+					return config.markdown.highlightLinesLanguageList.includes(className) || config.markdown.highlightLinesLanguageList.includes(className);
+				}).some(Boolean)) {
+					$(block).attr('data-lines', 1);
+					window.hljs.lineNumbersBlock(block);
+				}
 			});
 		}
 	}

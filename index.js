@@ -49,7 +49,7 @@ const Markdown = {
 		config.markdown = {
 			highlight: Markdown.highlight ? 1 : 0,
 			highlightLinesLanguageList: Markdown.config.highlightLinesLanguageList,
-			theme: highlightTheme || 'default.min.css',
+			theme: highlightTheme || 'default.css',
 			defaultHighlightLanguage: defaultHighlightLanguage || '',
 		};
 
@@ -62,13 +62,10 @@ const Markdown = {
 		hookData.links.push({
 			rel: 'prefetch stylesheet',
 			type: '',
-			href: `${nconf.get('relative_path')}/assets/plugins/nodebb-plugin-markdown/themes/${highlightTheme || 'default.min.css'}`,
+			href: `${nconf.get('relative_path')}/assets/plugins/nodebb-plugin-markdown/styles/${highlightTheme || 'default.css'}`,
 		}, {
 			rel: 'prefetch',
 			href: `${nconf.get('relative_path')}/assets/language/${meta.config.defaultLang || 'en-GB'}/markdown.json?${meta.config['cache-buster']}`,
-		}, {
-			rel: 'prefetch',
-			href: `${nconf.get('relative_path')}/assets/src/modules/highlight.js`,
 		});
 
 		return hookData;
@@ -83,7 +80,7 @@ const Markdown = {
 			langPrefix: 'language-',
 			highlight: true,
 			highlightLinesLanguageList: [],
-			highlightTheme: 'default.min.css',
+			highlightTheme: 'default.css',
 
 			probe: true,
 			probeCacheSize: 256,
@@ -148,7 +145,7 @@ const Markdown = {
 
 	loadThemes: async () => {
 		try {
-			const files = await fs.promises.readdir(path.resolve(require.main.paths[0], '@highlightjs/cdn-assets/styles'));
+			const files = await fs.promises.readdir(path.join(require.resolve('highlight.js'), '../../styles'));
 			const isStylesheet = /\.css$/;
 			Markdown.themes = files.filter(file => isStylesheet.test(file));
 		} catch (err) {

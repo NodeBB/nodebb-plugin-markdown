@@ -11,11 +11,9 @@
         "public/js/client.js"
     ],
     "staticDirs": {
-        "themes": "../@highlightjs/cdn-assets/styles"
+        "styles": "node_modules/highlight.js/styles"
     },
     "modules": {
-        "highlight.js": "../@highlightjs/cdn-assets/highlight.min.js",
-        "highlightjs-line-numbers.js": "./public/js/highlightjs-line-numbers.js",
         "../admin/plugins/markdown.js": "./public/js/admin.js"
     },
     "languages": "public/languages",
@@ -36,6 +34,7 @@
         { "hook": "filter:sanitize.config", "method": "updateSanitizeConfig" }
     ],
     "upgrades": [
-        "upgrades/reset_md_hljs_theme.js"
+        "upgrades/reset_md_hljs_theme.js",
+        "upgrades/use_unminified_hljs_theme.js"
     ]
 }
