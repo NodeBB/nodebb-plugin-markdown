@@ -136,8 +136,7 @@ const Markdown = {
 				Markdown._externalImageCache = cacheCreate({
 					name: 'markdown.externalImageCache',
 					max: parseInt(_self.config.probeCacheSize, 10) || 256,
-					length: function () { return 1; },
-					maxAge: 1000 * 60 * 60 * 24, // 1 day
+					ttl: 1000 * 60 * 60 * 24, // 1 day
 				});
 			}
 		});
