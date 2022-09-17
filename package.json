@@ -37,7 +37,7 @@
     "probe-image-size": "^7.2.1"
   },
   "nbbpm": {
-    "compatibility": "^2.4.0"
+    "compatibility": "^3.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "16.2.1",

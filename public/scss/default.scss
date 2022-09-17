@@ -1,4 +1,4 @@
-.markdown-highlight {
+@mixin markdown-highlight {
 	margin-top: 1rem;
 	color: inherit;
 	background-color: inherit;
@@ -34,7 +34,7 @@
 
 // Backwards compatibility with themes without components
 .post-content pre, .topic-text pre, .composer .preview pre {
-	.markdown-highlight;
+	@include markdown-highlight;
 }
 
 .markdown-highlight .hljs {
