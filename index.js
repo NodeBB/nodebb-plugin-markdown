@@ -350,7 +350,7 @@ const Markdown = {
 			// Validate the url
 			if (!Markdown.isUrlValid(attributes.get('src'))) { return ''; }
 
-			token.attrSet('class', `${token.attrGet('class') || ''} img-responsive img-markdown`);
+			token.attrSet('class', `${token.attrGet('class') || ''} img-fluid img-markdown`);
 
 			// Append sizes to images
 			if (parsedSrc.pathname) {
