@@ -1,6 +1,6 @@
 <div class="row">
-	<div class="col-sm-2 col-xs-12 settings-header">General</div>
-	<div class="col-sm-10 col-xs-12">
+	<div class="col-sm-2 col-12 settings-header">General</div>
+	<div class="col-sm-10 col-12">
 		<form class="form markdown-settings">
 			<div class="card">
 				<div class="card-header">Markdown</div>
