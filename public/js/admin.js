@@ -55,6 +55,7 @@ define('admin/plugins/markdown', ['settings', 'alerts'], function (Settings, ale
 					clickfn: function () {
 						socket.emit('admin.reload');
 					},
+					timeout: 2500,
 				});
 			});
 		});
