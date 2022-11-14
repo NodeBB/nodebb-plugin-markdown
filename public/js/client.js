@@ -240,7 +240,41 @@
 
 	async function highlight(elements) {
 		if (parseInt(config.markdown.highlight, 10)) {
-			const { default: hljs } = await import('highlight.js/lib/common');
+			console.debug('[plugin/markdown] Initializing highlight.js');
+			let hljs;
+			let list;
+			switch(true) {
+				case config.markdown.hljsLanguages.includes('common'): {
+					({ default: hljs} = await import(`highlight.js/lib/common`));
+					list = 'common';
+					break;
+				}
+
+				case config.markdown.hljsLanguages.includes('all'): {
+					({ default: hljs} = await import(`highlight.js`));
+					list = 'all';
+					break;
+				}
+
+				default: {
+					({ default: hljs} = await import(`highlight.js/lib/core`));
+					list = 'core';
+				}
+			}
+
+			if (list !== 'all') {
+				await Promise.all(config.markdown.hljsLanguages.map(async (language) => {
+					if (['common', 'all'].includes(language)) {
+						return;
+					}
+
+					console.debug(`[plugins/markdown] Loading ${language} support`);
+					const { default: lang } = await import('../../node_modules/highlight.js/lib/languages/' + language + '.js');
+					hljs.registerLanguage(language, lang);
+				}));
+			}
+
+			console.debug(`[plugins/markdown] Loading support for line numbers`);
 			window.hljs = hljs;
 			require('highlightjs-line-numbers.js');
 

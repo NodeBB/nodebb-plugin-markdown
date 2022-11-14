@@ -44,11 +44,18 @@ const Markdown = {
 	},
 
 	getConfig: async (config) => {
-		const { defaultHighlightLanguage, highlightTheme } = await meta.settings.get('markdown');
+		let { defaultHighlightLanguage, highlightTheme, hljsLanguages } = await meta.settings.get('markdown');
+
+		try {
+			hljsLanguages = JSON.parse(hljsLanguages);
+		} catch (e) {
+			hljsLanguages = ['common'];
+		}
 
 		config.markdown = {
 			highlight: Markdown.highlight ? 1 : 0,
 			highlightLinesLanguageList: Markdown.config.highlightLinesLanguageList,
+			hljsLanguages,
 			theme: highlightTheme || 'default.css',
 			defaultHighlightLanguage: defaultHighlightLanguage || '',
 		};

@@ -104,10 +104,33 @@
 							</div>
 
 							<div class="mb-3">
+								<label class="form-label" for="hljsLanguages">Apply syntax highlighting to the following languages</label>
+								<select class="form-select" multiple="true" name="hljsLanguages" id="hljsLanguages" size="20">
+									<optgroup label="Pre-defined lists">
+										<option value="all">All supported languages (greatest file size)</option>
+										<option value="common" selected>Common languages (a good compromise)</option>
+									</optgroup>
+									<optgroup label="Individual languages">
+										{{{ each hljsLanguages }}}
+										<option value="{@value}">{@value}</option>
+										{{{ end }}}
+									</optgroup>
+								</select>
+								<p class="form-text">
+									You can use <code>ctrl</code> and <code>shift</code> to select/deselect multiple
+									items and select/deselect items in ranges. <em>(Default: "Common languages".)</em>
+								</p>
+								<p class="form-text">
+									You are able to mix and match any of the items above, although "All" will include
+									everything anyway.
+								</p>
+							</div>
+
+							<div class="mb-3">
 								<label class="form-label" for="highlightLinesLanguageList">
 									Enable line numbers for the following languages
 								</label>
-								<select class="form-control" multiple="true" name="highlightLinesLanguageList" id="highlightLinesLanguageList" size="20">
+								<select class="form-select" multiple="true" name="highlightLinesLanguageList" id="highlightLinesLanguageList" size="20">
 									<option value="apache,apacheconf">Apache</option>
 									<option value="bash,sh,zsh">Bash</option>
 									<option value="cs,csharp">C#</option>
