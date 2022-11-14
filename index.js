@@ -44,7 +44,7 @@ const Markdown = {
 	},
 
 	getConfig: async (config) => {
-		let { defaultHighlightLanguage, highlightTheme, hljsLanguages } = await meta.settings.get('markdown');
+		let { defaultHighlightLanguage, highlightTheme, hljsLanguages, highlightLinesLanguageList } = await meta.settings.get('markdown');
 
 		try {
 			hljsLanguages = JSON.parse(hljsLanguages);
@@ -54,7 +54,7 @@ const Markdown = {
 
 		config.markdown = {
 			highlight: Markdown.highlight ? 1 : 0,
-			highlightLinesLanguageList: Markdown.config.highlightLinesLanguageList,
+			highlightLinesLanguageList,
 			hljsLanguages,
 			theme: highlightTheme || 'default.css',
 			defaultHighlightLanguage: defaultHighlightLanguage || '',
@@ -86,7 +86,6 @@ const Markdown = {
 
 			langPrefix: 'language-',
 			highlight: true,
-			highlightLinesLanguageList: [],
 			highlightTheme: 'default.css',
 
 			probe: true,
@@ -102,7 +101,7 @@ const Markdown = {
 			checkboxes: true,
 			multimdTables: true,
 		};
-		const notCheckboxes = ['langPrefix', 'highlightTheme', 'highlightLinesLanguageList', 'probeCacheSize'];
+		const notCheckboxes = ['langPrefix', 'highlightTheme', 'probeCacheSize'];
 
 		meta.settings.get('markdown', (err, options) => {
 			if (err) {
@@ -122,17 +121,6 @@ const Markdown = {
 
 			_self.highlight = _self.config.highlight;
 			delete _self.config.highlight;
-
-			if (typeof _self.config.highlightLinesLanguageList === 'string') {
-				try {
-					_self.config.highlightLinesLanguageList = JSON.parse(_self.config.highlightLinesLanguageList);
-				} catch (e) {
-					winston.warn('[plugins/markdown] Invalid config for highlightLinesLanguageList, blanking.');
-					_self.config.highlightLinesLanguageList = [];
-				}
-
-				_self.config.highlightLinesLanguageList = _self.config.highlightLinesLanguageList.join(',').split(',');
-			}
 
 			parser = new MarkdownIt(_self.config);
 

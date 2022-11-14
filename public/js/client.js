@@ -243,6 +243,7 @@
 			console.debug('[plugin/markdown] Initializing highlight.js');
 			let hljs;
 			let list;
+			let aliasMap = new Map();
 			switch(true) {
 				case config.markdown.hljsLanguages.includes('common'): {
 					({ default: hljs} = await import(`highlight.js/lib/common`));
@@ -261,6 +262,7 @@
 					list = 'core';
 				}
 			}
+			console.debug(`[plugins/markdown] Loaded ${list} hljs library`);
 
 			if (list !== 'all') {
 				await Promise.all(config.markdown.hljsLanguages.map(async (language) => {
@@ -273,6 +275,18 @@
 					hljs.registerLanguage(language, lang);
 				}));
 			}
+
+			// Build alias set
+			hljs.listLanguages().forEach((language) => {
+				const { aliases } = hljs.getLanguage(language);
+				if (aliases && Array.isArray(aliases)) {
+					aliases.forEach((alias) => {
+						aliasMap.set(alias, language);
+					});
+				}
+
+				aliasMap.set(language, language);
+			});
 
 			console.debug(`[plugins/markdown] Loading support for line numbers`);
 			window.hljs = hljs;
@@ -289,14 +303,16 @@
 				window.hljs.highlightElement(block);
 
 				// Check detected language against whitelist and add lines if enabled
-				if (block.className.split(' ').map(function (className) {
-					if (className.indexOf('language-') === 0) {
-						className = className.slice(9);
+				const classIterator = block.classList.values();
+				for(className of classIterator) {
+					if (className.startsWith('language-')) {
+						const language = className.split('-')[1];
+						if (aliasMap.has(language) && config.markdown.highlightLinesLanguageList.includes(aliasMap.get(language))) {
+							$(block).attr('data-lines', 1);
+							window.hljs.lineNumbersBlock(block);
+						}
+						break;
 					}
-					return config.markdown.highlightLinesLanguageList.includes(className) || config.markdown.highlightLinesLanguageList.includes(className);
-				}).some(Boolean)) {
-					$(block).attr('data-lines', 1);
-					window.hljs.lineNumbersBlock(block);
 				}
 			});
 		}
