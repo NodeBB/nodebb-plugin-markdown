@@ -293,7 +293,11 @@
 			require('highlightjs-line-numbers.js');
 
 			elements.each(function (i, block) {
-				$(block.parentNode).addClass('markdown-highlight');
+				const parentNode = $(block.parentNode);
+				if (parentNode.hasClass('markdown-highlight')) {
+					return;
+				}
+				parentNode.addClass('markdown-highlight');
 
 				// Default language if set in ACP
 				if (!Array.prototype.some.call(block.classList, (className) => className.startsWith('language-')) && config.markdown.defaultHighlightLanguage) {
