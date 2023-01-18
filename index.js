@@ -19,12 +19,13 @@ const SocketPlugins = require.main.require('./src/socket.io/plugins');
 SocketPlugins.markdown = require('./websockets');
 
 let parser;
-
+let app;
 const Markdown = {
 	config: {},
 	_externalImageCache: undefined,
 	_externalImageFailures: new Set(),
 	onLoad: async function (params) {
+		app = params.app;
 		const controllers = require('./lib/controllers');
 		const hostMiddleware = require.main.require('./src/middleware');
 		const middlewares = [
@@ -266,7 +267,8 @@ const Markdown = {
 	renderHelp: async function (helpContent) {
 		const translated = await translator.translate('[[markdown:help_text]]');
 		const parsed = await plugins.hooks.fire('filter:parse.raw', `## Markdown\n${translated}`);
-		helpContent += parsed;
+		const html = await app.renderAsync('modals/markdown-help', {});
+		helpContent += parsed + html;
 		return helpContent;
 	},
 
