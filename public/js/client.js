@@ -311,7 +311,8 @@
 				for(className of classIterator) {
 					if (className.startsWith('language-')) {
 						const language = className.split('-')[1];
-						if (aliasMap.has(language) && config.markdown.highlightLinesLanguageList.includes(aliasMap.get(language))) {
+						const list = config.markdown.highlightLinesLanguageList;
+						if (aliasMap.has(language) && list && list.includes(aliasMap.get(language))) {
 							$(block).attr('data-lines', 1);
 							window.hljs.lineNumbersBlock(block);
 						}
