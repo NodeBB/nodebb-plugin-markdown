@@ -33,7 +33,7 @@
 }
 
 // Backwards compatibility with themes without components
-.post-content pre, .topic-text pre, .composer .preview pre {
+.markdown-highlight, .post-content pre, .topic-text pre, .composer .preview pre {
 	@include markdown-highlight;
 }
 
