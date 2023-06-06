@@ -26,17 +26,18 @@ const Markdown = {
 	_externalImageFailures: new Set(),
 	onLoad: async function (params) {
 		app = params.app;
+		const { router } = params;
 		const controllers = require('./lib/controllers');
 		const hostMiddleware = require.main.require('./src/middleware');
+		const routeHelpers = require.main.require('./src/routes/helpers');
 		const middlewares = [
 			hostMiddleware.maintenanceMode, hostMiddleware.registrationComplete, hostMiddleware.pluginHooks,
 		];
 
-		params.router.get('/admin/plugins/markdown', params.middleware.admin.buildHeader, controllers.renderAdmin);
-		params.router.get('/api/admin/plugins/markdown', controllers.renderAdmin);
+		routeHelpers.setupAdminPageRoute(router, '/admin/plugins/markdown', controllers.renderAdmin);
 
 		// Return raw markdown via GET
-		params.router.get('/api/post/:pid/raw', middlewares, controllers.retrieveRaw);
+		router.get('/api/post/:pid/raw', middlewares, controllers.retrieveRaw);
 
 		Markdown.init();
 		await Markdown.loadThemes();
