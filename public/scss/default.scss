@@ -3,7 +3,9 @@
 	color: inherit;
 	background-color: inherit;
 	border: none;
-
+	code {
+		width: 100%;
+	}
 	code[data-lines="1"] {
 		white-space: normal !important;
 	}
