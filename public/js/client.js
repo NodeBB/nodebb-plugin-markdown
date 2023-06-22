@@ -160,10 +160,10 @@
 								textarea, selectionStart + 3, selectionStart + strings.list_item.length + 3
 							);
 						} else {
-							var wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '\n* ', '');
-							controls.updateTextareaSelection(
-								textarea, selectionStart + 3 + wrapDelta[0], selectionEnd + 3 - wrapDelta[1]
-							);
+							const selectedText = $(textarea).val().substring(selectionStart, selectionEnd);
+							const newText = '* ' + selectedText.split('\n').join('\n* ');
+							controls.replaceSelectionInTextareaWith(textarea, newText);
+							controls.updateTextareaSelection(textarea, selectionStart, selectionEnd + (newText.length - selectedText.length))
 						}
 					});
 
