@@ -22,16 +22,19 @@
 		-moz-user-select: none;
 		-ms-user-select: none;
 		user-select: none;
-
-		text-align: right;
 		color: #ccc;
-		border-right: 1px solid #CCC;
 		vertical-align: top;
+		/*rtl:begin:ignore*/
+		text-align: right;
+		border-right: 1px solid #CCC;
 		padding-right: 8px;
+		/*rtl:end:ignore*/
 	}
 
 	.hljs-ln-code {
+		/*rtl:begin:ignore*/
 		padding-left: 8px;
+		/*rtl:end:ignore*/
 	}
 }
 
