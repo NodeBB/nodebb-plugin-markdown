@@ -5,6 +5,7 @@
 	border: none;
 	code {
 		min-width: 100%;
+		max-height: calc($font-size-base * 24);
 	}
 	code[data-lines="1"] {
 		white-space: normal !important;
@@ -40,7 +41,7 @@
 }
 
 .markdown-highlight .hljs {
-	display: table-cell;
+	display: block;
 }
 
 [component="post/content"], .composer-container .preview {
