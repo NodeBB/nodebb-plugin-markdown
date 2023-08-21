@@ -14,7 +14,8 @@
         "styles": "node_modules/highlight.js/styles"
     },
     "modules": {
-        "../admin/plugins/markdown.js": "./public/js/admin.js"
+        "../admin/plugins/markdown.js": "./public/js/admin.js",
+        "markdown.js": "./public/js/markdown.js"
     },
     "languages": "public/languages",
     "defaultLang": "en_GB",
