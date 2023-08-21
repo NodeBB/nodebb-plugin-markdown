@@ -181,10 +181,23 @@ export function prepareFormattingTools() {
 	});
 };
 
-// export function markExternalLinks() {
-// 	const anchorEls = document.querySelectorAll('[component="post/content"] a');
-// 	console.log(anchorEls);
-// }
+export function markExternalLinks() {
+	const anchorEls = document.querySelectorAll('[component="post/content"] a');
+	anchorEls.forEach((anchorEl) => {
+		// Do nothing if the anchor contains only an image
+		if (anchorEl.childElementCount === 1 && anchorEl.querySelector('img') && !anchorEl.text) {
+			return;
+		}
+
+		// Otherwise, mark external links with icon
+		const parsed = new URL(anchorEl.href, document.location.href);
+		if (parsed.host != document.location.host) {
+			const iconEl = document.createElement('i');
+			iconEl.classList.add('fa', 'fa-external-link', 'small');
+			anchorEl.append(' ', iconEl);
+		}
+	})
+}
 
 export function enhanceCheckbox(ev, data) {
 	if (!data.posts && !data.post) {

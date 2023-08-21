@@ -15,6 +15,7 @@
 		$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', function (ev, data) {
 			markdown.highlight(components.get('post/content').find('pre code'));
 			markdown.enhanceCheckbox(ev, data);
+			markdown.markExternalLinks();
 		});
 	});
 }());
