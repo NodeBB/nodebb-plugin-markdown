@@ -3,7 +3,6 @@
 const MarkdownIt = require('markdown-it');
 const fs = require('fs');
 const path = require('path');
-const url = require('url');
 
 const probe = require('probe-image-size');
 
@@ -200,7 +199,7 @@ const Markdown = {
 			while ((current = matcher.exec(data.postData.content)) !== null) {
 				const match = current[1];
 				if (match && Markdown.isExternalLink(match)) { // for security only parse external images
-					const parsedUrl = url.parse(match);
+					const parsedUrl = new URL(match);
 					const filename = path.basename(parsedUrl.pathname);
 					const size = Markdown._externalImageCache.get(match);
 
@@ -343,7 +342,7 @@ const Markdown = {
 		parser.renderer.rules.image = function (tokens, idx, options, env, self) {
 			const token = tokens[idx];
 			const attributes = new Map(token.attrs);
-			const parsedSrc = url.parse(attributes.get('src'));
+			const parsedSrc = new URL(attributes.get('src'));
 
 			// Validate the url
 			if (!Markdown.isUrlValid(attributes.get('src'))) { return ''; }
@@ -432,7 +431,7 @@ const Markdown = {
 		const allowed = pathname => allowedRoots.some(root => pathname.toString().startsWith(root) || pathname.toString().startsWith(nconf.get('relative_path') + root));
 
 		try {
-			const urlObj = url.parse(src, false, true);
+			const urlObj = new URL(src, false, true);
 			return !(urlObj.host === null && !allowed(urlObj.pathname));
 		} catch (e) {
 			return false;
