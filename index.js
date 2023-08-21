@@ -442,8 +442,12 @@ const Markdown = {
 		let urlObj;
 		let baseUrlObj;
 		try {
-			urlObj = url.parse(urlString);
-			baseUrlObj = url.parse(nconf.get('url'));
+			if (urlString.startsWith('//')) {
+				urlString = `${nconf.get('url_parsed').protocol}${urlString}`;
+			}
+
+			urlObj = new URL(urlString);
+			baseUrlObj = nconf.get('url_parsed');
 		} catch (err) {
 			return false;
 		}
