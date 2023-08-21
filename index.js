@@ -343,7 +343,7 @@ const Markdown = {
 		parser.renderer.rules.image = function (tokens, idx, options, env, self) {
 			const token = tokens[idx];
 			const attributes = new Map(token.attrs);
-			const parsedSrc = new URL(attributes.get('src'));
+			const parsedSrc = new URL(attributes.get('src'), nconf.get('url'));
 
 			// Validate the url
 			if (!Markdown.isUrlValid(attributes.get('src'))) { return ''; }
