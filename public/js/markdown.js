@@ -182,6 +182,10 @@ export function prepareFormattingTools() {
 };
 
 export function markExternalLinks() {
+	if (!config.markdown.externalMark) {
+		return;
+	}
+
 	const anchorEls = document.querySelectorAll('[component="post/content"] a');
 	anchorEls.forEach((anchorEl) => {
 		// Do nothing if the anchor contains only an image

@@ -55,14 +55,6 @@
 				<div class="mb-4">
 					<h5 class="fw-bold tracking-tight settings-header">External Links</h5>
 
-					<div class="mb-3">
-						<label class="form-label" for="externalBehaviour">Restrictions</label>
-						<select class="form-control" id="externalBehaviour" name="externalBehaviour">
-							<option value="2">No restriction — external linking allowed for all users</option>
-							<option value="1">Partial restriction — users with enough reputation can link externally; new users cannot</option>
-							<option value="0">Full restriction — remove external links for all users</option>
-						</select>
-					</div>
 					<div class="mb-3 form-check form-switch">
 						<input type="checkbox" class="form-check-input" name="externalMark" id="externalMark" />
 						<label class="form-check-label" for="externalMark">
@@ -184,12 +176,15 @@
 						</label>
 					</div>
 					<div class="alert alert-warning">
-						<strong><i class="icon-warning-sign"></i> Careful!</strong>
+						<strong><i class="fa fa-info-circle"></i> History</strong>
 						<p>
 							Automatic HTML sanitization is an important part of ensuring that
 							your users do not run arbitrary javascript or alter parts of the
-							page that were not meant to be altered. If this option is checked,
-							beware the consequences!
+							page that were not meant to be altered.
+						</p>
+						<p>
+							This used to be the sole line of defense from rogue HTML in user-generated content.
+							However, NodeBB now comes with its own built-in HTML sanitizer so it is safe to disable this one if necessary.
 						</p>
 					</div>
 				</div>
