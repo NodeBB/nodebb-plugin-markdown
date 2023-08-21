@@ -431,7 +431,7 @@ const Markdown = {
 		const allowed = pathname => allowedRoots.some(root => pathname.toString().startsWith(root) || pathname.toString().startsWith(nconf.get('relative_path') + root));
 
 		try {
-			const urlObj = new URL(src, false, true);
+			const urlObj = new URL(src);
 			return !(urlObj.host === null && !allowed(urlObj.pathname));
 		} catch (e) {
 			return false;
