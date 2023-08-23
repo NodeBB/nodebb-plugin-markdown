@@ -321,7 +321,7 @@ async function processHighlight(elements) {
 
 			// Check detected language against whitelist and add lines if enabled
 			const classIterator = block.classList.values();
-			for(className of classIterator) {
+			for (const className of classIterator) {
 				if (className.startsWith('language-')) {
 					const language = className.split('-')[1];
 					const list = config.markdown.highlightLinesLanguageList;
