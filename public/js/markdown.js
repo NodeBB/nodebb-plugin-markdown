@@ -251,45 +251,11 @@ export function highlight(data) {
 	}
 };
 
-async function processHighlight(elements) {
-	if (parseInt(config.markdown.highlight, 10)) {
-		console.debug('[plugin/markdown] Initializing highlight.js');
-		let hljs;
-		let list;
-		let aliasMap = new Map();
-		switch(true) {
-			case config.markdown.hljsLanguages.includes('common'): {
-				({ default: hljs} = await import(`highlight.js/lib/common`));
-				list = 'common';
-				break;
-			}
+const aliasMap = new Map();
 
-			case config.markdown.hljsLanguages.includes('all'): {
-				({ default: hljs} = await import(`highlight.js`));
-				list = 'all';
-				break;
-			}
-
-			default: {
-				({ default: hljs} = await import(`highlight.js/lib/core`));
-				list = 'core';
-			}
-		}
-		console.debug(`[plugins/markdown] Loaded ${list} hljs library`);
-
-		if (list !== 'all') {
-			await Promise.all(config.markdown.hljsLanguages.map(async (language) => {
-				if (['common', 'all'].includes(language)) {
-					return;
-				}
-
-				console.debug(`[plugins/markdown] Loading ${language} support`);
-				const { default: lang } = await import('../../node_modules/highlight.js/lib/languages/' + language + '.js');
-				hljs.registerLanguage(language, lang);
-			}));
-		}
-
-		// Build alias set
+export function buildAliasMap() {
+	if (window.hljs) {
+		const hljs = window.hljs;
 		hljs.listLanguages().forEach((language) => {
 			const { aliases } = hljs.getLanguage(language);
 			if (aliases && Array.isArray(aliases)) {
@@ -300,9 +266,19 @@ async function processHighlight(elements) {
 
 			aliasMap.set(language, language);
 		});
+	}
+}
+
+async function processHighlight(elements) {
+	if (parseInt(config.markdown.highlight, 10)) {
+		const hljs = window.hljs;
+		if (!hljs) {
+			console.debug(`[plugins/markdown] Tryin to highlight without initializing hljs`);
+			return;
+		}
 
 		console.debug(`[plugins/markdown] Loading support for line numbers`);
-		window.hljs = hljs;
+
 		require('highlightjs-line-numbers.js');
 
 		elements.each(function (i, block) {
