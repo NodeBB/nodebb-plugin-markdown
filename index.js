@@ -200,7 +200,7 @@ const Markdown = {
 			while ((current = matcher.exec(data.postData.content)) !== null) {
 				const match = current[1];
 				if (match && Markdown.isExternalLink(match)) { // for security only parse external images
-					const parsedUrl = new URL(match);
+					const parsedUrl = new URL(match, nconf.get('url'));
 					const filename = path.basename(parsedUrl.pathname);
 					const size = Markdown._externalImageCache.get(match);
 
@@ -432,7 +432,7 @@ const Markdown = {
 		const allowed = pathname => allowedRoots.some(root => pathname.toString().startsWith(root) || pathname.toString().startsWith(nconf.get('relative_path') + root));
 
 		try {
-			const urlObj = new URL(src);
+			const urlObj = new URL(src, nconf.get('url'));
 			return !(urlObj.host === null && !allowed(urlObj.pathname));
 		} catch (e) {
 			return false;
@@ -443,11 +443,7 @@ const Markdown = {
 		let urlObj;
 		let baseUrlObj;
 		try {
-			if (urlString.startsWith('//')) {
-				urlString = `${nconf.get('url_parsed').protocol}${urlString}`;
-			}
-
-			urlObj = new URL(urlString);
+			urlObj = new URL(urlString, nconf.get('url'));
 			baseUrlObj = nconf.get('url_parsed');
 		} catch (err) {
 			return false;
