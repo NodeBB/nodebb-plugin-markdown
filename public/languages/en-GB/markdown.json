@@ -2,6 +2,7 @@
 	"bold": "bolded text",
 	"italic": "italicised text",
 	"list_item": "list item",
+	"heading": "heading",
 	"strikethrough_text": "strikethrough text",
 	"code_text": "code_text",
 	"link_text": "link text",

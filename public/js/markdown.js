@@ -52,6 +52,23 @@ export function prepareFormattingTools() {
 	], function (formatting, controls, translator) {
 		if (formatting && controls) {
 			translator.getTranslations(window.config.userLang || window.config.defaultLang, 'markdown', function (strings) {
+				// used for h1,h2...h6
+				function formatHeading(heading, textarea, selectionStart, selectionEnd) {
+					if (selectionStart === selectionEnd) {
+						controls.insertIntoTextarea(textarea, `${heading} ${strings.heading}`);
+
+						controls.updateTextareaSelection(
+							textarea, selectionStart + heading.length + 1, selectionStart + strings.heading.length + heading.length + 1
+						);
+					} else {
+						const selectedText = $(textarea).val().substring(selectionStart, selectionEnd);
+						const newText = `${heading} ${selectedText}`;
+						controls.replaceSelectionInTextareaWith(textarea, newText);
+						controls.updateTextareaSelection(textarea, selectionStart + (heading.length + 1), selectionEnd + (newText.length - selectedText.length));
+					}
+				}
+
+
 				formatting.addButtonDispatch('bold', function (textarea, selectionStart, selectionEnd) {
 					if (selectionStart === selectionEnd) {
 						var block = controls.getBlockData(textarea, '**', selectionStart);
@@ -94,6 +111,12 @@ export function prepareFormattingTools() {
 					}
 				});
 
+				[1, 2, 3, 4, 5, 6].forEach((size) => {
+					formatting.addButtonDispatch(`heading${size}`, function (textarea, selectionStart, selectionEnd) {
+						formatHeading(new Array(size).fill('#').join(''), textarea, selectionStart, selectionEnd);
+					});
+				})
+
 				formatting.addButtonDispatch('list', function (textarea, selectionStart, selectionEnd) {
 					if (selectionStart === selectionEnd) {
 						controls.insertIntoTextarea(textarea, '\n* ' + strings.list_item);
@@ -106,7 +129,7 @@ export function prepareFormattingTools() {
 						const selectedText = $(textarea).val().substring(selectionStart, selectionEnd);
 						const newText = '* ' + selectedText.split('\n').join('\n* ');
 						controls.replaceSelectionInTextareaWith(textarea, newText);
-						controls.updateTextareaSelection(textarea, selectionStart, selectionEnd + (newText.length - selectedText.length));
+						controls.updateTextareaSelection(textarea, selectionStart + 2, selectionEnd + (newText.length - selectedText.length));
 					}
 				});
 

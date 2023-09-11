@@ -277,6 +277,18 @@ const Markdown = {
 		const formatting = [
 			{ name: 'bold', className: 'fa fa-bold', title: '[[modules:composer.formatting.bold]]' },
 			{ name: 'italic', className: 'fa fa-italic', title: '[[modules:composer.formatting.italic]]' },
+			{
+				className: 'fa fa-heading',
+				title: '[[modules:composer.formatting.heading]]',
+				dropdownItems: [
+					{ name: 'heading1', text: '[[modules:composer.formatting.heading1]]' },
+					{ name: 'heading2', text: '[[modules:composer.formatting.heading2]]' },
+					{ name: 'heading3', text: '[[modules:composer.formatting.heading3]]' },
+					{ name: 'heading4', text: '[[modules:composer.formatting.heading4]]' },
+					{ name: 'heading5', text: '[[modules:composer.formatting.heading5]]' },
+					{ name: 'heading6', text: '[[modules:composer.formatting.heading6]]' },
+				],
+			},
 			{ name: 'list', className: 'fa fa-list-ul', title: '[[modules:composer.formatting.list]]' },
 			{ name: 'strikethrough', className: 'fa fa-strikethrough', title: '[[modules:composer.formatting.strikethrough]]' },
 			{ name: 'code', className: 'fa fa-code', title: '[[modules:composer.formatting.code]]' },
