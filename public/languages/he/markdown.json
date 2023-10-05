@@ -1,12 +1,12 @@
 {
 	"bold": "טקסט מודגש",
 	"italic": "טקסט נטוי",
-	"list_item": "פריט רשימה",
-	"strikethrough_text": "קו חוצה",
-	"code_text": "קוד",
-	"link_text": "טקסט קישור",
-	"link_url": "כתובת קישור",
-	"picture_text": "כיתוב בבעיות טעינה",
-	"picture_url": "כתובת תמונה",
-	"help_text": "הפורום עובד עם Markdown. להסבר מלא, [לחץ כאן](http://commonmark.org/help/)"
+	"list-item": "פריט רשימה",
+	"strikethrough-text": "קו חוצה",
+	"code-text": "קוד",
+	"link-text": "טקסט קישור",
+	"link-url": "כתובת קישור",
+	"picture-text": "כיתוב בבעיות טעינה",
+	"picture-url": "כתובת תמונה",
+	"help-text": "הפורום עובד עם Markdown. להסבר מלא, [לחץ כאן](http://commonmark.org/help/)"
 }

@@ -1,11 +1,12 @@
 {
 	"bold": "Fettschrift",
 	"italic": "Kursivschrift",
-	"list_item": "Listenpunkt",
-	"strikethrough_text": "Durchgestrichen",
-	"link_text": "Link Text",
-	"link_url": "Link Adresse",
-	"picture_text": "Bild Text",
-	"picture_url": "Bild Link",
-	"help_text": "Dieses Forum unterstützt Markdown. Für mehr Informationen, [hier klicken](http://commonmark.org/help/)"
+	"list-item": "Listenpunkt",
+	"strikethrough-text": "Durchgestrichen",
+	"code-text": "code_text",
+	"link-text": "Link Text",
+	"link-url": "Link Adresse",
+	"picture-text": "Bild Text",
+	"picture-url": "Bild Link",
+	"help-text": "Dieses Forum unterstützt Markdown. Für mehr Informationen, [hier klicken](http://commonmark.org/help/)"
 }

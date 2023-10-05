@@ -1,11 +1,11 @@
 {
 	"bold": "texte en gras",
 	"italic": "texte en italique",
-	"list_item": "élément de liste",
-	"strikethrough_text": "strikethrough text",
-	"link_text": "texte du lien",
-	"link_url": "url du lien",
-	"picture_text": "text alternatif",
-	"picture_url": "url de l'image",
-	"help_text": "Ce forum utilise la syntaxe Markdown. Pour accéder à la documentation, suivre ce [lien](http://commonmark.org/help/)"
+	"list-item": "élément de liste",
+	"strikethrough-text": "strikethrough text",
+	"link-text": "texte du lien",
+	"link-url": "url du lien",
+	"picture-text": "text alternatif",
+	"picture-url": "url de l'image",
+	"help-text": "Ce forum utilise la syntaxe Markdown. Pour accéder à la documentation, suivre ce [lien](http://commonmark.org/help/)"
 }

@@ -1,11 +1,11 @@
 {
 	"bold": "Жирный текст",
 	"italic": "Прописной шрифт",
-	"list_item": "Пункт списка",
-	"strikethrough_text": "Зачеркнутый текст",
-	"link_text": "Текст ссылки",
-	"link_url": "Адрес ссылки",
-	"picture_text": "Описание",
-	"picture_url": "URL-адрес изображения",
-	"help_text": "Этот форум работает на основе Markdown. Для получения полной документации [перейдите на сайт](http://commonmark.org/help/)"
+	"list-item": "Пункт списка",
+	"strikethrough-text": "Зачеркнутый текст",
+	"link-text": "Текст ссылки",
+	"link-url": "Адрес ссылки",
+	"picture-text": "Описание",
+	"picture-url": "URL-адрес изображения",
+	"help-text": "Этот форум работает на основе Markdown. Для получения полной документации [перейдите на сайт](http://commonmark.org/help/)"
 }
