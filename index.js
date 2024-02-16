@@ -10,6 +10,7 @@ const nconf = require.main.require('nconf');
 const winston = require.main.require('winston');
 const meta = require.main.require('./src/meta');
 const posts = require.main.require('./src/posts');
+const activitypub = require.main.require('./src/activitypub');
 const translator = require.main.require('./src/translator');
 const plugins = require.main.require('./src/plugins');
 const cacheCreate = require.main.require('./src/cacheCreate');
@@ -152,7 +153,7 @@ const Markdown = {
 
 	parsePost: async function (data) {
 		const env = await Markdown.beforeParse(data);
-		if (data && data.postData && data.postData.content && parser) {
+		if (env.parse && data && data.postData && data.postData.content && parser) {
 			data.postData.content = parser.render(data.postData.content, env || {});
 		}
 		return Markdown.afterParse(data);
@@ -178,8 +179,14 @@ const Markdown = {
 
 	beforeParse: async (data) => {
 		const env = {
+			parse: true,
 			images: new Map(),
 		};
+
+		if (activitypub.helpers.isUri(data.postData.pid) && !data.postData.hasOwnProperty('sourceContent')) {
+			// content contained is likely already html, bypass parsing
+			env.parse = false;
+		}
 
 		if (data && data.postData && data.postData.pid) {
 			// Check that pid for images, and return their sizes
