@@ -205,7 +205,7 @@ const Markdown = {
 					// Short-circuit to ignore previous failures
 					const hasFailed = Markdown._externalImageFailures.has(match);
 					if (hasFailed) {
-						return;
+						continue;
 					}
 
 					if (size) {
