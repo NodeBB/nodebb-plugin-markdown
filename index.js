@@ -204,29 +204,27 @@ const Markdown = {
 
 					// Short-circuit to ignore previous failures
 					const hasFailed = Markdown._externalImageFailures.has(match);
-					if (hasFailed) {
-						continue;
-					}
+					if (!hasFailed) {
+						if (size) {
+							env.images.set(filename, size);
+						} else {
+							// Size checked asynchronously, see: https://github.com/tomas/needle/issues/389
+							probe(match, {
+								follow_max: 2,
+							}).then((size) => {
+								let { width, height } = size;
 
-					if (size) {
-						env.images.set(filename, size);
-					} else {
-						// Size checked asynchronously, see: https://github.com/tomas/needle/issues/389
-						probe(match, {
-							follow_max: 2,
-						}).then((size) => {
-							let { width, height } = size;
+								// Swap width and height if orientation bit is set
+								if (size.orientation >= 5 && size.orientation <= 8) {
+									[width, height] = [height, width];
+								}
 
-							// Swap width and height if orientation bit is set
-							if (size.orientation >= 5 && size.orientation <= 8) {
-								[width, height] = [height, width];
-							}
-
-							Markdown._externalImageCache.set(match, { width, height });
-						}).catch(() => {
-							// Likely an issue getting the external image size, ignore in the future
-							Markdown._externalImageFailures.add(match);
-						});
+								Markdown._externalImageCache.set(match, { width, height });
+							}).catch(() => {
+								// Likely an issue getting the external image size, ignore in the future
+								Markdown._externalImageFailures.add(match);
+							});
+						}
 					}
 				}
 			}
