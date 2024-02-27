@@ -41,8 +41,6 @@ const Markdown = {
 
 		Markdown.init();
 		await Markdown.loadThemes();
-
-		return params;
 	},
 
 	getConfig: async (config) => {
