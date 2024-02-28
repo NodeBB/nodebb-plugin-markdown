@@ -181,7 +181,10 @@ const Markdown = {
 			images: new Map(),
 		};
 
-		if (activitypub.helpers.isUri(data.postData.pid) && !data.postData.hasOwnProperty('sourceContent')) {
+		if (
+			activitypub.helpers.isUri(data.postData.pid) &&
+			(!data.postData.hasOwnProperty('sourceContent') || !data.postData.sourceContent)
+		) {
 			// content contained is likely already html, bypass parsing
 			env.parse = false;
 		}
