@@ -63,3 +63,12 @@
 		}
 	}
 }
+
+a.plugin-markdown-hidden-link {
+	&::before {
+		content: 'hidden link';
+		border: 1px dashed $danger;
+		padding: .25rem;
+		border-radius: var(--bs-border-radius) !important;
+	}
+}
