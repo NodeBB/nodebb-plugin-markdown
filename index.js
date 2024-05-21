@@ -372,34 +372,25 @@ const Markdown = {
 		};
 
 		parser.renderer.rules.link_open = function (tokens, idx, options, env, self) {
-			// Add target="_blank" to all links
-			const targetIdx = tokens[idx].attrIndex('target');
-			let relIdx = tokens[idx].attrIndex('rel');
-			const hrefIdx = tokens[idx].attrIndex('href');
+			const attributes = new Map(tokens[idx].attrs);
 
-			if (Markdown.isExternalLink(tokens[idx].attrs[hrefIdx][1])) {
+			if (attributes.has('href') && Markdown.isExternalLink(attributes.get('href'))) {
+				const rel = [];
 				if (Markdown.config.externalBlank) {
-					if (targetIdx < 0) {
-						tokens[idx].attrPush(['target', '_blank']);
-					} else {
-						tokens[idx].attrs[targetIdx][1] = '_blank';
-					}
-
-					if (relIdx < 0) {
-						tokens[idx].attrPush(['rel', 'noopener noreferrer']);
-						relIdx = tokens[idx].attrIndex('rel');
-					} else {
-						tokens[idx].attrs[relIdx][1] = 'noopener noreferrer';
-					}
+					attributes.set('target', '_blank');
+					rel.push('noopener', 'noreferrer');
 				}
 
 				if (Markdown.config.nofollow) {
-					if (relIdx < 0) {
-						tokens[idx].attrPush(['rel', 'nofollow ugc']);
-					} else {
-						tokens[idx].attrs[relIdx][1] += ' nofollow ugc';
-					}
+					rel.push('nofollow', 'ugc');
 				}
+
+				attributes.set('rel', rel.join(' '));
+			}
+
+			// Clearly indicate hidden links
+			if (tokens[idx + 1].type === 'link_close') {
+				attributes.set('class', String(`${attributes.get('class') || ''} plugin-markdown-hidden-link small link-danger`).trim());
 			}
 
 			if (!Markdown.config.allowRTLO) {
@@ -410,6 +401,7 @@ const Markdown = {
 				}
 			}
 
+			tokens[idx].attrs = Array.from(attributes);
 			return renderLink(tokens, idx, options, env, self);
 		};
 
