@@ -157,7 +157,7 @@ const Markdown = {
 		return Markdown.afterParse(raw);
 	},
 
-	beforeParse: async (/* data */) => {
+	beforeParse: async (data) => {
 		const env = {
 			parse: true,
 			images: new Map(),
