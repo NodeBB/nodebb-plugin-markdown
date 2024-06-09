@@ -149,24 +149,6 @@
 				</div>
 
 				<div class="mb-4">
-					<h5 class="fw-bold tracking-tight settings-header">Images</h5>
-
-					<div class="mb-3 form-check form-switch">
-						<input type="checkbox" class="form-check-input" name="probe" id="probe" />
-						<label class="form-check-label" for="probe">
-							Append image sizes for externally linked images
-						</label>
-					</div>
-					<div class="mb-3">
-						<label class="form-label" for="probeCacheSize">Cache size (number of images)</label>
-						<input class="form-control" type="number" id="probeCacheSize" name="probeCacheSize" placeholder="256 (Default)" />
-						<p class="form-text">
-							Markdown automatically saves image sizes so as to not make too many unnecessary calls. It remembers this value for 24 hours, to a maximum number of images as defined here. Increase this number if your forum posts contain links to many external images.
-						</p>
-					</div>
-				</div>
-
-				<div class="mb-4">
 					<h5 class="fw-bold tracking-tight settings-header">HTML Sanitization</h5>
 
 					<div class="mb-3 form-check form-switch">

@@ -4,12 +4,9 @@ const MarkdownIt = require('markdown-it');
 const fs = require('fs');
 const path = require('path');
 
-const probe = require('probe-image-size');
-
 const nconf = require.main.require('nconf');
 const winston = require.main.require('winston');
 const meta = require.main.require('./src/meta');
-const posts = require.main.require('./src/posts');
 const translator = require.main.require('./src/translator');
 const plugins = require.main.require('./src/plugins');
 const cacheCreate = require.main.require('./src/cacheCreate');
@@ -21,8 +18,6 @@ let parser;
 let app;
 const Markdown = {
 	config: {},
-	_externalImageCache: undefined,
-	_externalImageFailures: new Set(),
 	onLoad: async function (params) {
 		app = params.app;
 		const { router } = params;
@@ -88,9 +83,6 @@ const Markdown = {
 			highlight: true,
 			highlightTheme: 'default.css',
 
-			probe: true,
-			probeCacheSize: 256,
-
 			xhtmlOut: true,
 			breaks: true,
 			linkify: true,
@@ -101,7 +93,7 @@ const Markdown = {
 			checkboxes: true,
 			multimdTables: true,
 		};
-		const notCheckboxes = ['langPrefix', 'highlightTheme', 'probeCacheSize'];
+		const notCheckboxes = ['langPrefix', 'highlightTheme'];
 
 		meta.settings.get('markdown', (err, options) => {
 			if (err) {
@@ -125,15 +117,6 @@ const Markdown = {
 			parser = new MarkdownIt(_self.config);
 
 			Markdown.updateParserRules(parser);
-
-			// External image size cache
-			if (_self.config.probe) {
-				Markdown._externalImageCache = cacheCreate({
-					name: 'markdown.externalImageCache',
-					max: parseInt(_self.config.probeCacheSize, 10) || 256,
-					ttl: 1000 * 60 * 60 * 24, // 1 day
-				});
-			}
 		});
 	},
 
@@ -174,61 +157,10 @@ const Markdown = {
 		return Markdown.afterParse(raw);
 	},
 
-	beforeParse: async (data) => {
+	beforeParse: async (/* data */) => {
 		const env = {
 			images: new Map(),
 		};
-
-		if (data && data.postData && data.postData.pid) {
-			// Check that pid for images, and return their sizes
-			const images = await posts.uploads.listWithSizes(data.postData.pid);
-			env.images = images.reduce((memo, cur) => {
-				memo.set(cur.name, cur);
-				delete cur.name;
-				return memo;
-			}, env.images);
-		}
-
-		// Probe post data for external images as well
-		if (Markdown.config.probe && data && data.postData && data.postData.content) {
-			const matcher = /!\[[^\]]*?\]\((https?[^)]+?)\)/g;
-			let current;
-
-			// eslint-disable-next-line no-cond-assign
-			while ((current = matcher.exec(data.postData.content)) !== null) {
-				const match = current[1];
-				if (match && Markdown.isExternalLink(match)) { // for security only parse external images
-					const parsedUrl = new URL(match, nconf.get('url'));
-					const filename = path.basename(parsedUrl.pathname);
-					const size = Markdown._externalImageCache.get(match);
-
-					// Short-circuit to ignore previous failures
-					const hasFailed = Markdown._externalImageFailures.has(match);
-					if (!hasFailed) {
-						if (size) {
-							env.images.set(filename, size);
-						} else {
-							// Size checked asynchronously, see: https://github.com/tomas/needle/issues/389
-							probe(match, {
-								follow_max: 2,
-							}).then((size) => {
-								let { width, height } = size;
-
-								// Swap width and height if orientation bit is set
-								if (size.orientation >= 5 && size.orientation <= 8) {
-									[width, height] = [height, width];
-								}
-
-								Markdown._externalImageCache.set(match, { width, height });
-							}).catch(() => {
-								// Likely an issue getting the external image size, ignore in the future
-								Markdown._externalImageFailures.add(match);
-							});
-						}
-					}
-				}
-			}
-		}
 
 		return env;
 	},
@@ -351,22 +283,11 @@ const Markdown = {
 		parser.renderer.rules.image = function (tokens, idx, options, env, self) {
 			const token = tokens[idx];
 			const attributes = new Map(token.attrs);
-			const parsedSrc = new URL(attributes.get('src'), nconf.get('url'));
 
 			// Validate the url
 			if (!Markdown.isUrlValid(attributes.get('src'))) { return ''; }
 
 			token.attrSet('class', `${token.attrGet('class') || ''} img-fluid img-markdown`);
-
-			// Append sizes to images
-			if (parsedSrc.pathname) {
-				const filename = path.basename(parsedSrc.pathname);
-				if (env.images && env.images.has(filename)) {
-					const size = env.images.get(filename);
-					token.attrSet('width', size.width);
-					token.attrSet('height', size.height);
-				}
-			}
 
 			return renderImage(tokens, idx, options, env, self);
 		};
