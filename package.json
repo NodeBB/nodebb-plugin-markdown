@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-markdown",
-  "version": "13.0.0-pre.4",
+  "version": "13.0.0-pre.5",
   "description": "A Markdown parser for NodeBB",
   "main": "index.js",
   "repository": {
