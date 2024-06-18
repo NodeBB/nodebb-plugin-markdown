@@ -158,10 +158,12 @@ const Markdown = {
 	},
 
 	beforeParse: async (data) => {
-		const env = {
+		let env = {
 			parse: true,
-			images: new Map(),
+			images: new Map(), // is this still used?
 		};
+
+		env = await plugins.hooks.fire('filter:markdown.beforeParse', { env, data: Object.freeze({ ...data }) });
 
 		if (
 			activitypub.helpers.isUri(data.postData.pid) &&
