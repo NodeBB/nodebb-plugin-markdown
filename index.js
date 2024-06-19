@@ -163,7 +163,7 @@ const Markdown = {
 			images: new Map(), // is this still used?
 		};
 
-		env = await plugins.hooks.fire('filter:markdown.beforeParse', { env, data: Object.freeze({ ...data }) });
+		({ env } = await plugins.hooks.fire('filter:markdown.beforeParse', { env, data: Object.freeze({ ...data }) }));
 
 		if (
 			activitypub.helpers.isUri(data.postData.pid) &&
