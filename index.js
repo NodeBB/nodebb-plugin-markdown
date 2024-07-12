@@ -136,6 +136,7 @@ const Markdown = {
 		if (env.parse && data && data.postData && data.postData.content && parser) {
 			data.postData.content = parser.render(data.postData.content, env || {});
 		}
+
 		return Markdown.afterParse(data);
 	},
 
@@ -160,6 +161,7 @@ const Markdown = {
 	beforeParse: async (data) => {
 		let env = {
 			parse: true,
+			type: data.type,
 			images: new Map(), // is this still used?
 		};
 
@@ -294,6 +296,10 @@ const Markdown = {
 		parser.renderer.rules.image = function (tokens, idx, options, env, self) {
 			const token = tokens[idx];
 			const attributes = new Map(token.attrs);
+			if (env.type === 'plaintext') {
+				const filename = path.basename(attributes.get('src'));
+				return `[image: ${filename}]`;
+			}
 
 			// Validate the url
 			if (!Markdown.isUrlValid(attributes.get('src'))) { return ''; }
@@ -304,6 +310,10 @@ const Markdown = {
 		};
 
 		parser.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+			if (env.type === 'plaintext') {
+				return '';
+			}
+
 			const attributes = new Map(tokens[idx].attrs);
 
 			if (attributes.has('href') && Markdown.isExternalLink(attributes.get('href'))) {
@@ -335,6 +345,15 @@ const Markdown = {
 
 			tokens[idx].attrs = Array.from(attributes);
 			return renderLink(tokens, idx, options, env, self);
+		};
+
+		parser.renderer.rules.link_close = function (...args) {
+			const [,,, env, self] = args;
+			if (env === 'plaintext') {
+				return '';
+			}
+
+			return self.renderToken(...args);
 		};
 
 		parser.renderer.rules.table_open = function (tokens, idx, options, env, self) {
