@@ -167,12 +167,14 @@ const Markdown = {
 
 		({ env } = await plugins.hooks.fire('filter:markdown.beforeParse', { env, data: Object.freeze({ ...data }) }));
 
-		if (
-			activitypub.helpers.isUri(data.postData.pid) &&
-			(!data.postData.hasOwnProperty('sourceContent') || !data.postData.sourceContent)
-		) {
-			// content contained is likely already html, bypass parsing
-			env.parse = false;
+		if (activitypub.helpers.isUri(data.postData.pid)) {
+			if (data.postData.sourceContent) {
+				data.content = data.sourceContent;
+				delete data.sourceContent;
+			} else {
+				// content contained is likely already html, bypass parsing
+				env.parse = false;
+			}
 		}
 
 		return env;
