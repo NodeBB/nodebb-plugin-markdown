@@ -7,5 +7,5 @@
 	"link-url": "url du lien",
 	"picture-text": "text alternatif",
 	"picture-url": "url de l'image",
-	"help-text": "Ce forum utilise la syntaxe Markdown. Pour accéder à la documentation, suivre ce [lien](http://commonmark.org/help/)"
+	"help-text": "Ce forum utilise la syntaxe Markdown. <a href=\"http://commonmark.org/help/\" class=\"text-decoration-underline\">Pour accéder à la documentation, suivre ce lien.</a>"
 }

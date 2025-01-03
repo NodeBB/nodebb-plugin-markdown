@@ -1,3 +1,6 @@
+<h2>Markdown</h2>
+<p>[[markdown:help-text]]</p>
+
 <table class="table markdown-reference">
 	<thead>
 		<tr>

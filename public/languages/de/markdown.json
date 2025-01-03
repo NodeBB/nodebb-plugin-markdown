@@ -8,5 +8,5 @@
 	"link-url": "Link Adresse",
 	"picture-text": "Bild Text",
 	"picture-url": "Bild Link",
-	"help-text": "Dieses Forum unterstützt Markdown. Für mehr Informationen, [hier klicken](http://commonmark.org/help/)"
+	"help-text": "Dieses Forum unterstützt Markdown. <a href=\"http://commonmark.org/help/\" class=\"text-decoration-underline\">Für mehr Informationen, hier klicken.</a>"
 }

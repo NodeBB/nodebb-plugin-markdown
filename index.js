@@ -7,9 +7,7 @@ const path = require('path');
 const nconf = require.main.require('nconf');
 const winston = require.main.require('winston');
 const meta = require.main.require('./src/meta');
-const translator = require.main.require('./src/translator');
 const plugins = require.main.require('./src/plugins');
-const cacheCreate = require.main.require('./src/cacheCreate');
 
 const SocketPlugins = require.main.require('./src/socket.io/plugins');
 SocketPlugins.markdown = require('./websockets');
@@ -194,10 +192,8 @@ const Markdown = {
 	},
 
 	renderHelp: async function (helpContent) {
-		const translated = await translator.translate('[[markdown:help-text]]');
-		const parsed = await plugins.hooks.fire('filter:parse.raw', `## Markdown\n${translated}`);
 		const html = await app.renderAsync('modals/markdown-help', {});
-		helpContent += parsed + html;
+		helpContent += html;
 		return helpContent;
 	},
 

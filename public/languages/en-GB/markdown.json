@@ -9,5 +9,5 @@
 	"link-url": "link url",
 	"picture-text": "alt text",
 	"picture-url": "image url",
-	"help-text": "This forum is powered by Markdown. For full documentation, [click here](http://commonmark.org/help/)"
+	"help-text": "This forum is powered by Markdown. <a href=\"http://commonmark.org/help/\" class=\"text-decoration-underline\">For full documentation, click here.</a>"
 }

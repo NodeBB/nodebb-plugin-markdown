@@ -7,5 +7,5 @@
 	"link-url": "Адрес ссылки",
 	"picture-text": "Описание",
 	"picture-url": "URL-адрес изображения",
-	"help-text": "Этот форум работает на основе Markdown. Для получения полной документации [перейдите на сайт](http://commonmark.org/help/)"
+	"help-text": "Этот форум работает на основе Markdown. <a href=\"http://commonmark.org/help/\" class=\"text-decoration-underline\">Для получения полной документации перейдите на сайт.</a>"
 }
