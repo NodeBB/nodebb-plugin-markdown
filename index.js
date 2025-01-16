@@ -7,6 +7,7 @@ const path = require('path');
 const nconf = require.main.require('nconf');
 const winston = require.main.require('winston');
 const meta = require.main.require('./src/meta');
+const activitypub = require.main.require('./src/activitypub');
 const plugins = require.main.require('./src/plugins');
 
 const SocketPlugins = require.main.require('./src/socket.io/plugins');
@@ -131,9 +132,10 @@ const Markdown = {
 
 	parsePost: async function (data) {
 		const env = await Markdown.beforeParse(data);
-		if (data && data.postData && data.postData.content && parser) {
+		if (env.parse && data && data.postData && data.postData.content && parser) {
 			data.postData.content = parser.render(data.postData.content, env || {});
 		}
+
 		return Markdown.afterParse(data);
 	},
 
@@ -155,10 +157,24 @@ const Markdown = {
 		return Markdown.afterParse(raw);
 	},
 
-	beforeParse: async (/* data */) => {
-		const env = {
-			images: new Map(),
+	beforeParse: async (data) => {
+		let env = {
+			parse: true,
+			type: data.type,
+			images: new Map(), // is this still used?
 		};
+
+		({ env } = await plugins.hooks.fire('filter:markdown.beforeParse', { env, data: Object.freeze({ ...data }) }));
+
+		if (activitypub.helpers.isUri(data.postData.pid)) {
+			if (data.postData.sourceContent) {
+				data.content = data.sourceContent;
+				delete data.sourceContent;
+			} else {
+				// content contained is likely already html, bypass parsing
+				env.parse = false;
+			}
+		}
 
 		return env;
 	},
@@ -279,6 +295,10 @@ const Markdown = {
 		parser.renderer.rules.image = function (tokens, idx, options, env, self) {
 			const token = tokens[idx];
 			const attributes = new Map(token.attrs);
+			if (env.type === 'plaintext') {
+				const filename = path.basename(attributes.get('src'));
+				return `[image: ${filename}]`;
+			}
 
 			// Validate the url
 			if (!Markdown.isUrlValid(attributes.get('src'))) { return ''; }
@@ -289,6 +309,10 @@ const Markdown = {
 		};
 
 		parser.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+			if (env.type === 'plaintext') {
+				return '';
+			}
+
 			const attributes = new Map(tokens[idx].attrs);
 
 			if (attributes.has('href') && Markdown.isExternalLink(attributes.get('href'))) {
@@ -320,6 +344,15 @@ const Markdown = {
 
 			tokens[idx].attrs = Array.from(attributes);
 			return renderLink(tokens, idx, options, env, self);
+		};
+
+		parser.renderer.rules.link_close = function (...args) {
+			const [,,, env, self] = args;
+			if (env === 'plaintext') {
+				return '';
+			}
+
+			return self.renderToken(...args);
 		};
 
 		parser.renderer.rules.table_open = function (tokens, idx, options, env, self) {

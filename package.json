@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-markdown",
-  "version": "12.2.9",
+  "version": "13.0.0-pre.10",
   "description": "A Markdown parser for NodeBB",
   "main": "index.js",
   "repository": {
@@ -36,7 +36,7 @@
     "markdown-it-multimd-table": "^4.0.1"
   },
   "nbbpm": {
-    "compatibility": "^3.0.0"
+    "compatibility": "^4.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "16.2.1",
