@@ -167,6 +167,7 @@ const Markdown = {
 		({ env } = await plugins.hooks.fire('filter:markdown.beforeParse', { env, data: Object.freeze({ ...data }) }));
 
 		if (data.type === 'markdown') {
+			// core is expecting markdown to come back, bypass parsing
 			env.parse = false;
 		} else if (activitypub.helpers.isUri(data.postData.pid)) {
 			if (data.postData.sourceContent) {
