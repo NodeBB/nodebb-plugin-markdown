@@ -1,7 +1,7 @@
 'use strict';
 
 const privileges = require.main.require('./src/privileges');
-const SocketPosts = require.main.require('./src/socket.io/posts');
+const postsAPI = require.main.require('./src/api/posts');
 const posts = require.main.require('./src/posts');
 
 module.exports.checkbox = {
@@ -21,7 +21,7 @@ module.exports.checkbox = {
 			indices.push(match.index);
 		}
 
-		content = content.replace(checkboxRegex, function (match, idx) {
+		content = content.replace(checkboxRegex, (match, idx) => {
 			if (idx !== indices[data.index]) {
 				return match;
 			}
@@ -29,7 +29,7 @@ module.exports.checkbox = {
 			return data.state ? '[x]' : '[ ]';
 		});
 
-		await SocketPosts.edit(socket, {
+		await postsAPI.edit(socket, {
 			pid: data.pid,
 			content: content,
 		});
