@@ -6,7 +6,7 @@ const posts = require.main.require('./src/posts');
 
 module.exports.checkbox = {
 	edit: async function (socket, data) {
-		const canEdit = await privileges.posts.canEdit(parseInt(data.pid, 10), socket.uid);
+		const canEdit = await privileges.posts.canEdit(data.pid, socket.uid);
 		if (!canEdit) {
 			throw new Error('[[error:no-privileges]]');
 		}
