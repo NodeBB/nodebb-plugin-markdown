@@ -58,13 +58,19 @@ export function prepareFormattingTools() {
 						controls.insertIntoTextarea(textarea, `${heading} ${strings.heading}`);
 
 						controls.updateTextareaSelection(
-							textarea, selectionStart + heading.length + 1, selectionStart + strings.heading.length + heading.length + 1
+							textarea,
+							selectionStart + heading.length + 1,
+							selectionStart + strings.heading.length + heading.length + 1
 						);
 					} else {
 						const selectedText = $(textarea).val().substring(selectionStart, selectionEnd);
 						const newText = `${heading} ${selectedText}`;
 						controls.replaceSelectionInTextareaWith(textarea, newText);
-						controls.updateTextareaSelection(textarea, selectionStart + (heading.length + 1), selectionEnd + (newText.length - selectedText.length));
+						controls.updateTextareaSelection(
+							textarea,
+							selectionStart + (heading.length + 1),
+							selectionEnd + (newText.length - selectedText.length)
+						);
 					}
 				}
 
@@ -115,7 +121,7 @@ export function prepareFormattingTools() {
 					formatting.addButtonDispatch(`heading${size}`, function (textarea, selectionStart, selectionEnd) {
 						formatHeading(new Array(size).fill('#').join(''), textarea, selectionStart, selectionEnd);
 					});
-				})
+				});
 
 				formatting.addButtonDispatch('list', function (textarea, selectionStart, selectionEnd) {
 					if (selectionStart === selectionEnd) {
@@ -129,7 +135,9 @@ export function prepareFormattingTools() {
 						const selectedText = $(textarea).val().substring(selectionStart, selectionEnd);
 						const newText = '* ' + selectedText.split('\n').join('\n* ');
 						controls.replaceSelectionInTextareaWith(textarea, newText);
-						controls.updateTextareaSelection(textarea, selectionStart + 2, selectionEnd + (newText.length - selectedText.length));
+						controls.updateTextareaSelection(
+							textarea, selectionStart + 2, selectionEnd + (newText.length - selectedText.length)
+						);
 					}
 				});
 
@@ -223,7 +231,7 @@ export function markExternalLinks() {
 			iconEl.classList.add('fa', 'fa-external-link', 'small');
 			anchorEl.append(' ', iconEl);
 		}
-	})
+	});
 }
 
 export function enhanceCheckbox(ev, data) {

@@ -1,6 +1,6 @@
 'use strict';
 
-define('admin/plugins/markdown', ['settings', 'alerts'], function (Settings, alerts) {
+define('admin/plugins/markdown', ['settings'], function (Settings) {
 	var Markdown = {};
 
 	Markdown.init = function () {
@@ -31,7 +31,7 @@ define('admin/plugins/markdown', ['settings', 'alerts'], function (Settings, ale
 			};
 
 			// Set defaults
-			for (var setting in defaults) {
+			for (const setting of Object.keys(defaults)) {
 				if (!settings.hasOwnProperty(setting)) {
 					if (typeof defaults[setting] === 'boolean') {
 						$('#' + setting).prop('checked', defaults[setting]);

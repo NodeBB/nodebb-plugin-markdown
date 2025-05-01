@@ -283,15 +283,12 @@ const Markdown = {
 
 		// Update renderer to add some classes to all images
 		const renderImage = parser.renderer.rules.image || function (tokens, idx, options, env, self) {
-			// eslint-disable-next-line prefer-spread,prefer-rest-params
 			return self.renderToken.apply(self, arguments);
 		};
 		const renderLink = parser.renderer.rules.link_open || function (tokens, idx, options, env, self) {
-			// eslint-disable-next-line prefer-spread,prefer-rest-params
 			return self.renderToken.apply(self, arguments);
 		};
 		const renderTable = parser.renderer.rules.table_open || function (tokens, idx, options, env, self) {
-			// eslint-disable-next-line prefer-spread,prefer-rest-params
 			return self.renderToken.apply(self, arguments);
 		};
 

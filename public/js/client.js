@@ -47,7 +47,7 @@
 			selector: '.composer .preview pre code',
 		}, async (params) => {
 			await initHljs();
-			markdown.highlight(params)
+			markdown.highlight(params);
 		});
 
 		$(window).on('action:posts.loaded action:topic.loaded action:posts.edited', async function (ev, data) {
