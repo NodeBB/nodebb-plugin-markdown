@@ -2,11 +2,12 @@
 	"bold": "טקסט מודגש",
 	"italic": "טקסט נטוי",
 	"list-item": "פריט רשימה",
+	"heading": "כותרת",
 	"strikethrough-text": "קו חוצה",
 	"code-text": "קוד",
 	"link-text": "טקסט קישור",
 	"link-url": "כתובת קישור",
 	"picture-text": "כיתוב בבעיות טעינה",
 	"picture-url": "כתובת תמונה",
-	"help-text": "הפורום עובד עם Markdown. להסבר מלא, [לחץ כאן](http://commonmark.org/help/)"
+	"help-text": "הפורום עובד עם Markdown. להסבר מלא <a href=\"http://commonmark.org/help/\" class=\"text-decoration-underline\">לחצו כאן</a>."
 }
