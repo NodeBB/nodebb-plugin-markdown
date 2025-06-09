@@ -2,10 +2,12 @@
 	"bold": "粗体字",
 	"italic": "斜体字",
 	"list-item": "列表",
+	"heading": "标题",
 	"strikethrough-text": "删除线",
+	"code-text": "代码文本",
 	"link-text": "链接文本",
 	"link-url": "链接地址",
 	"picture-text": "替代文字",
 	"picture-url": "图片地址",
-	"help-text": "该论坛使用 Markdown 语法。[点此查看](http://commonmark.org/help/) 语法说明。"
+	"help-text": "该论坛使用 Markdown 语法。<a href=\"https://commonmark.org/help/\" class=\"text-decoration-underline\">点此查看</a> 语法说明。"
 }
