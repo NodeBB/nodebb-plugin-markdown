@@ -219,16 +219,23 @@ export function markExternalLinks() {
 
 	const anchorEls = document.querySelectorAll('[component="post/content"] a');
 	anchorEls.forEach((anchorEl) => {
-		// Do nothing if the anchor contains only an image
-		if (anchorEl.childElementCount === 1 && anchorEl.querySelector('img') && !anchorEl.text) {
+		const imageOnly = anchorEl.childElementCount === 1 && anchorEl.querySelector('img') && !anchorEl.text;
+		const iconAlreadyAdded = anchorEl.querySelector('.external-link-icon');
+		if (imageOnly || iconAlreadyAdded) {
 			return;
 		}
 
 		// Otherwise, mark external links with icon
-		const parsed = new URL(anchorEl.href, document.location.href);
+		let parsed;
+		try {
+			parsed = new URL(anchorEl.href, document.location.href);
+		} catch (err) {
+			return;
+		}
+
 		if (parsed.host != document.location.host) {
 			const iconEl = document.createElement('i');
-			iconEl.classList.add('fa', 'fa-external-link', 'small');
+			iconEl.classList.add('fa', 'fa-external-link', 'small', 'external-link-icon');
 			anchorEl.append(' ', iconEl);
 		}
 	});
