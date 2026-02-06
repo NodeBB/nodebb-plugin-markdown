@@ -64,9 +64,6 @@ const Markdown = {
 			rel: 'prefetch stylesheet',
 			type: '',
 			href: `${nconf.get('relative_path')}/assets/plugins/nodebb-plugin-markdown/styles/${highlightTheme || 'default.css'}`,
-		}, {
-			rel: 'prefetch',
-			href: `${nconf.get('relative_path')}/assets/language/${meta.config.defaultLang || 'en-GB'}/markdown.json?${meta.config['cache-buster']}`,
 		});
 
 		return hookData;

@@ -51,7 +51,7 @@ export function prepareFormattingTools() {
 		'translator',
 	], function (formatting, controls, translator) {
 		if (formatting && controls) {
-			translator.getTranslations(window.config.userLang || window.config.defaultLang, 'markdown', function (strings) {
+			translator.getTranslations(window.config.userLang, 'markdown', function (strings) {
 				// used for h1,h2...h6
 				function formatHeading(heading, textarea, selectionStart, selectionEnd) {
 					if (selectionStart === selectionEnd) {
