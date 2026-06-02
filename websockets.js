@@ -1,8 +1,8 @@
 'use strict';
 
-const privileges = require.main.require('./src/privileges');
-const postsAPI = require.main.require('./src/api/posts');
-const posts = require.main.require('./src/posts');
+const privileges = nodebb.require('./src/privileges');
+const postsAPI = nodebb.require('./src/api/posts');
+const posts = nodebb.require('./src/posts');
 
 module.exports.checkbox = {
 	edit: async function (socket, data) {

@@ -1,7 +1,7 @@
 'use strict';
 
 define('admin/plugins/markdown', ['settings'], function (Settings) {
-	var Markdown = {};
+	const Markdown = {};
 
 	Markdown.init = function () {
 		Settings.load('markdown', $('.markdown-settings'), function (err, settings) {
@@ -9,7 +9,7 @@ define('admin/plugins/markdown', ['settings'], function (Settings) {
 				settings = {};
 			}
 
-			var defaults = {
+			const defaults = {
 				html: false,
 
 				langPrefix: 'language-',

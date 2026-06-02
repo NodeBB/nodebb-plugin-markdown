@@ -1,6 +1,6 @@
 'use strict';
 
-const meta = require.main.require('./src/meta');
+const meta = nodebb.require('./src/meta');
 
 module.exports = {
 	name: 'Update Markdown Theme to point to unminified file',

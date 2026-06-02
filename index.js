@@ -4,13 +4,13 @@ const MarkdownIt = require('markdown-it');
 const fs = require('fs');
 const path = require('path');
 
-const nconf = require.main.require('nconf');
-const winston = require.main.require('winston');
-const meta = require.main.require('./src/meta');
-const activitypub = require.main.require('./src/activitypub');
-const plugins = require.main.require('./src/plugins');
+const nconf = nodebb.require('nconf');
+const winston = nodebb.require('winston');
+const meta = nodebb.require('./src/meta');
+const activitypub = nodebb.require('./src/activitypub');
+const plugins = nodebb.require('./src/plugins');
 
-const SocketPlugins = require.main.require('./src/socket.io/plugins');
+const SocketPlugins = nodebb.require('./src/socket.io/plugins');
 SocketPlugins.markdown = require('./websockets');
 
 let parser;
@@ -21,8 +21,8 @@ const Markdown = {
 		app = params.app;
 		const { router } = params;
 		const controllers = require('./lib/controllers');
-		const hostMiddleware = require.main.require('./src/middleware');
-		const routeHelpers = require.main.require('./src/routes/helpers');
+		const hostMiddleware = nodebb.require('./src/middleware');
+		const routeHelpers = nodebb.require('./src/routes/helpers');
 		const middlewares = [
 			hostMiddleware.maintenanceMode, hostMiddleware.registrationComplete, hostMiddleware.pluginHooks,
 		];

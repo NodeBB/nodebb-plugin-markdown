@@ -38,7 +38,7 @@
 		}
 
 		$(window).on('action:composer.enhanced', function (evt, data) {
-			var textareaEl = data.postContainer.find('textarea');
+			const textareaEl = data.postContainer.find('textarea');
 			markdown.capturePaste(textareaEl);
 			markdown.prepareFormattingTools();
 		});

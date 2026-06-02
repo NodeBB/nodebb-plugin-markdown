@@ -1,6 +1,6 @@
 'use strict';
 
-const meta = require.main.require('./src/meta');
+const meta = nodebb.require('./src/meta');
 const markdown = require('..');
 
 module.exports = {

@@ -2,11 +2,11 @@
 
 export function capturePaste(targetEl) {
 	targetEl.on('paste', function (e) {
-		var triggers = [/^>\s*/, /^\s*\*\s+/, /^\s*\d+\.\s+/, /^\s{4,}/];
-		var start = e.target.selectionStart;
-		var line = getLine(targetEl.val(), start);
+		const triggers = [/^>\s*/, /^\s*\*\s+/, /^\s*\d+\.\s+/, /^\s{4,}/];
+		const start = e.target.selectionStart;
+		const line = getLine(targetEl.val(), start);
 
-		var trigger = triggers.reduce(function (regexp, cur) {
+		const trigger = triggers.reduce(function (regexp, cur) {
 			if (regexp) {
 				return regexp;
 			}
@@ -14,15 +14,15 @@ export function capturePaste(targetEl) {
 			return cur.test(line) ? cur : false;
 		}, false);
 
-		var prefix = line.match(trigger);
+		let prefix = line.match(trigger);
 		if (prefix) {
 			prefix = prefix.shift();
 
-			var payload = e.originalEvent.clipboardData.getData('text');
-			var fixed = payload.replace(/^/gm, prefix).slice(prefix.length);
+			const payload = e.originalEvent.clipboardData.getData('text');
+			const fixed = payload.replace(/^/gm, prefix).slice(prefix.length);
 
 			setTimeout(function () {
-				var replacement = targetEl.val().slice(0, start) + fixed + targetEl.val().slice(start + payload.length);
+				const replacement = targetEl.val().slice(0, start) + fixed + targetEl.val().slice(start + payload.length);
 				targetEl.val(replacement);
 			}, 0);
 		}
@@ -30,7 +30,7 @@ export function capturePaste(targetEl) {
 
 	function getLine(text, selectionStart) {
 		// Break apart into lines, return the line the cursor is in
-		var lines = text.split('\n');
+		const lines = text.split('\n');
 
 		return lines.reduce(function (memo, cur) {
 			if (typeof memo !== 'number') {
@@ -77,7 +77,7 @@ export function prepareFormattingTools() {
 
 				formatting.addButtonDispatch('bold', function (textarea, selectionStart, selectionEnd) {
 					if (selectionStart === selectionEnd) {
-						var block = controls.getBlockData(textarea, '**', selectionStart);
+						const block = controls.getBlockData(textarea, '**', selectionStart);
 
 						if (block.in && block.atEnd) {
 							// At end of bolded string, move cursor past delimiters
@@ -89,7 +89,7 @@ export function prepareFormattingTools() {
 							);
 						}
 					} else {
-						var wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '**');
+						const wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '**');
 						controls.updateTextareaSelection(
 							textarea, selectionStart + 2 + wrapDelta[0], selectionEnd + 2 - wrapDelta[1]
 						);
@@ -98,7 +98,7 @@ export function prepareFormattingTools() {
 
 				formatting.addButtonDispatch('italic', function (textarea, selectionStart, selectionEnd) {
 					if (selectionStart === selectionEnd) {
-						var block = controls.getBlockData(textarea, '*', selectionStart);
+						const block = controls.getBlockData(textarea, '*', selectionStart);
 
 						if (block.in && block.atEnd) {
 							// At end of italicised string, move cursor past delimiters
@@ -110,7 +110,7 @@ export function prepareFormattingTools() {
 							);
 						}
 					} else {
-						var wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '*');
+						const wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '*');
 						controls.updateTextareaSelection(
 							textarea, selectionStart + 1 + wrapDelta[0], selectionEnd + 1 - wrapDelta[1]
 						);
@@ -143,7 +143,7 @@ export function prepareFormattingTools() {
 
 				formatting.addButtonDispatch('strikethrough', function (textarea, selectionStart, selectionEnd) {
 					if (selectionStart === selectionEnd) {
-						var block = controls.getBlockData(textarea, '~~', selectionStart);
+						const block = controls.getBlockData(textarea, '~~', selectionStart);
 
 						if (block.in && block.atEnd) {
 							// At end of bolded string, move cursor past delimiters
@@ -155,7 +155,7 @@ export function prepareFormattingTools() {
 							);
 						}
 					} else {
-						var wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '~~', '~~');
+						const wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '~~', '~~');
 						controls.updateTextareaSelection(
 							textarea, selectionStart + 2 + wrapDelta[0], selectionEnd + 2 - wrapDelta[1]
 						);
@@ -169,7 +169,7 @@ export function prepareFormattingTools() {
 							textarea, selectionStart + 4, selectionEnd + strings['code-text'].length + 4
 						);
 					} else {
-						var wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '```\n', '\n```');
+						const wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '```\n', '\n```');
 						controls.updateTextareaSelection(
 							textarea, selectionStart + 4 + wrapDelta[0], selectionEnd + 4 - wrapDelta[1]
 						);
@@ -185,7 +185,7 @@ export function prepareFormattingTools() {
 							selectionEnd + strings['link-text'].length + strings['link-url'].length + 3
 						);
 					} else {
-						var wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '[', '](' + strings['link-url'] + ')');
+						const wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '[', '](' + strings['link-url'] + ')');
 						controls.updateTextareaSelection(
 							textarea, selectionEnd + 3 - wrapDelta[1], selectionEnd + strings['link-url'].length + 3 - wrapDelta[1]
 						);
@@ -201,7 +201,7 @@ export function prepareFormattingTools() {
 							selectionEnd + strings['picture-text'].length + strings['picture-url'].length + 4
 						);
 					} else {
-						var wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '![', '](' + strings['picture-url'] + ')');
+						const wrapDelta = controls.wrapSelectionInTextareaWith(textarea, '![', '](' + strings['picture-url'] + ')');
 						controls.updateTextareaSelection(
 							textarea, selectionEnd + 4 - wrapDelta[1], selectionEnd + strings['picture-url'].length + 4 - wrapDelta[1]
 						);
@@ -248,8 +248,8 @@ export function enhanceCheckbox(ev, data) {
 		data.posts = [data.post];
 	}
 
-	var disable;
-	var checkboxEls;
+	let disable;
+	let checkboxEls;
 	data.posts.forEach(function (post) {
 		disable = !post.display_edit_tools;
 		checkboxEls = $('.posts li[data-pid="' + post.pid + '"] .content div.plugin-markdown input[type="checkbox"]');
@@ -261,9 +261,9 @@ export function enhanceCheckbox(ev, data) {
 			}
 
 			// Otherwise, edit the post to reflect state change
-			var _this = this;
-			var pid = $(this).parents('li[data-pid]').attr('data-pid');
-			var index = $(this).parents('.content').find('input[type="checkbox"]').toArray()
+			const _this = this;
+			const pid = $(this).parents('li[data-pid]').attr('data-pid');
+			const index = $(this).parents('.content').find('input[type="checkbox"]').toArray()
 				.reduce(function (memo, cur, index) {
 					if (cur === _this) {
 						memo = index;
