@@ -24,13 +24,15 @@ const Markdown = {
 		const hostMiddleware = nodebb.require('./src/middleware');
 		const routeHelpers = nodebb.require('./src/routes/helpers');
 		const middlewares = [
-			hostMiddleware.maintenanceMode, hostMiddleware.registrationComplete, hostMiddleware.pluginHooks,
+			hostMiddleware.maintenanceMode,
+			hostMiddleware.registrationComplete,
+			hostMiddleware.pluginHooks,
 		];
 
 		routeHelpers.setupAdminPageRoute(router, '/admin/plugins/markdown', controllers.renderAdmin);
 
 		// Return raw markdown via GET
-		router.get('/api/post/:pid/raw', middlewares, controllers.retrieveRaw);
+		router.get('/api/post/:pid/raw', middlewares, routeHelpers.tryRoute(controllers.retrieveRaw));
 
 		Markdown.init();
 		await Markdown.loadThemes();
