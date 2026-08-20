@@ -13,6 +13,14 @@ const plugins = nodebb.require('./src/plugins');
 const SocketPlugins = nodebb.require('./src/socket.io/plugins');
 SocketPlugins.markdown = require('./websockets');
 
+const strongCharRegex = /\p{L}/u;
+const rtlCharRegex = /[\p{Script=Hebrew}\p{Script=Arabic}\p{Script=Syriac}\p{Script=Thaana}\p{Script=Nko}]/u;
+
+function isRTL(text) {
+	const match = text.match(strongCharRegex);
+	return !!match && rtlCharRegex.test(match[0]);
+}
+
 let parser;
 let app;
 const Markdown = {
@@ -272,9 +280,18 @@ const Markdown = {
 
 		parser.use((md) => {
 			md.core.ruler.before('linkify', 'autodir', (state) => {
-				state.tokens.forEach((token) => {
+				state.tokens.forEach((token, index) => {
 					if (token.type === 'paragraph_open') {
-						token.attrJoin('dir', 'auto');
+						const inline = state.tokens[index + 1];
+						// `dir="auto"` resolves direction from the first strong character of the
+						// rendered HTML, which skips content isolated in `<bdi>` (e.g. mentions),
+						// so a paragraph containing only an RTL mention falls back to LTR.
+						// The source text still has that character, so detect RTL here instead.
+						if (inline && inline.type === 'inline' && isRTL(inline.content)) {
+							token.attrJoin('dir', 'rtl');
+						} else {
+							token.attrJoin('dir', 'auto');
+						}
 					}
 				});
 			});
