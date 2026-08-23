@@ -3,11 +3,13 @@
 const MarkdownIt = require('markdown-it');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const nconf = nodebb.require('nconf');
 const winston = nodebb.require('winston');
 const meta = nodebb.require('./src/meta');
 const activitypub = nodebb.require('./src/activitypub');
+const db = nodebb.require('./src/database');
 const plugins = nodebb.require('./src/plugins');
 
 const SocketPlugins = nodebb.require('./src/socket.io/plugins');
@@ -20,6 +22,9 @@ function isRTL(text) {
 	const match = text.match(strongCharRegex);
 	return !!match && rtlCharRegex.test(match[0]);
 }
+
+const md5 = filename => crypto.createHash('md5').update(filename).digest('hex');
+const resizedSuffix = /-resized(\.[\w]+)?$/;
 
 let parser;
 let app;
@@ -168,7 +173,7 @@ const Markdown = {
 		let env = {
 			parse: true,
 			type: data.type,
-			images: new Map(), // is this still used?
+			images: new Map(),
 		};
 
 		({ env } = await plugins.hooks.fire('filter:markdown.beforeParse', { env, data: Object.freeze({ ...data }) }));
@@ -186,7 +191,30 @@ const Markdown = {
 			}
 		}
 
+		if (env.parse && data.postData) {
+			await Markdown.addUploadSizes(env.images, data.postData.uploads);
+		}
+
 		return env;
+	},
+
+	// Adds the sizes of the post's own uploads to `images`, keyed by filename.
+	// They are recorded on upload by posts.uploads.saveSize, so this is a single
+	// read and never touches the image itself. Entries already present (added by
+	// filter:markdown.beforeParse) are left alone.
+	addUploadSizes: async (images, uploads) => {
+		if (!Array.isArray(uploads) || !uploads.length) {
+			return;
+		}
+
+		const sizes = await db.getObjects(uploads.map(filePath => `upload:${md5(filePath)}`));
+		uploads.forEach((filePath, idx) => {
+			const size = sizes[idx];
+			const filename = path.basename(filePath);
+			if (size && size.width && size.height && !images.has(filename)) {
+				images.set(filename, { width: size.width, height: size.height });
+			}
+		});
 	},
 
 	afterParse: function (payload) {
@@ -320,6 +348,20 @@ const Markdown = {
 			if (!Markdown.isUrlValid(attributes.get('src'))) { return ''; }
 
 			token.attrSet('class', `${token.attrGet('class') || ''} img-fluid img-markdown`);
+
+			// Give the image its intrinsic size so it reserves the space it will
+			// take before it loads, otherwise images finishing above the viewport
+			// shift the content below them. A resized variant is not tracked
+			// separately, but it keeps the original's ratio, which is all that
+			// matters while these are rendered with `height: auto`
+			if (env.images && env.images.size) {
+				const filename = path.basename(new URL(attributes.get('src'), nconf.get('url')).pathname);
+				const size = env.images.get(filename) || env.images.get(filename.replace(resizedSuffix, '$1'));
+				if (size) {
+					token.attrSet('width', size.width);
+					token.attrSet('height', size.height);
+				}
+			}
 
 			return renderImage(tokens, idx, options, env, self);
 		};
