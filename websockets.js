@@ -7,7 +7,7 @@ const posts = nodebb.require('./src/posts');
 module.exports.checkbox = {
 	edit: async function (socket, data) {
 		const canEdit = await privileges.posts.canEdit(data.pid, socket.uid);
-		if (!canEdit) {
+		if (!canEdit.flag) {
 			throw new Error('[[error:no-privileges]]');
 		}
 
