@@ -342,9 +342,11 @@ const Markdown = {
 			if (env.type === 'plaintext') {
 				// The alt text is what the author wrote, so prefer it over the stored
 				// filename, which carries an upload timestamp (and a uuid, for pasted
-				// uploads) that reads as noise in teasers and other plaintext contexts
+				// uploads) that reads as noise in teasers and other plaintext contexts.
+				// token.content is the raw alt text, so it is escaped here the way the
+				// text rule escapes the rest of the plaintext output
 				const label = token.content || path.basename(attributes.get('src'));
-				return `[image: ${label}]`;
+				return `[image: ${parser.utils.escapeHtml(label)}]`;
 			}
 
 			// Validate the url
