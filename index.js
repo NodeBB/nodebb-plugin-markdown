@@ -340,8 +340,11 @@ const Markdown = {
 			const token = tokens[idx];
 			const attributes = new Map(token.attrs);
 			if (env.type === 'plaintext') {
-				const filename = path.basename(attributes.get('src'));
-				return `[image: ${filename}]`;
+				// The alt text is what the author wrote, so prefer it over the stored
+				// filename, which carries an upload timestamp (and a uuid, for pasted
+				// uploads) that reads as noise in teasers and other plaintext contexts
+				const label = token.content || path.basename(attributes.get('src'));
+				return `[image: ${label}]`;
 			}
 
 			// Validate the url
