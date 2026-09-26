@@ -23,6 +23,19 @@ function isRTL(text) {
 	return !!match && rtlCharRegex.test(match[0]);
 }
 
+function getImageDimension(value) {
+	if (!value) {
+		return '';
+	}
+	if (/^(?:\d+(?:\.\d+)?)%$/.test(value)) {
+		return value;
+	}
+	if (/^\d+$/.test(value)) {
+		return value;
+	}
+	return '';
+}
+
 const md5 = filename => crypto.createHash('md5').update(filename).digest('hex');
 const resizedSuffix = /-resized(\.[\w]+)?$/;
 
@@ -352,20 +365,27 @@ const Markdown = {
 			// Validate the url
 			if (!Markdown.isUrlValid(attributes.get('src'))) { return ''; }
 
-			token.attrSet('class', `${token.attrGet('class') || ''} img-fluid img-markdown`);
+			const imageUrl = new URL(attributes.get('src'), nconf.get('url'));
+			const { searchParams } = imageUrl;
+			const hasSizeParams = searchParams.has('w') || searchParams.has('h');
+			token.attrSet('class', `img-markdown ${token.attrGet('class') || ''} ${hasSizeParams ? 'not-responsive' : 'img-fluid'}`);
 
 			// Give the image its intrinsic size so it reserves the space it will
 			// take before it loads, otherwise images finishing above the viewport
 			// shift the content below them. A resized variant is not tracked
 			// separately, but it keeps the original's ratio, which is all that
 			// matters while these are rendered with `height: auto`
-			if (env.images && env.images.size) {
-				const filename = path.basename(new URL(attributes.get('src'), nconf.get('url')).pathname);
-				const size = env.images.get(filename) || env.images.get(filename.replace(resizedSuffix, '$1'));
-				if (size) {
-					token.attrSet('width', size.width);
-					token.attrSet('height', size.height);
-				}
+			const filename = path.basename(imageUrl.pathname);
+			const size = !hasSizeParams && (env.images?.get(filename) || env.images?.get(filename.replace(resizedSuffix, '$1')));
+			const widthParam = getImageDimension(searchParams.get('w'));
+			const heightParam = getImageDimension(searchParams.get('h'));
+			const width = widthParam || size?.width || '';
+			const height = heightParam || size?.height || '';
+			if (width) {
+				token.attrSet('width', width);
+			}
+			if (height) {
+				token.attrSet('height', height);
 			}
 
 			return renderImage(tokens, idx, options, env, self);
