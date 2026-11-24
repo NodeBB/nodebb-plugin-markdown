@@ -44,6 +44,31 @@ export function capturePaste(targetEl) {
 	}
 };
 
+export function continueList({ textarea, event }) {
+	if (event.key !== 'Enter') {
+		return;
+	}
+
+	const { selectionStart, value } = textarea;
+	const lineStart = value.lastIndexOf('\n', selectionStart - 1) + 1;
+	const line = value.slice(lineStart, selectionStart);
+	const match = line.match(/^(\s*)(\*|\d+\.)\s(.*)$/);
+	if (!match) {
+		return;
+	}
+
+	event.preventDefault();
+	const [, indent, bullet, rest] = match;
+	if (!rest) {
+		// Empty list item: strip the prefix to end the list
+		textarea.setRangeText('\n', lineStart, selectionStart, 'end');
+	} else {
+		const prefix = indent + (/^\d+\.$/.test(bullet) ? (parseInt(bullet, 10) + 1) + '.' : bullet) + ' ';
+		textarea.setRangeText('\n' + prefix, selectionStart, selectionStart, 'end');
+	}
+	textarea.dispatchEvent(new Event('input', { bubbles: true }));
+};
+
 export function prepareFormattingTools() {
 	require([
 		'composer/formatting',

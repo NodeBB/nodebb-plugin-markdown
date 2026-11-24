@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-	require(['markdown', 'components'], (markdown, components) => {
+	require(['markdown', 'components', 'hooks'], (markdown, components, hooks) => {
 		async function initHljs() {
 			if (window.hljs) {
 				return;
@@ -41,6 +41,10 @@
 			const textareaEl = data.postContainer.find('textarea');
 			markdown.capturePaste(textareaEl);
 			markdown.prepareFormattingTools();
+		});
+
+		hooks.register('action:composer.keydown', (data) => {
+			markdown.continueList(data);
 		});
 
 		$(window).on('action:composer.preview', {
