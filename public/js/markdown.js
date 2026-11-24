@@ -1,48 +1,55 @@
 'use strict';
 
-export function capturePaste(targetEl) {
-	targetEl.on('paste', function (e) {
-		const triggers = [/^>\s*/, /^\s*\*\s+/, /^\s*\d+\.\s+/, /^\s{4,}/];
-		const start = e.target.selectionStart;
-		const line = getLine(targetEl.val(), start);
+export function capturePaste({ textarea, event }, autoformat) {
+	const triggers = [/^>\s*/, /^\s*\*\s+/, /^\s*\d+\.\s+/, /^\s{4,}/];
+	const start = textarea.selectionStart;
+	const line = getLine(textarea.value, start);
 
-		const trigger = triggers.reduce(function (regexp, cur) {
-			if (regexp) {
-				return regexp;
-			}
-
-			return cur.test(line) ? cur : false;
-		}, false);
-
-		let prefix = line.match(trigger);
-		if (prefix) {
-			prefix = prefix.shift();
-
-			const payload = e.originalEvent.clipboardData.getData('text');
-			const fixed = payload.replace(/^/gm, prefix).slice(prefix.length);
-
-			setTimeout(function () {
-				const replacement = targetEl.val().slice(0, start) + fixed + targetEl.val().slice(start + payload.length);
-				targetEl.val(replacement);
-			}, 0);
+	const trigger = triggers.reduce(function (regexp, cur) {
+		if (regexp) {
+			return regexp;
 		}
-	});
 
-	function getLine(text, selectionStart) {
-		// Break apart into lines, return the line the cursor is in
-		const lines = text.split('\n');
+		return cur.test(line) ? cur : false;
+	}, false);
 
-		return lines.reduce(function (memo, cur) {
-			if (typeof memo !== 'number') {
-				return memo;
-			} if (selectionStart > (memo + cur.length)) {
-				return memo + cur.length + 1;
-			}
-
-			return cur;
-		}, 0);
+	if (!trigger) {
+		return;
 	}
+
+	const payload = event.clipboardData.getData('text');
+	if (!payload) {
+		return;
+	}
+
+	const prefix = line.match(trigger)[0];
+	event.preventDefault();
+
+	// Numbered lists auto-increment the marker on each pasted line, starting
+	// from the number on the current line
+	const numbered = prefix.match(/^(\s*)(\d+)\.\s+$/);
+	let counter = numbered ? parseInt(numbered[2], 10) : 0;
+	const fixed = payload
+		.replace(/^/gm, () => (numbered ? `${numbered[1]}${counter++}. ` : prefix))
+		.slice(prefix.length);
+
+	autoformat.replaceRange(textarea, start, start, fixed);
 };
+
+function getLine(text, selectionStart) {
+	// Break apart into lines, return the line the cursor is in
+	const lines = text.split('\n');
+
+	return lines.reduce(function (memo, cur) {
+		if (typeof memo !== 'number') {
+			return memo;
+		} if (selectionStart > (memo + cur.length)) {
+			return memo + cur.length + 1;
+		}
+
+		return cur;
+	}, 0);
+}
 
 export function continueList({ textarea, event }) {
 	if (event.key !== 'Enter') {

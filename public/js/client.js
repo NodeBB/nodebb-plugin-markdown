@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-	require(['markdown', 'components', 'hooks'], (markdown, components, hooks) => {
+	require(['markdown', 'components', 'hooks', 'composer/autoformat'], (markdown, components, hooks, autoformat) => {
 		async function initHljs() {
 			if (window.hljs) {
 				return;
@@ -37,14 +37,16 @@
 			markdown.buildAliasMap();
 		}
 
-		$(window).on('action:composer.enhanced', function (evt, data) {
-			const textareaEl = data.postContainer.find('textarea');
-			markdown.capturePaste(textareaEl);
+		$(window).on('action:composer.enhanced', function () {
 			markdown.prepareFormattingTools();
 		});
 
 		hooks.register('action:composer.keydown', (data) => {
 			markdown.continueList(data);
+		});
+
+		hooks.register('action:composer.paste', (data) => {
+			markdown.capturePaste(data, autoformat);
 		});
 
 		$(window).on('action:composer.preview', {
